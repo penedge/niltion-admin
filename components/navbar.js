@@ -32,7 +32,7 @@ export default class Navbar extends React.Component {
                         </Menu.Item>
                         <Menu.Item key="2" style={{backgroundColor: 'transparent'}}>
                             <div className="avatar">
-                                <img src={`/static/images/profileImage/${admin.image}`} />
+                                <img src={`/static/images/user/${admin.image}`} />
                             </div>
                         </Menu.Item>
                     </Menu>
@@ -55,7 +55,6 @@ export default class Navbar extends React.Component {
                     height: 100%;
                     object-fit: cover;
                     position: relative;
-                    top: 4px;
                 }
                 .adminName {
                     font-size: 18px;

@@ -6,7 +6,7 @@ import Head from 'next/head'
 import { notification, Icon, Layout, Breadcrumb } from 'antd';
 import Navbar from '../components/navbar'
 import SideBar from '../components/sidebar'
-const { Content} = Layout;
+const { Content } = Layout;
 export default class Dashboard extends React.Component {
     constructor(props) {
         super(props)
@@ -57,13 +57,14 @@ export default class Dashboard extends React.Component {
         return (
             <div>
                 <Head>
+                    <title>Penedge | Dashboard</title>
                     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.20.3/antd.min.css" />
                 </Head>
                 <Layout className="custom-bg">
-                    <Navbar admin={this.state.admin}/>
+                    <Navbar admin={this.state.admin} />
                     <Content className="DashboardContainer">
                         <Layout style={{ padding: '24px 0', background: '#fff' }}>
-                            <SideBar/>
+                            <SideBar />
                         </Layout>
                     </Content>
                 </Layout>

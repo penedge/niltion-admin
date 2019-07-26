@@ -34,6 +34,7 @@ export default class Index extends React.Component {
     return (
       <div>
         <Head>
+          <title>Penedge Admin</title>
           <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.20.3/antd.min.css"/>
         </Head>
         <Layout>
