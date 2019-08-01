@@ -32,21 +32,30 @@ app.prepare().then(() => {
         next();
     });
     // determine upload folder
-    let storage = multer.diskStorage({
+    const userStorage = multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, __dirname + '/static/images/user/')
+            cb(null, __dirname + '/static/images/user/profile_image/')
         },
         filename: function (req, file, cb) {
             cb(null, file.originalname)
         }
     });
-    const upload = multer({ storage: storage });
+    const blogStorage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, __dirname + '/static/images/user/content/')
+        },
+        filename: function (req, file, cb) {
+            cb(null, file.originalname)
+        }
+    });
+    const uploadProfile = multer({ storage: userStorage });
+    const uploadPost = multer({ storage: blogStorage });
     // Schema
     const User = require('./static/schema/user.model');
     const Blog = require('./static/schema/blog.model');
 
     // Authentication API
-    server.post('/register', upload.single("profileImage"), (req, res) => {
+    server.post('/register', uploadProfile.single("profileImage"), (req, res) => {
         if (Object.keys(req.body.username).length > 8 || Object.keys(req.body.password).length > 8 || Object.keys(req.body.email).length > 8) {
             const newUser = new User();
             newUser.email = req.body.email;
@@ -112,7 +121,7 @@ app.prepare().then(() => {
         req.logout();
     });
     // Blog API
-    server.post('/blog', upload.fields([{ name: 'cover'}, { name: 'multiFile'}]),(req, res) => {
+    server.post('/blog', uploadPost.fields([{ name: 'cover'}, { name: 'multiFile'}]),(req, res) => {
         const blog = new Blog();
         blog.cover = req.files.originalname;
         blog.image = req.body.image;

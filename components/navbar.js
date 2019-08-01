@@ -32,7 +32,7 @@ export default class Navbar extends React.Component {
                         </Menu.Item>
                         <Menu.Item key="2" style={{backgroundColor: 'transparent'}}>
                             <div className="avatar">
-                                <img src={`/static/images/user/${admin.image}`} />
+                                <img src={`/static/images/user/profile_image/${admin.image}`} />
                             </div>
                         </Menu.Item>
                     </Menu>
