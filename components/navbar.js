@@ -63,9 +63,13 @@ export default class Navbar extends React.Component {
                     font-weight: bold;
                 }
                 .avatar img {
-                    width: 70px;
+                    width: 66px;
+                    height: 66px;
                     padding: 8px;
+                    overflow:hidden;
+                    margin-top: 6px;
                     border-radius: 100%;
+                    object-fit:cover;
                 }
             `}</style>
             </div>

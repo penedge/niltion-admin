@@ -1,17 +1,18 @@
 import React from 'react'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
-import { Input, Layout, Icon, Tabs, Upload, message, Select } from 'antd'
+import { Icon, Tabs, Upload, Select, Card, Col, Row, Skeleton } from 'antd'
 import TextArea from 'antd/lib/input/TextArea';
+import { relativeTimeThreshold } from 'moment';
 const { TabPane } = Tabs;
 const { Option } = Select;
+const { Meta } = Card;
 export default class Editor extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             loading: false,
             title: [],
-            textStyle: '',
             content: [],
             tabPosition: 'top',
             preview: null,
@@ -80,13 +81,12 @@ export default class Editor extends React.Component {
             ],
             selectedItems: [],
             hashtag: null,
-            category: []
+            multiFile: []
         }
     }
     title = (e) => {
         this.setState({
-            title: e.target.value,
-            textStyle: 'bold'
+            title: e.target.value
         })
     }
     content = (e) => {
@@ -117,17 +117,17 @@ export default class Editor extends React.Component {
         }
     }
     // select category
-    category = (category)=> {
-        this.setState({
-            category
-        })
-    }
-    // select hashtag
     hashtag = (selectedItems) => {
         this.setState({
             selectedItems
         })
     };
+    //
+    upload_albums = (info) => {
+        this.setState({
+            multiFile: info.fileList
+        })
+    }
     // submit form
     submit = (e) => {
         e.preventDefault();
@@ -135,20 +135,51 @@ export default class Editor extends React.Component {
         const getToken = jwt.decode(atob(decode));
         const formData = new FormData();
         formData.append('cover', this.state.cover);
+        formData.append('image', this.state.cover.name);
         formData.append('title', this.state.title);
         formData.append('content', this.state.content);
         formData.append('author', getToken.username);
-        formData.append('tags', this.state.selectedItems);
-        formData.append('category', this.state.category);
-        axios.post('/blog', formData, config).then((res) => {
-            console.log(res.data);
-        })
+        formData.append('category', this.state.selectedItems);
+        let albums = [];
+        for (let i = 0; i < this.state.multiFile.length; i++) {
+            const file = this.state.multiFile[i].originFileObj;
+            formData.append('multiFile', file);
+            const file_name = this.state.multiFile[i].name;
+            albums.push(file_name);
+        }
+        formData.append('albums', albums);
         const config = {
             headers: {
                 'content-type': 'multipart/form-data'
             }
         }
+        axios.post('/blog', formData, config).then((res) => {
+            console.log(res.data);
+        })
+    }
+    example = () => {
+        if (this.state.preview === null) {
+            return (
+                <div>
 
+                </div>
+            )
+        }
+        else {
+            return (
+                <div>
+                    <Row gutter={16}>
+                        <Col span={6}>
+                            <Card cover={<img style={{ width: "100%" }} src={this.state.preview} />}>
+                                <Meta
+                                    title={<h1 style={{ fontWeight: 'bold', textTransform: 'capitalize' }}>{this.state.title}</h1>} />
+                                <Skeleton />
+                            </Card>
+                        </Col>
+                    </Row>
+                </div>
+            )
+        }
     }
     render() {
         const uploadButton = (
@@ -157,8 +188,17 @@ export default class Editor extends React.Component {
                 <div className="ant-upload-text">Add Cover</div>
             </div>
         );
+        const albumsButton = (
+            <div>
+                <Icon style={{ marginBottom: 14, fontSize: 33, marginRight: 20 }}
+                    type="picture" />
+                <Icon style={{ marginBottom: 14, fontSize: 33 }}
+                    type="play-square" />
+                <div className="ant-upload-text">picture / video</div>
+            </div>
+        )
         const { preview } = this.state;
-        const { selectedItems } = this.state;
+        const { selectedItems, multiFile } = this.state;
         return (
             <div>
                 <br />
@@ -186,7 +226,7 @@ export default class Editor extends React.Component {
                                         ตัวอย่างเว็บไซด์แจกไฟล์ภาพถูกต้องลิขสิทธิ์ ฟรี เช่น <a style={{ fontWeight: 'bold' }} href="https://unsplash.com/" target="_blank">https://unsplash.com/</a>
                                     </p>
                                     <br />
-
+                                    {this.example()}
                                 </div>
                             </TabPane>
                             <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="form" />Write Story</span>} key="2">
@@ -194,36 +234,38 @@ export default class Editor extends React.Component {
                                     placeholder="Add your story...">
                                 </textarea>
                             </TabPane>
+                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="plus" />Albums</span>} key="3">
+                                <div className="mainFormUpload">
+                                    <Upload
+                                        multiple={true}
+                                        className="UploadAlbums"
+                                        action={'https://www.mocky.io/v2/5cc8019d300000980a055e76'}
+                                        listType="picture-card"
+                                        onChange={this.upload_albums}
+                                    >
+                                        {multiFile.length >= 8 ? null : albumsButton}
+                                    </Upload>
+                                </div>
+                                <h1 style={{ fontFamily: 'sukhumvit set', fontWeight: 'bold', marginTop: 23 }}>ข้อแนะนำ</h1>
+                                <p>
+                                    ไฟล์ที่อัพโหลดต้องถูกต้องลิขสิทธิ์เท่านั้น และ ไฟล์ต้องไม่ติดลิขสิทธิ์ใดๆ จากเว็บอื่นๆ หรือ ไฟล์ที่ละเมิดลิขสิทธิ์มา
+                                    </p>
+                                <p>
+                                    ตัวอย่างเว็บไซด์แจกไฟล์ภาพถูกต้องลิขสิทธิ์ ฟรี เช่น <a style={{ fontWeight: 'bold' }} href="https://unsplash.com/" target="_blank">https://unsplash.com/</a>
+                                </p>
+                                <br />
+                            </TabPane>
                             <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}>
                                 <Icon type="align-left" /> Tags
-                            </span>} key="3">
+                            </span>} key="4">
                                 <br />
                                 <h3>Select Category</h3>
-                                <br />
-                                <div className="clearfix">
-                                    <Select
-                                        placeholder="Story Category"
-                                        style={{ width: 150 }}
-                                        showArrow={false}
-                                        onChange={this.category}
-                                    >
-                                        {
-                                            this.state.tags.map((category) => (
-                                                <Option key={category.id} value={category.type}>
-                                                    {category.type}
-                                                </Option>
-                                            ))
-                                        }
-                                    </Select>
-                                </div>
-                                <br />
-                                <h3>Select Tags</h3>
                                 <br />
                                 <div className="Category">
                                     <Select
                                         className="selectCategory"
                                         mode="multiple"
-                                        placeholder="Selected Stories Tags"
+                                        placeholder="Selected Stories Category"
                                         value={selectedItems}
                                         onChange={this.hashtag}
                                         showArrow={false}>
@@ -238,9 +280,6 @@ export default class Editor extends React.Component {
                                 </div>
                                 <br />
                             </TabPane>
-                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="plus" />Photo / Video albums</span>} key="4">
-                                4
-                            </TabPane>
                         </Tabs>
 
                     </div>
@@ -248,6 +287,9 @@ export default class Editor extends React.Component {
                 <style>{`
                     .clearfix {
                         clear:both;
+                    }
+                    li {
+                        text-transform: capitalize;
                     }
                     .title {
                         width: 84%;
@@ -284,7 +326,7 @@ export default class Editor extends React.Component {
                     }
                     .content {
                         width: 100%;
-                        height: 800px !important;
+                        height: 765px !important;
                         overflow-y:auto;
                         border: 0;
                         color: #000;
@@ -297,7 +339,7 @@ export default class Editor extends React.Component {
                         background-color:transparent;
                     }
                     .mainFormUpload {
-                        margin: 20px;
+                        margin-top: 20px;
                     }
                     .previewUpload {
                         width: 100%;
@@ -308,6 +350,17 @@ export default class Editor extends React.Component {
                     .avatar-uploader > .ant-upload {
                         width: 260px;
                         height: 180px;
+                        margin-bottom: 20px;
+                    }
+                    .anticon-eye-o {
+                        display: none;
+                    }
+                    .anticon-delete {
+                        font-size: 26px !important;
+                    }
+                    .UploadAlbums > .ant-upload, .ant-upload-list-picture-card .ant-upload-list-item {
+                        width: 210px;
+                        height: 160px;
                         margin-bottom: 20px;
                     }
                     .Category {

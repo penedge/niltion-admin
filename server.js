@@ -8,7 +8,8 @@ const handle = app.getRequestHandler();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/react_auth');
+mongoose.set('useCreateIndex', true);
+mongoose.connect('mongodb://localhost/react_auth', {useNewUrlParser: true});
 const multer = require('multer');
 const passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy;
@@ -53,8 +54,6 @@ app.prepare().then(() => {
             newUser.password = jwt.sign(req.body.password, req.body.username);
             newUser.profileImage = req.file.originalname;
             newUser.image = req.file.filename;
-            console.log(req.body);
-            console.log(req.file);
             newUser.save((err, newUser) => {
                 if (!err) {
                     res.redirect('/')
@@ -113,17 +112,18 @@ app.prepare().then(() => {
         req.logout();
     });
     // Blog API
-    server.post('/blog', upload.single("cover"),(req, res) => {
+    server.post('/blog', upload.fields([{ name: 'cover'}, { name: 'multiFile'}]),(req, res) => {
         const blog = new Blog();
-        blog.cover = req.file.originalname;
-        blog.image = req.file.filename;
+        blog.cover = req.files.originalname;
+        blog.image = req.body.image;
         blog.title = req.body.title;
         blog.content = req.body.content;
         blog.author = req.body.author;
-        blog.tags = req.body.tags;
         blog.category = req.body.category;
+        blog.multiFile = req.files.originalname;
+        blog.albums = req.body.albums;
         blog.save((err, newUser) => {
-            if (!err) {
+            if (err) {
                 res.redirect('/')
             }
         });
