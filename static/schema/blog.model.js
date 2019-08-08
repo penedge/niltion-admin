@@ -7,7 +7,7 @@ const BlogSchema = new Schema ({
     author:{type:String},
     tags: {type:String},
     category: {type:String},
-    albums: {type:String},
+    albums : {type: Array},
     date: { type: Date, default: Date.now }
 });
 const Blog = mongoose.model('Blog', BlogSchema);

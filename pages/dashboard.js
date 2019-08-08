@@ -29,7 +29,7 @@ export default class Dashboard extends React.Component {
         if (getToken === null) {
             this.messageAlert();
             setTimeout(() => {
-                location.href = "/"
+                location.href = "admin"
             }, 1500);
         }
         else {
@@ -47,7 +47,7 @@ export default class Dashboard extends React.Component {
                     localStorage.removeItem('auth');
                     this.messageAlert();
                     setTimeout(() => {
-                        location.href = "/"
+                        location.href = "admin"
                     }, 1500);
                 }
             });

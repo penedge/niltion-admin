@@ -9,7 +9,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
-mongoose.connect('mongodb://localhost/react_auth', {useNewUrlParser: true});
+mongoose.connect('mongodb://localhost/react_auth', { useNewUrlParser: true });
 const multer = require('multer');
 const passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy;
@@ -26,7 +26,7 @@ app.prepare().then(() => {
     server.use(passport.session());
 
     //Enabling CORS
-    server.use((req, res, next)=> {
+    server.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         next();
@@ -34,7 +34,7 @@ app.prepare().then(() => {
     // determine upload folder
     const userStorage = multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, __dirname + '/static/images/user/profile_image/')
+            cb(null, __dirname + '/static/images/admin/profile_image/')
         },
         filename: function (req, file, cb) {
             cb(null, file.originalname)
@@ -42,7 +42,7 @@ app.prepare().then(() => {
     });
     const blogStorage = multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, __dirname + '/static/images/user/content/')
+            cb(null, __dirname + '/static/images/admin/content/')
         },
         filename: function (req, file, cb) {
             cb(null, file.originalname)
@@ -65,7 +65,7 @@ app.prepare().then(() => {
             newUser.image = req.file.filename;
             newUser.save((err, newUser) => {
                 if (!err) {
-                    res.redirect('/')
+                    res.redirect('/admin')
                 }
             });
         }
@@ -110,7 +110,7 @@ app.prepare().then(() => {
     ));
     server.post('/login', (req, res) => {
         if (!req.body.username || !req.body.password) {
-            res.redirect('/')
+            res.redirect('/admin')
         }
         else {
             res.send(user);
@@ -121,7 +121,7 @@ app.prepare().then(() => {
         req.logout();
     });
     // Blog API
-    server.post('/blog', uploadPost.fields([{ name: 'cover'}, { name: 'multiFile'}]),(req, res) => {
+    server.post('/blog', uploadPost.fields([{ name: 'cover' }, { name: 'multiFile' }]), (req, res) => {
         const blog = new Blog();
         blog.cover = req.files.originalname;
         blog.image = req.body.image;
@@ -131,12 +131,32 @@ app.prepare().then(() => {
         blog.category = req.body.category;
         blog.multiFile = req.files.originalname;
         blog.albums = req.body.albums;
-        blog.save((err, newUser) => {
+        blog.save((err, newBlog) => {
             if (err) {
-                res.redirect('/')
+                res.redirect('/admin')
+            }
+            else {
+                res.send(newBlog)
             }
         });
     });
+    server.get('/blog/:author', (req, res) => {
+        const author = req.params.author;
+        Blog.find({author}, (err, admin) => {
+            if (err) {
+                res.redirect('/admin');
+            }
+            else {
+                res.send(admin)
+            }
+        });
+    });
+    server.delete('/blog/:id', (req, res) => {
+        const id = req.params.id;
+        Blog.findByIdAndDelete({ _id: id }, (err, admin) => {
+            res.send(admin);
+        });
+    })
     // running server
     server.get('*', (req, res) => {
         return handle(req, res)

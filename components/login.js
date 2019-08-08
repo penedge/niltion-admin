@@ -34,7 +34,7 @@ export default class Login extends React.Component {
                 localStorage.setItem('auth', btoa(tokenId));
                 if (!localStorage.getItem('auth') || localStorage.getItem('auth') === null) {
                   localStorage.removeItem('auth');
-                  location.href = '/'
+                  location.href = 'admin'
                 }
                 else {
                   location.href = 'dashboard'

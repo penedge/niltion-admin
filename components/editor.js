@@ -140,14 +140,18 @@ export default class Editor extends React.Component {
         formData.append('content', this.state.content);
         formData.append('author', getToken.username);
         formData.append('category', this.state.selectedItems);
-        let albums = [];
+        let newAlbums = [];
         for (let i = 0; i < this.state.multiFile.length; i++) {
             const file = this.state.multiFile[i].originFileObj;
             formData.append('multiFile', file);
-            const file_name = this.state.multiFile[i].name;
-            albums.push(file_name);
+            const file_name = (this.state.multiFile[i], {photo:this.state.multiFile[i].name});
+            //const json = JSON.stringify(file_name);
+            newAlbums.push(file_name);
         }
-        formData.append('albums', albums);
+        //formData.append('albums', newAlbums);
+        for (let j = 0; j < newAlbums.length; j++) {
+            formData.append('albums', newAlbums[j].photo)
+        }
         const config = {
             headers: {
                 'content-type': 'multipart/form-data'
@@ -156,6 +160,11 @@ export default class Editor extends React.Component {
         axios.post('/blog', formData, config).then((res) => {
             console.log(res.data);
         })
+        /*
+        axios.post('/blog', formData, config).then((res) => {
+            console.log(res.data);
+        })
+        */
     }
     example = () => {
         if (this.state.preview === null) {

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Icon, Menu, Tabs } from 'antd';
-import EditorForm from '../components/editor'
+import EditorForm from '../components/editor';
+import AdminPost from '../components/adminPost';
 const { TabPane } = Tabs;
 export default class SideBar extends React.Component {
     constructor(props) {
@@ -11,7 +12,7 @@ export default class SideBar extends React.Component {
     }
     logOut = () => {
         localStorage.removeItem('auth');
-        location.href = "/"
+        location.href = "admin"
     }
     render() {
         const IconFont = Icon.createFromIconfontCN({
@@ -31,7 +32,7 @@ export default class SideBar extends React.Component {
                         <EditorForm/>
                     </TabPane>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="book" /></span>All your stories</span>} key="2">
-                        Stories
+                        <AdminPost/>
                     </TabPane>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="setting" /></span>Profile Setting</span>} key="3">
                         profile
