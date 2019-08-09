@@ -131,6 +131,7 @@ app.prepare().then(() => {
         blog.category = req.body.category;
         blog.multiFile = req.files.originalname;
         blog.albums = req.body.albums;
+        blog.date = req.body.date;
         blog.save((err, newBlog) => {
             if (err) {
                 res.redirect('/admin')
@@ -140,6 +141,29 @@ app.prepare().then(() => {
             }
         });
     });
+    //update
+    server.post('/blog', uploadPost.fields([{ name: 'cover' }, { name: 'multiFile' }]), (req, res) => {
+        const blog = new Blog();
+        blog.cover = req.files.originalname;
+        blog.image = req.body.image;
+        blog.title = req.body.title;
+        blog.content = req.body.content;
+        blog.author = req.body.author;
+        blog.category = req.body.category;
+        blog.multiFile = req.files.originalname;
+        blog.albums = req.body.albums;
+        blog.date = req.body.date;
+        blog.updateOne((err, newBlog) => {
+            if (err) {
+                res.redirect('/admin')
+            }
+            else {
+                res.send(newBlog)
+            }
+        });
+    });
+
+    //query by id
     server.get('/blog/:author', (req, res) => {
         const author = req.params.author;
         Blog.find({author}, (err, admin) => {
@@ -151,6 +175,7 @@ app.prepare().then(() => {
             }
         });
     });
+    // delete blog
     server.delete('/blog/:id', (req, res) => {
         const id = req.params.id;
         Blog.findByIdAndDelete({ _id: id }, (err, admin) => {

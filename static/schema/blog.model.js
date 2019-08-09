@@ -8,7 +8,10 @@ const BlogSchema = new Schema ({
     tags: {type:String},
     category: {type:String},
     albums : {type: Array},
-    date: { type: Date, default: Date.now }
+    date: { type: String }
 });
 const Blog = mongoose.model('Blog', BlogSchema);
 module.exports = Blog;
+const date = new Date();
+let times = (date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear());
+console.log(times);

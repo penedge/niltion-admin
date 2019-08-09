@@ -2,8 +2,6 @@ import React from 'react'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import { Icon, Tabs, Upload, Select, Card, Col, Row, Skeleton } from 'antd'
-import TextArea from 'antd/lib/input/TextArea';
-import { relativeTimeThreshold } from 'moment';
 const { TabPane } = Tabs;
 const { Option } = Select;
 const { Meta } = Card;
@@ -140,11 +138,14 @@ export default class Editor extends React.Component {
         formData.append('content', this.state.content);
         formData.append('author', getToken.username);
         formData.append('category', this.state.selectedItems);
+        const date = new Date();
+        const times = (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
+        formData.append('date', times);
         let newAlbums = [];
         for (let i = 0; i < this.state.multiFile.length; i++) {
             const file = this.state.multiFile[i].originFileObj;
             formData.append('multiFile', file);
-            const file_name = (this.state.multiFile[i], {photo:this.state.multiFile[i].name});
+            const file_name = (this.state.multiFile[i], { photo: this.state.multiFile[i].name });
             //const json = JSON.stringify(file_name);
             newAlbums.push(file_name);
         }
