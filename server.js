@@ -142,26 +142,22 @@ app.prepare().then(() => {
         });
     });
     //update
-    server.post('/blog', uploadPost.fields([{ name: 'cover' }, { name: 'multiFile' }]), (req, res) => {
-        const blog = new Blog();
-        blog.cover = req.files.originalname;
-        blog.image = req.body.image;
-        blog.title = req.body.title;
-        blog.content = req.body.content;
-        blog.author = req.body.author;
-        blog.category = req.body.category;
-        blog.multiFile = req.files.originalname;
-        blog.albums = req.body.albums;
-        blog.date = req.body.date;
-        blog.updateOne((err, newBlog) => {
-            if (err) {
-                res.redirect('/admin')
-            }
-            else {
-                res.send(newBlog)
-            }
+    server.put('/blog/:id', uploadPost.fields([{ name: 'cover' }, { name: 'multiFile' }]), (req, res) => {
+        const id = req.params.id;
+        Blog.findByIdAndUpdate({ _id: id }, {$set:{
+            cover: req.files.originalname,
+            image: req.body.image,
+            title: req.body.title,
+            content: req.body.content,
+            author: req.body.author,
+            category: req.body.category,
+            multiFile: req.files.originalname,
+            albums: req.body.albums,
+            date: req.body.date
+        }},(err, admin) => {
+            res.send(admin);
         });
-    });
+    })
 
     //query by id
     server.get('/blog/:author', (req, res) => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Upload, Icon, Select } from 'antd'
 import jwt from 'jsonwebtoken'
+import axios from 'axios'
 export default class Edit_post extends React.Component {
     constructor(props) {
         super(props)
@@ -159,6 +160,10 @@ export default class Edit_post extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         }
+        axios.put(`/blog/${this.props.id}`, formData, config).then((res) => {
+            console.log(res.data);
+        })
+        
     }
     render() {
         const uploadButton = (

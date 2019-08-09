@@ -161,11 +161,6 @@ export default class Editor extends React.Component {
         axios.post('/blog', formData, config).then((res) => {
             console.log(res.data);
         })
-        /*
-        axios.post('/blog', formData, config).then((res) => {
-            console.log(res.data);
-        })
-        */
     }
     example = () => {
         if (this.state.preview === null) {
