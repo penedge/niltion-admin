@@ -8,6 +8,7 @@ export default class Edit_post extends React.Component {
         this.state = {
             loading: false,
             title: [],
+            image: [],
             content: [],
             tabPosition: 'top',
             preview: null,
@@ -76,14 +77,14 @@ export default class Edit_post extends React.Component {
             ],
             selectedItems: [],
             hashtag: null,
+            albums: [],
             multiFile: []
         };
     }
     componentDidMount() {
-        const { title, content } = this.props.edit;
+        const { title, content, albums, image } = this.props.edit;
         this.setState({
-            title,
-            content
+            title, content, albums, image
         })
     }
     // editCover
@@ -131,39 +132,69 @@ export default class Edit_post extends React.Component {
     }
     saved = (e) => {
         e.preventDefault();
-        const decode = localStorage.getItem('auth');
-        const getToken = jwt.decode(atob(decode));
-        const formData = new FormData();
-        formData.append('cover', this.state.cover);
-        formData.append('image', this.state.cover.name);
-        formData.append('title', this.state.title);
-        formData.append('content', this.state.content);
-        formData.append('author', getToken.username);
-        formData.append('category', this.state.selectedItems);
-        const date = new Date();
-        const times = (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
-        formData.append('date', times);
-        let newAlbums = [];
-        for (let i = 0; i < this.state.multiFile.length; i++) {
-            const file = this.state.multiFile[i].originFileObj;
-            formData.append('multiFile', file);
-            const file_name = (this.state.multiFile[i], { photo: this.state.multiFile[i].name });
-            //const json = JSON.stringify(file_name);
-            newAlbums.push(file_name);
-        }
-        //formData.append('albums', newAlbums);
-        for (let j = 0; j < newAlbums.length; j++) {
-            formData.append('albums', newAlbums[j].photo)
-        }
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
+        if (this.state.multiFile.length === 0 || this.state.cover === 0) {
+            const decode = localStorage.getItem('auth');
+            const getToken = jwt.decode(atob(decode));
+            const formData = new FormData();
+            formData.append('image', this.state.image);
+            formData.append('title', this.state.title);
+            formData.append('content', this.state.content);
+            formData.append('author', getToken.username);
+            formData.append('category', this.state.selectedItems);
+            const date = new Date();
+            const times = (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
+            formData.append('date', times);
+            let oldAlbums = [];
+            for (let i = 0; i < this.state.albums.length; i++) {
+                const old_file_name = (this.state.albums[i], { photo: this.state.albums[i] });
+                //const json = JSON.stringify(file_name);
+                oldAlbums.push(old_file_name);
             }
+            for (let j = 0; j < oldAlbums.length; j++) {
+                formData.append('albums', oldAlbums[j].photo)
+            };
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            }
+            axios.put(`/blog/${this.props.id}`, formData, config).then((res) => {
+                console.log(res.data);
+            });
         }
-        axios.put(`/blog/${this.props.id}`, formData, config).then((res) => {
-            console.log(res.data);
-        })
-        
+        else {
+            const decode = localStorage.getItem('auth');
+            const getToken = jwt.decode(atob(decode));
+            const formData = new FormData();
+            formData.append('image', this.state.image);
+            formData.append('title', this.state.title);
+            formData.append('content', this.state.content);
+            formData.append('author', getToken.username);
+            formData.append('category', this.state.selectedItems);
+            const date = new Date();
+            const times = (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
+            formData.append('date', times);
+            let newAlbums = [];
+            for (let i = 0; i < this.state.multiFile.length; i++) {
+                const file = this.state.multiFile[i].originFileObj;
+                formData.append('multiFile', file);
+                const file_name = (this.state.multiFile[i], { photo: this.state.multiFile[i].name });
+                //const json = JSON.stringify(file_name);
+                newAlbums.push(file_name);
+            }
+            //formData.append('albums', newAlbums);
+            for (let j = 0; j < newAlbums.length; j++) {
+                formData.append('albums', newAlbums[j].photo)
+            }
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            }
+            axios.put(`/blog/${this.props.id}`, formData, config).then((res) => {
+                console.log(res.data);
+            });
+        }
     }
     render() {
         const uploadButton = (
@@ -196,8 +227,8 @@ export default class Edit_post extends React.Component {
                         >
                             {preview ? <img src={preview} style={{ width: '100%' }} /> : uploadButton}
                         </Upload>
-                        <input className="editStory" value={this.state.title} type="text" onChange={this.edit_Title} />
-                        <textarea className="editContent" value={this.state.content} type="text" onChange={this.edit_Content}>
+                        <input className="editStory" value={this.state.title} placeholder="Story Title" type="text" onChange={this.edit_Title} />
+                        <textarea className="editContent" value={this.state.content} placeholder="Add Content here" type="text" onChange={this.edit_Content}>
                         </textarea>
                         <br />
                         <Upload
@@ -211,7 +242,7 @@ export default class Edit_post extends React.Component {
                         </Upload>
                         <br />
                         <Select
-                            style={{width: '100%',marginBottom:20}}
+                            style={{ width: '100%', marginBottom: 20 }}
                             mode="multiple"
                             placeholder="Selected Stories Category"
                             value={selectedItems}

@@ -26,9 +26,16 @@ export default class AdminPost extends React.Component {
                 });
             }
             else {
-                this.setState({
-                    blog: res.data
-                });
+                if (this.state.blog === null || this.state.blog === []) {
+                    this.setState({
+                        blog: []
+                    });
+                }
+                else {
+                    this.setState({
+                        blog: res.data
+                    });
+                }
             }
         })
     }
@@ -40,10 +47,12 @@ export default class AdminPost extends React.Component {
             console.log(res.data);
         })
     }
-    openModal = (id, title, content)=> {
+    openModal = (id, title, content, albums, image)=> {
         let editContent = {
             title,
-            content
+            content,
+            albums,
+            image
         }
         this.setState({
             openModal: true,
@@ -67,7 +76,7 @@ export default class AdminPost extends React.Component {
                             !this.state.loading && this.state.blog.map((blog) => (
                                 <Col span={8} className="itemList">
                                     <Card key={blog._id} title={<span><h3 className="storyName">{blog.title}</h3><span className="author"><Icon type={'user'}/> : <span style={{textTransform:'capitalize'}}>{blog.author}</span></span><div className="clearfix"><span style={{fontSize:12,fontWeight:'lighter'}}><Icon type={'history'}/> : {blog.date}</span></div></span>}
-                                        actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content)}><Icon type="form" /></span>, <span onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></span>]}>
+                                        actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image)}><Icon type="form" /></span>, <span onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></span>]}>
                                         <div className="cover">
                                             <img src={`/static/images/admin/content/${blog.image}`} />
                                         </div>
