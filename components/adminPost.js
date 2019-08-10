@@ -35,10 +35,6 @@ export default class AdminPost extends React.Component {
     componentDidMount() {
         this.data();
     }
-    // realtime
-    /*componentDidUpdate() {
-        this.data();
-    }*/
     delete = (id) => {
         axios.delete(`/blog/${id}`).then(res => {
             console.log(res.data);
@@ -69,7 +65,7 @@ export default class AdminPost extends React.Component {
                     <Row gutter={16}>
                         {
                             !this.state.loading && this.state.blog.map((blog) => (
-                                <Col span={7} className="itemList">
+                                <Col span={8} className="itemList">
                                     <Card key={blog._id} title={<span><h3 className="storyName">{blog.title}</h3><span className="author"><Icon type={'user'}/> : <span style={{textTransform:'capitalize'}}>{blog.author}</span></span><div className="clearfix"><span style={{fontSize:12,fontWeight:'lighter'}}><Icon type={'history'}/> : {blog.date}</span></div></span>}
                                         actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content)}><Icon type="form" /></span>, <span onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></span>]}>
                                         <div className="cover">
@@ -139,8 +135,8 @@ export default class AdminPost extends React.Component {
                         width: 100%;
                     }
                     .albumsImage {
-                        width: 123px;
-                        height: 110px;
+                        width: 100px;
+                        height: 100px;
                         float: left;
                         object-fit: cover;
                         overflow: hidden;
@@ -148,6 +144,7 @@ export default class AdminPost extends React.Component {
                         padding-bottom: 9px;
                     }
                     .albumsList {
+                        width: 218px;
                         height: 62px;
                         overflow: auto;
                         margin-bottom: 10px;

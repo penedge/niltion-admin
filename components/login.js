@@ -24,23 +24,20 @@ export default class Login extends React.Component {
     }
     loginForm = (e) => {
         e.preventDefault();
-        if (Object.keys(this.state.username).length > 8 || Object.keys(this.state.password).length > 8) {
-            axios.post(`/login`).then(res => {
-                const user = {
-                    username: this.state.username,
-                    password: this.state.password
-                }
-                let tokenId = jwt.sign(user, JSON.stringify(this.state.username));
-                localStorage.setItem('auth', btoa(tokenId));
-                if (!localStorage.getItem('auth') || localStorage.getItem('auth') === null) {
-                  localStorage.removeItem('auth');
-                  location.href = 'admin'
-                }
-                else {
-                  location.href = 'dashboard'
-                }
-            })
-        }
+        axios.post(`/login`).then(res => {
+            const user = {
+                username: this.state.username,
+                password: this.state.password
+            }
+            let tokenId = jwt.sign(user, JSON.stringify(this.state.username));
+            localStorage.setItem('auth', btoa(tokenId));
+            if (localStorage.getItem('auth')=== null) {
+                location.href='admin'
+            }
+            else {
+                location.href='dashboard'
+            }
+        })
     }
     render() {
         return (

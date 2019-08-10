@@ -9,7 +9,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
-mongoose.connect('mongodb://localhost/react_auth', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/penedgeDB1234', { useNewUrlParser: true });
 const multer = require('multer');
 const passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy;
