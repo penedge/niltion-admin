@@ -141,7 +141,7 @@ app.prepare().then(() => {
             }
         });
     });
-    //update
+    //update Blog Data
     server.put('/blog/:id', uploadPost.fields([{ name: 'cover' }, { name: 'multiFile' }]), (req, res) => {
         const id = req.params.id;
         Blog.findByIdAndUpdate({ _id: id }, {$set:{
@@ -156,6 +156,19 @@ app.prepare().then(() => {
             date: req.body.date
         }},(err, admin) => {
             res.send(admin);
+        });
+    })
+    //update user infomation
+    server.put('/register/:username', uploadProfile.single("profileImage"), (req, res) => {
+        const username = req.params.username;
+        User.findOneAndUpdate({username}, {$set:{
+            profileImage: req.file.originalname,
+            image: req.body.image,
+            email: req.body.email,
+            username: req.body.username,
+            password: jwt.sign(req.body.password, req.body.username)
+        }},(err, updateInfo) => {
+            res.send(updateInfo);
         });
     })
 

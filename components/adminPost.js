@@ -88,7 +88,7 @@ export default class AdminPost extends React.Component {
         return (
             <div>
                 <div className="storiesContainer">
-                    <h3>Your Stories</h3>
+                    <h2><strong>All Your stories</strong></h2>
                     <Row gutter={16}>
                         {
                             !this.state.loading && this.state.blog.map((blog) => (

@@ -2,6 +2,7 @@ import React from 'react'
 import { Icon, Menu, Tabs } from 'antd';
 import EditorForm from '../components/editor';
 import AdminPost from '../components/adminPost';
+import ProfileSetting from '../components/profile_etting'
 const { TabPane } = Tabs;
 export default class SideBar extends React.Component {
     constructor(props) {
@@ -35,7 +36,7 @@ export default class SideBar extends React.Component {
                         <AdminPost/>
                     </TabPane>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="setting" /></span>Profile Setting</span>} key="3">
-                        profile
+                        <ProfileSetting/>
                     </TabPane>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="inbox" /></span>Message inbox</span>} key="4">
                         message
