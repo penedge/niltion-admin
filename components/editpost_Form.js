@@ -12,7 +12,7 @@ export default class Edit_post extends React.Component {
             content: [],
             tabPosition: 'top',
             preview: null,
-            cover: [],
+            cover: undefined,
             tags: [
                 {
                     "id": 1,
@@ -103,7 +103,7 @@ export default class Edit_post extends React.Component {
             this.getBase64(info.file.originFileObj, imageUrl =>
                 this.setState({
                     imageUrl,
-                    loading: false,
+                    loading: true,
                     preview: URL.createObjectURL(info.file.originFileObj),
                     cover: info.file.originFileObj
                 }),
@@ -132,11 +132,12 @@ export default class Edit_post extends React.Component {
     }
     saved = (e) => {
         e.preventDefault();
-        if (this.state.multiFile.length === 0 || this.state.cover === 0) {
+        if (this.state.loading === true) {
             const decode = localStorage.getItem('auth');
             const getToken = jwt.decode(atob(decode));
             const formData = new FormData();
-            formData.append('image', this.state.image);
+            formData.append('cover', this.state.cover);
+            formData.append('image', this.state.cover.name);
             formData.append('title', this.state.title);
             formData.append('content', this.state.content);
             formData.append('author', getToken.username);
@@ -144,15 +145,18 @@ export default class Edit_post extends React.Component {
             const date = new Date();
             const times = (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
             formData.append('date', times);
-            let oldAlbums = [];
-            for (let i = 0; i < this.state.albums.length; i++) {
-                const old_file_name = (this.state.albums[i], { photo: this.state.albums[i] });
+            let newAlbums = [];
+            for (let i = 0; i < this.state.multiFile.length; i++) {
+                const file = this.state.multiFile[i].originFileObj;
+                formData.append('multiFile', file);
+                const file_name = (this.state.multiFile[i], { photo: this.state.multiFile[i].name });
                 //const json = JSON.stringify(file_name);
-                oldAlbums.push(old_file_name);
+                newAlbums.push(file_name);
             }
-            for (let j = 0; j < oldAlbums.length; j++) {
-                formData.append('albums', oldAlbums[j].photo)
-            };
+            //formData.append('albums', newAlbums);
+            for (let j = 0; j < newAlbums.length; j++) {
+                formData.append('albums', newAlbums[j].photo)
+            }
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data'
@@ -174,18 +178,15 @@ export default class Edit_post extends React.Component {
             const date = new Date();
             const times = (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
             formData.append('date', times);
-            let newAlbums = [];
-            for (let i = 0; i < this.state.multiFile.length; i++) {
-                const file = this.state.multiFile[i].originFileObj;
-                formData.append('multiFile', file);
-                const file_name = (this.state.multiFile[i], { photo: this.state.multiFile[i].name });
+            let oldAlbums = [];
+            for (let i = 0; i < this.state.albums.length; i++) {
+                const old_file_name = (this.state.albums[i], { photo: this.state.albums[i] });
                 //const json = JSON.stringify(file_name);
-                newAlbums.push(file_name);
+                oldAlbums.push(old_file_name);
             }
-            //formData.append('albums', newAlbums);
-            for (let j = 0; j < newAlbums.length; j++) {
-                formData.append('albums', newAlbums[j].photo)
-            }
+            for (let j = 0; j < oldAlbums.length; j++) {
+                formData.append('albums', oldAlbums[j].photo)
+            };
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data'

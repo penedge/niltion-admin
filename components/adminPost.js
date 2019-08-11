@@ -47,7 +47,7 @@ export default class AdminPost extends React.Component {
             console.log(res.data);
         })
     }
-    openModal = (id, title, content, albums, image)=> {
+    openModal = (id, title, content, albums, image) => {
         let editContent = {
             title,
             content,
@@ -60,13 +60,31 @@ export default class AdminPost extends React.Component {
             editContent: editContent
         })
     }
-    closeModal = (id)=> {
+    closeModal = (id) => {
         this.setState({
             openModal: false,
             Modal_id: id
         })
     }
     render() {
+        const setAlbums = (albums) => {
+            if (albums === null) {
+                <div>
+                    
+                </div>
+            }
+            else {
+                return (
+                    <div>
+                        <List className="albumsList" dataSource={albums} renderItem={List => (
+                            <div>
+                                <img className="albumsImage" src={`/static/images/admin/content/${List}`} />
+                            </div>
+                        )} />
+                    </div>
+                )
+            }
+        }
         return (
             <div>
                 <div className="storiesContainer">
@@ -75,28 +93,24 @@ export default class AdminPost extends React.Component {
                         {
                             !this.state.loading && this.state.blog.map((blog) => (
                                 <Col span={8} className="itemList">
-                                    <Card key={blog._id} title={<span><h3 className="storyName">{blog.title}</h3><span className="author"><Icon type={'user'}/> : <span style={{textTransform:'capitalize'}}>{blog.author}</span></span><div className="clearfix"><span style={{fontSize:12,fontWeight:'lighter'}}><Icon type={'history'}/> : {blog.date}</span></div></span>}
+                                    <Card key={blog._id} title={<span><h3 className="storyName">{blog.title}</h3><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{blog.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {blog.date}</span></div></span>}
                                         actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image)}><Icon type="form" /></span>, <span onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></span>]}>
                                         <div className="cover">
                                             <img src={`/static/images/admin/content/${blog.image}`} />
                                         </div>
                                         <p>{blog.content}</p>
-                                        <List className="albumsList" dataSource={blog.albums} renderItem={List => (
-                                            <div>
-                                                <img className="albumsImage" src={`/static/images/admin/content/${List}`} />
-                                            </div>
-                                        )} />
+                                        {setAlbums(blog.albums)}
                                     </Card>
                                 </Col>
                             ))
                         }
                         {
-                           <Modal
+                            <Modal
                                 visible={this.state.openModal}
-                                onCancel={this.closeModal} 
+                                onCancel={this.closeModal}
                                 title={'Edit Blog'}
                                 footer={null}>
-                                <Edit_post id={this.state.Modal_id} edit={this.state.editContent}/>
+                                <Edit_post id={this.state.Modal_id} edit={this.state.editContent} />
                             </Modal>
                         }
                     </Row>
