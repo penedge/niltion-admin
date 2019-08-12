@@ -38,7 +38,7 @@ export default class Dashboard extends React.Component {
                 const checked_username = getToken.username;
                 const checked_password = getToken.password;
                 const decode = jwt.decode(res.data.password);
-                if (Object.values(res.data).includes(checked_username) === true && decode === checked_password === true) {
+                if (Object.values(res.data).includes(checked_username) === true && Array(decode).includes(checked_password) === true) {
                     this.setState({
                         admin: res.data
                     })

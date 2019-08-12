@@ -159,16 +159,30 @@ app.prepare().then(() => {
         });
     })
     //update user infomation
-    server.put('/register/:username', uploadProfile.single("profileImage"), (req, res) => {
+    server.put('/changeUsername/:username', (req, res)=> {
         const username = req.params.username;
         User.findOneAndUpdate({username}, {$set:{
-            profileImage: req.file.originalname,
-            image: req.body.image,
-            email: req.body.email,
-            username: req.body.username,
+            username: req.body.username
+        }},(err, updateInfo) => {
+            if (err) {
+
+            }
+            else {
+                res.send(updateInfo)
+            }
+        });
+    })
+    server.put('/changePassword/:username', (req, res)=> {
+        const username = req.params.username;
+        User.findOneAndUpdate({username}, {$set:{
             password: jwt.sign(req.body.password, req.body.username)
         }},(err, updateInfo) => {
-            res.send(updateInfo);
+            if (err) {
+
+            }
+            else {
+                res.send(updateInfo)
+            }
         });
     })
 

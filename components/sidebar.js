@@ -2,7 +2,7 @@ import React from 'react'
 import { Icon, Menu, Tabs } from 'antd';
 import EditorForm from '../components/editor';
 import AdminPost from '../components/adminPost';
-import ProfileSetting from '../components/profile_etting'
+import ProfileSetting from '../components/profile_Setting'
 const { TabPane } = Tabs;
 export default class SideBar extends React.Component {
     constructor(props) {
