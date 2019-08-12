@@ -56,19 +56,17 @@ app.prepare().then(() => {
 
     // Authentication API
     server.post('/register', uploadProfile.single("profileImage"), (req, res) => {
-        if (Object.keys(req.body.username).length > 8 || Object.keys(req.body.password).length > 8 || Object.keys(req.body.email).length > 8) {
-            const newUser = new User();
-            newUser.email = req.body.email;
-            newUser.username = req.body.username;
-            newUser.password = jwt.sign(req.body.password, req.body.username);
-            newUser.profileImage = req.file.originalname;
-            newUser.image = req.file.filename;
-            newUser.save((err, newUser) => {
-                if (!err) {
-                    res.redirect('/admin')
-                }
-            });
-        }
+        const newUser = new User();
+        newUser.email = req.body.email;
+        newUser.username = req.body.username;
+        newUser.password = jwt.sign(req.body.password, req.body.username);
+        newUser.profileImage = req.file.originalname;
+        newUser.image = req.file.filename;
+        newUser.save((err, newUser) => {
+            if (!err) {
+                res.redirect('/admin')
+            }
+        });
     });
     server.get('/register', (req, res) => {
         mongoose.model('User').find().exec((err, user) => {
@@ -144,26 +142,31 @@ app.prepare().then(() => {
     //update Blog Data
     server.put('/blog/:id', uploadPost.fields([{ name: 'cover' }, { name: 'multiFile' }]), (req, res) => {
         const id = req.params.id;
-        Blog.findByIdAndUpdate({ _id: id }, {$set:{
-            cover: req.files.originalname,
-            image: req.body.image,
-            title: req.body.title,
-            content: req.body.content,
-            author: req.body.author,
-            category: req.body.category,
-            multiFile: req.files.originalname,
-            albums: req.body.albums,
-            date: req.body.date
-        }},(err, admin) => {
+        Blog.findByIdAndUpdate({ _id: id }, {
+            $set: {
+                cover: req.files.originalname,
+                image: req.body.image,
+                title: req.body.title,
+                content: req.body.content,
+                author: req.body.author,
+                category: req.body.category,
+                multiFile: req.files.originalname,
+                albums: req.body.albums,
+                date: req.body.date
+            }
+        }, (err, admin) => {
             res.send(admin);
         });
     })
     //update user infomation
-    server.put('/changeUsername/:username', (req, res)=> {
-        const username = req.params.username;
-        User.findOneAndUpdate({username}, {$set:{
-            username: req.body.username
-        }},(err, updateInfo) => {
+    server.put('/changeProfileImage/:id', uploadProfile.fields([{ name: 'profileImage' }]), (req, res) => {
+        const id = req.params.id;
+        User.findByIdAndUpdate({ _id: id }, {
+            $set: {
+                profileImage: req.files.originalname,
+                image: req.body.image
+            }
+        }, (err, updateInfo) => {
             if (err) {
 
             }
@@ -172,11 +175,28 @@ app.prepare().then(() => {
             }
         });
     })
-    server.put('/changePassword/:username', (req, res)=> {
-        const username = req.params.username;
-        User.findOneAndUpdate({username}, {$set:{
-            password: jwt.sign(req.body.password, req.body.username)
-        }},(err, updateInfo) => {
+    server.put('/changeUsername/:id', (req, res) => {
+        const id = req.params.id;
+        User.findByIdAndUpdate({ _id: id }, {
+            $set: {
+                username: req.body.username
+            }
+        }, (err, updateInfo) => {
+            if (err) {
+
+            }
+            else {
+                res.send(updateInfo)
+            }
+        });
+    })
+    server.put('/changePassword/:id', (req, res) => {
+        const id = req.params.id;
+        User.findByIdAndUpdate({ _id: id }, {
+            $set: {
+                password: jwt.sign(req.body.password, req.body.username)
+            }
+        }, (err, updateInfo) => {
             if (err) {
 
             }
@@ -189,7 +209,7 @@ app.prepare().then(() => {
     //query by id
     server.get('/blog/:author', (req, res) => {
         const author = req.params.author;
-        Blog.find({author}, (err, admin) => {
+        Blog.find({ author }, (err, admin) => {
             if (err) {
                 res.redirect('/admin');
             }

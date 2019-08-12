@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon, Input, Upload, notification } from 'antd'
+import { Icon, Input, Upload, notification, Button } from 'antd'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 export default class RegisterAccount extends React.Component {
@@ -66,9 +66,7 @@ export default class RegisterAccount extends React.Component {
             }
             axios.post('/register', formData, config).then((res)=> {
                 notification['success']({
-                message: 'Notification Title',
-                description:
-                'This is the content of the notification. This is the content of the notification. This is the content of the notification.',
+                message: 'Create Username & Password success'
                 });
                 const user = {
                     username: this.state.username,
@@ -107,7 +105,7 @@ export default class RegisterAccount extends React.Component {
                             showUploadList={false}
                             action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                             onChange={this.handleChange}>
-                                {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                                {imageUrl ? <img src={imageUrl} className="avatar" /> : uploadButton}
                         </Upload>
                     </div>
                     <Input type={'email'} name={'email'} onChange={this.email} className="createEmail" placeholder="Email"
@@ -115,19 +113,20 @@ export default class RegisterAccount extends React.Component {
                     <Input type={'username'} name={'username'} onChange={this.username} className="createUsername" placeholder="Enter your username"
                         prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} />
                     <Input type={'password'} name={'password'} onChange={this.password} className="createPassword" placeholder="Password" />
+                    <p>Username & Password mustn't less than 8 characters.</p>
                     <button type="submit" className="create">CREATE ACCOUNT</button>
                 </form>
                 <style>{`
                 .createEmail, .createUsername, .createPassword {
                     width: 100%;
-                    margin-bottom: 20px;
+                    margin-bottom: 26px;
                   }
-                  .create {
+                  .create, .create:hover {
                     width: 160px;
                     height: 35px;
                     background-color: #f26522;
                     border: 0;
-                    color: #fff;
+                    color: #fff !important;
                     border-radius: 4px;
                   }
                   .create {
@@ -138,6 +137,12 @@ export default class RegisterAccount extends React.Component {
                     height: 128px;
                     margin: auto;
                     margin-bottom: 26px;
+                  }
+                  .avatar {
+                      width: 100%;
+                      height: 128px;
+                      overflow: hidden;
+                      object-fit:cover;
                   }
                 `}</style>
             </div>
