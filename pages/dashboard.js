@@ -53,6 +53,24 @@ export default class Dashboard extends React.Component {
             });
         }
     }
+    componentWillUpdate() {
+        const decode = localStorage.getItem('auth');
+        const getToken = jwt.decode(atob(decode));
+        axios.get(`/register/${getToken.username}`).then(res => {
+            if (res.data === null) {
+                this.setState({
+                    admin: []
+                })
+            }
+            else {
+                setTimeout(()=> {
+                    this.setState({
+                        admin: res.data
+                    })
+                }, 1000)
+            }
+        })
+    }
     render() {
         return (
             <div>

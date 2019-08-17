@@ -132,6 +132,7 @@ export default class Edit_post extends React.Component {
     }
     saved = (e) => {
         e.preventDefault();
+        e.target.reset();
         if (this.state.loading === true) {
             const decode = localStorage.getItem('auth');
             const getToken = jwt.decode(atob(decode));
@@ -287,7 +288,6 @@ export default class Edit_post extends React.Component {
                     .editCoverImage > .ant-upload {
                         width: 100%;
                         height: 180px;
-                        margin-bottom: 20px
                     }
                  `}</style>
             </div>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Input, Row, Col, Upload, Icon, Collapse } from 'antd'
+import React from 'react'
+import { Form, Row, Col, Upload, Icon, Collapse } from 'antd'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 const { Panel } = Collapse;
@@ -8,6 +8,7 @@ export default class ProfileSetting extends React.Component {
         super(props);
         this.state = {
             loading: false,
+            loadingImage: false,
             account: [],
             username: null,
             password: null,
@@ -38,7 +39,7 @@ export default class ProfileSetting extends React.Component {
     }
     newProfile = (info) => {
         if (info.file.status === 'uploading') {
-            this.setState({ loading: true });
+            this.setState({ loadingImage: true });
             return;
         }
         if (info.file.status === 'done') {
@@ -46,7 +47,7 @@ export default class ProfileSetting extends React.Component {
             this.getBase64(info.file.originFileObj, imageUrl =>
                 this.setState({
                     imageUrl,
-                    loading: false,
+                    loadingImage: false,
                     profileImage: info.file.originFileObj,
                     fileName: info.file.name
                 }),
@@ -65,9 +66,11 @@ export default class ProfileSetting extends React.Component {
             loading: true
         })
     }
-    saveChangeUsername = () => {
+    saveChangeUsername = (e) => {
+        e.preventDefault();
+        e.target.reset();
         if (this.state.loading === false && this.state.username === null) {
-            window.location.reload()
+            e.target.reset()
         }
         else {
             const decode = localStorage.getItem('auth');
@@ -79,17 +82,14 @@ export default class ProfileSetting extends React.Component {
             axios.put(`/changeUsername/${this.state.account._id}`, user).then((res) => {
                 let tokenId = jwt.sign(user, JSON.stringify(this.state.username));
                 localStorage.setItem('auth', btoa(tokenId));
-                if (res.data) {
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1300);
-                }
             });
         }
     }
-    saveChangePassword = () => {
+    saveChangePassword = (e) => {
+        e.preventDefault();
+        e.target.reset()
         if (this.state.loading === false && this.state.password === null) {
-            window.location.reload()
+            e.target.reset()
         }
         else {
             const decode = localStorage.getItem('auth');
@@ -101,18 +101,14 @@ export default class ProfileSetting extends React.Component {
             axios.put(`/changePassword/${this.state.account._id}`, user).then((res) => {
                 let tokenId = jwt.sign(user, JSON.stringify(this.state.username));
                 localStorage.setItem('auth', btoa(tokenId));
-                if (res.data) {
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1300);
-                }
             });
         }
     }
-    saveChaneProfile = (e)=> {
+    saveChaneProfile = (e) => {
         e.preventDefault();
-        if (this.state.loading === false && this.state.profileImage === null) {
-            window.location.reload();
+        this.props.form.resetFields();
+        if (this.state.loadingImage === false && this.state.profileImage === null) {
+            e.target.reset();
         }
         else {
             const formData = new FormData();
@@ -124,19 +120,13 @@ export default class ProfileSetting extends React.Component {
                 }
             }
             axios.put(`/changeProfileImage/${this.state.account._id}`, formData, config).then((res) => {
-                if (res.data) {
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1300);
-                }
             });
         }
-        
     }
     render() {
         const uploadButton = (
             <div>
-                <Icon type={this.state.loading ? 'loading' : 'plus'} />
+                <Icon type={this.state.loadingImage ? 'loading' : 'plus'} />
                 <div className="ant-upload-text">Upload</div>
             </div>
         );
@@ -153,7 +143,7 @@ export default class ProfileSetting extends React.Component {
                                     <Col span={8}>
                                         <Collapse className="custom-border" bordered={false} showArrow={true}>
                                             <Panel showArrow={false} header={<span><Icon style={{ marginRight: 10, fontSize: 18 }} type={'picture'} /><span style={{ textTransform: 'capitalize' }}>Change Profile</span><Icon className="customDrop_downIcon" type="caret-down" /></span>} key="1">
-                                                <form onSubmit={this.saveChaneProfile}>
+                                                <Form onSubmit={this.saveChaneProfile} form={this.props.form}>
                                                     <div className="UploadContainer">
                                                         <Upload
                                                             name="avatar"
@@ -166,6 +156,16 @@ export default class ProfileSetting extends React.Component {
                                                             {imageUrl ? <img src={imageUrl} className="changeProfile" /> : uploadButton}
                                                         </Upload>
                                                     </div>
+                                                    <button className="save custom-buttonSave" type="submit">Save Change</button>
+                                                </Form>
+                                            </Panel>
+                                        </Collapse>
+                                    </Col>
+                                    <Col span={8}>
+                                        <Collapse className="custom-border" bordered={false} showArrow={true}>
+                                            <Panel showArrow={false} header={<span><Icon style={{ marginRight: 10, fontSize: 18 }} type={'user'} /><span style={{ textTransform: 'capitalize' }}>Change username</span><Icon className="customDrop_downIcon" type="caret-down" /></span>} key="2">
+                                                <form id="ChangeUsername" className="editContainer" onSubmit={this.saveChangeUsername}>
+                                                    <input className="ChangeForm" placeholder={'Change your username'} onChange={this.newUsername} style={{ marginBottom: 20 }} />
                                                     <button className="save" type="submit">Save Change</button>
                                                 </form>
                                             </Panel>
@@ -173,21 +173,11 @@ export default class ProfileSetting extends React.Component {
                                     </Col>
                                     <Col span={8}>
                                         <Collapse className="custom-border" bordered={false} showArrow={true}>
-                                            <Panel showArrow={false} header={<span><Icon style={{ marginRight: 10, fontSize: 18 }} type={'user'} /><span style={{ textTransform: 'capitalize' }}>Change username</span><Icon className="customDrop_downIcon" type="caret-down" /></span>} key="2">
-                                                <div className="editContainer">
-                                                    <Input type="text" placeholder={'Change your username'} onChange={this.newUsername} style={{ marginBottom: 20 }} />
-                                                    <button className="save" type="button" onClick={this.saveChangeUsername}>Save Change</button>
-                                                </div>
-                                            </Panel>
-                                        </Collapse>
-                                    </Col>
-                                    <Col span={8}>
-                                        <Collapse className="custom-border" bordered={false} showArrow={true}>
                                             <Panel showArrow={false} header={<span><Icon style={{ marginRight: 10, fontSize: 18 }} type={'lock'} /><span style={{ textTransform: 'capitalize' }}>Change password</span><Icon className="customDrop_downIcon" type="caret-down" /></span>} key="3">
-                                                <div className="editContainer">
-                                                    <Input type="password" placeholder={'Change your password'} onChange={this.newPassword} style={{ marginBottom: 20 }} />
-                                                    <button className="save" type="button" onClick={this.saveChangePassword}>Save Change</button>
-                                                </div>
+                                                <form className="editContainer" onSubmit={this.saveChangePassword}>
+                                                    <input className="ChangeForm" type="password" placeholder={'Change your password'} onChange={this.newPassword} style={{ marginBottom: 20 }} />
+                                                    <button className="save" type="submit">Save Change</button>
+                                                </form>
                                             </Panel>
                                         </Collapse>
                                     </Col>
@@ -216,6 +206,9 @@ export default class ProfileSetting extends React.Component {
                         padding: 30px;
                         background-color: #001528;
                     }
+                    .custom-buttonSave {
+                        margin-top: 15px;
+                    }
                     .save {
                         font-size: 11.3px;
                         height: 35px;
@@ -228,16 +221,27 @@ export default class ProfileSetting extends React.Component {
                     .UploadContainer {
                         margin-bottom: 20px;
                     }
+                    .ediUploadProfile{
+                        margin-bottom: 20px;
+                    }
                     .ediUploadProfile > .ant-upload {
                         width: 140px;
                         height: 140px;
                         overflow:hidden;
+                        margin-bottom: 20px;
                     }
                     .changeProfile {
                         width: 100%;
                         height: 140px;
                         object-fit:cover;
                         overflow:hidden;
+                    }
+                    .ChangeForm {
+                        width: 100%;
+                        height: 35px;
+                        padding: 4px 11px;
+                        border-radius: 4px;
+                        border: 0;
                     }
                 `}</style>
             </div>
