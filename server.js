@@ -9,7 +9,13 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 mongoose.set('useCreateIndex', true);
-mongoose.connect('mongodb://localhost/penedgeDB1234', { useNewUrlParser: true });
+const connectServer = 'mongodb://localhost/penedgeDB1234';
+const options = {
+    user: 'penedgeAdmin1234',
+    pass: 'penedge1234',
+    useNewUrlParser: true
+};
+mongoose.connect(connectServer, options);
 const multer = require('multer');
 const passport = require('passport'),
     LocalStrategy = require('passport-local').Strategy;
@@ -192,17 +198,6 @@ app.prepare().then(() => {
             res.send(admin);
         });
     });
-    /*
-                cover: req.files.originalname,
-                image: req.body.image,
-                title: req.body.title,
-                content: req.body.content,
-                author: req.body.author,
-                category: req.body.category,
-                multiFile: req.files.originalname,
-                albums: req.body.albums,
-                date: req.body.date
-    */
     //update user infomation
     server.put('/changeProfileImage/:id', uploadProfile.fields([{ name: 'profileImage' }]), (req, res) => {
         const id = req.params.id;

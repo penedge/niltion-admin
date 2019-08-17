@@ -118,7 +118,7 @@ export default class Edit_post extends React.Component {
             axios.put(`/ChangeCoverBlog/${this.props.id}`, formData, config).then((res) => {
                 notification.open({
                     message: 'congrats',
-                    description: 'Edit Cover Successful',
+                    description: 'saved Successful',
                     icon: <Icon type="picture" />,
                 });
             });
@@ -154,7 +154,7 @@ export default class Edit_post extends React.Component {
         axios.put(`/ChangeAlbumsBlog/${this.props.id}`, formData, config).then((res) => {
             notification.open({
                 message: 'congrats',
-                description: 'Edit Albums Successful',
+                description: 'saved Successful',
                 icon: <Icon type="picture" />,
             });
         });
@@ -236,7 +236,7 @@ export default class Edit_post extends React.Component {
                         <br />
                         <Upload
                             multiple={true}
-                            className="UploadAlbums"
+                            className="EditAlbums"
                             action={'https://www.mocky.io/v2/5cc8019d300000980a055e76'}
                             listType="picture-card"
                             onChange={this.upload_albums}
@@ -259,7 +259,7 @@ export default class Edit_post extends React.Component {
                                 ))
                             }
                         </Select>
-                        <button className="closeButton" type="submit">Publish</button>
+                        <button className="PublishSaved" type="submit">Publish</button>
                     </div>
                 </form>
                 <style>{`
@@ -289,6 +289,21 @@ export default class Edit_post extends React.Component {
                     .editCoverImage > .ant-upload {
                         width: 100%;
                         height: 180px;
+                    }
+                    .PublishSaved {
+                        width: 136px;
+                        font-size: 11.3px;
+                        height: 35px;
+                        border: 0;
+                        border-radius: 4px;
+                        background-color: #f26522;
+                        color: #fff;
+                        cursor: pointer;
+                    }
+                    .EditAlbums > .ant-upload {
+                        width: 210px;
+                        height: 160px;
+                        margin-bottom: 20px;
                     }
                  `}</style>
             </div>

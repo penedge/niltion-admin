@@ -140,7 +140,8 @@ export default class Editor extends React.Component {
         formData.append('content', this.state.content);
         formData.append('author', getToken.username);
         const date = new Date();
-        const times = (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const times = (date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear());
         formData.append('date', times);
         let newAlbums = [];
         for (let i = 0; i < this.state.multiFile.length; i++) {

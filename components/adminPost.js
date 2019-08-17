@@ -83,7 +83,7 @@ export default class AdminPost extends React.Component {
             else {
                 return (
                     <div>
-                        <List className="albumsList" dataSource={albums} renderItem={List => (
+                        <List className="albumsImageContainer" dataSource={albums} renderItem={List => (
                             <div>
                                 <img className="albumsImage" src={`/static/images/admin/content/${List}`} />
                             </div>
@@ -165,13 +165,13 @@ export default class AdminPost extends React.Component {
                         width: 100%;
                     }
                     .albumsImage {
-                        width: 100px;
+                        width: 130px;
                         height: 100px;
                         float: left;
                         object-fit: cover;
                         overflow: hidden;
-                        padding-right: 9px;
-                        padding-bottom: 9px;
+                        padding: 9px;
+                        padding-left: 0;
                     }
                     .albumsList {
                         width: 218px;
@@ -195,6 +195,11 @@ export default class AdminPost extends React.Component {
                         width: 50%;
                         margin-top:20px;
                         margin-bottom:20px;
+                    }
+                    .albumsImageContainer {
+                        width: 100%;
+                        height: 100px;
+                        overflow-y: auto;
                     }
                     @media screen and (max-width: 320px) {
                         .search {

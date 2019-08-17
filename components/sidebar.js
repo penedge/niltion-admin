@@ -1,5 +1,6 @@
 import React from 'react'
 import { Icon, Menu, Tabs } from 'antd';
+import Home_feed from '../components/feed';
 import EditorForm from '../components/editor';
 import AdminPost from '../components/adminPost';
 import ProfileSetting from '../components/profile_Setting'
@@ -22,21 +23,17 @@ export default class SideBar extends React.Component {
         return (
             <div>
                 <Tabs className="sideBar" tabPosition={this.state.tabPosition}>
-                    {
-                        /*
-                        <TabPane tab={<span><span className="tabsIcon"><Icon type="home" /></span>Home</span>} key="0">
-                            Home
-                        </TabPane>
-                        */
-                    }
+                    <TabPane tab={<span><span className="tabsIcon"><Icon type="home" /></span>Home</span>} key="0">
+                        <Home_feed/>
+                    </TabPane>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="edit" /></span>Add new Story</span>} key="1">
-                        <EditorForm/>
+                        <EditorForm />
                     </TabPane>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="book" /></span>All your stories</span>} key="2">
-                        <AdminPost/>
+                        <AdminPost />
                     </TabPane>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="setting" /></span>Profile Setting</span>} key="3">
-                        <ProfileSetting/>
+                        <ProfileSetting />
                     </TabPane>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="inbox" /></span>Message inbox</span>} key="4">
                         message
