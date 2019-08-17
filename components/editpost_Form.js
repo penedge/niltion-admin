@@ -1,5 +1,5 @@
 import React from 'react';
-import { Upload, Icon, Select } from 'antd'
+import { Upload, Icon, Select, notification } from 'antd'
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
 export default class Edit_post extends React.Component {
@@ -75,17 +75,17 @@ export default class Edit_post extends React.Component {
                     "type": "erotic"
                 }
             ],
-            selectedItems: [],
             hashtag: null,
             albums: [],
-            multiFile: []
+            multiFile: [],
+            selectedItems: []
         };
     }
     componentDidMount() {
         const { title, content, albums, image } = this.props.edit;
         this.setState({
             title, content, albums, image
-        })
+        });
     }
     // editCover
     getBase64(img, callback) {
@@ -108,6 +108,20 @@ export default class Edit_post extends React.Component {
                     cover: info.file.originFileObj
                 }),
             );
+            const formData = new FormData();
+            formData.append('image', info.file.originFileObj.name);
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            }
+            axios.put(`/ChangeCoverBlog/${this.props.id}`, formData, config).then((res) => {
+                notification.open({
+                    message: 'congrats',
+                    description: 'Edit Cover Successful',
+                    icon: <Icon type="picture" />,
+                });
+            });
         }
     }
     hashtag = (selectedItems) => {
@@ -119,6 +133,31 @@ export default class Edit_post extends React.Component {
         this.setState({
             multiFile: info.fileList
         })
+        const formData = new FormData();
+        let newAlbums = [];
+        for (let i = 0; i < this.state.multiFile.length; i++) {
+            const file = this.state.multiFile[i].originFileObj;
+            formData.append('multiFile', file);
+            const file_name = (this.state.multiFile[i], { photo: this.state.multiFile[i].name });
+            //const json = JSON.stringify(file_name);
+            newAlbums.push(file_name);
+        }
+        //formData.append('albums', newAlbums);
+        for (let j = 0; j < newAlbums.length; j++) {
+            formData.append('albums', newAlbums[j].photo)
+        }
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            }
+        }
+        axios.put(`/ChangeAlbumsBlog/${this.props.id}`, formData, config).then((res) => {
+            notification.open({
+                message: 'congrats',
+                description: 'Edit Albums Successful',
+                icon: <Icon type="picture" />,
+            });
+        });
     }
     edit_Title = (e) => {
         this.setState({
@@ -128,75 +167,37 @@ export default class Edit_post extends React.Component {
     edit_Content = (e) => {
         this.setState({
             content: e.target.value
-        })
+        });
     }
-    saved = (e) => {
+    publish = (e) => {
         e.preventDefault();
-        e.target.reset();
-        if (this.state.loading === true) {
-            const decode = localStorage.getItem('auth');
-            const getToken = jwt.decode(atob(decode));
-            const formData = new FormData();
-            formData.append('cover', this.state.cover);
-            formData.append('image', this.state.cover.name);
-            formData.append('title', this.state.title);
-            formData.append('content', this.state.content);
-            formData.append('author', getToken.username);
-            formData.append('category', this.state.selectedItems);
-            const date = new Date();
-            const times = (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
-            formData.append('date', times);
-            let newAlbums = [];
-            for (let i = 0; i < this.state.multiFile.length; i++) {
-                const file = this.state.multiFile[i].originFileObj;
-                formData.append('multiFile', file);
-                const file_name = (this.state.multiFile[i], { photo: this.state.multiFile[i].name });
-                //const json = JSON.stringify(file_name);
-                newAlbums.push(file_name);
-            }
-            //formData.append('albums', newAlbums);
-            for (let j = 0; j < newAlbums.length; j++) {
-                formData.append('albums', newAlbums[j].photo)
-            }
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data'
-                }
-            }
-            axios.put(`/blog/${this.props.id}`, formData, config).then((res) => {
-                console.log(res.data);
-            });
+        const data = {
+            title: this.state.title,
+            content: this.state.content
         }
-        else {
-            const decode = localStorage.getItem('auth');
-            const getToken = jwt.decode(atob(decode));
-            const formData = new FormData();
-            formData.append('image', this.state.image);
-            formData.append('title', this.state.title);
-            formData.append('content', this.state.content);
-            formData.append('author', getToken.username);
-            formData.append('category', this.state.selectedItems);
-            const date = new Date();
-            const times = (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
-            formData.append('date', times);
-            let oldAlbums = [];
-            for (let i = 0; i < this.state.albums.length; i++) {
-                const old_file_name = (this.state.albums[i], { photo: this.state.albums[i] });
-                //const json = JSON.stringify(file_name);
-                oldAlbums.push(old_file_name);
-            }
-            for (let j = 0; j < oldAlbums.length; j++) {
-                formData.append('albums', oldAlbums[j].photo)
-            };
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data'
-                }
-            }
-            axios.put(`/blog/${this.props.id}`, formData, config).then((res) => {
-                console.log(res.data);
-            });
+        //Change Title
+        axios.put(`/ChangeTitleBlog/${this.props.id}`, data).then((res) => {
+            
+        });
+        //Change Content
+        axios.put(`/ChangeContentBlog/${this.props.id}`, data).then((res) => {
+
+        });
+        // Change category
+        const select = {
+            category: (this.state.selectedItems)
         }
+        axios.put(`/ChangeCategoryBlog/${this.props.id}`, select).then((res) => {
+
+        });
+        notification.open({
+            message: 'congrats',
+            description: 'Edit you blog successful',
+            icon: <Icon type="form" />,
+        });
+        setTimeout(()=> {
+            window.location.reload();
+        },1100);
     }
     render() {
         const uploadButton = (
@@ -218,7 +219,7 @@ export default class Edit_post extends React.Component {
         const { selectedItems, multiFile } = this.state;
         return (
             <div>
-                <form onSubmit={this.saved}>
+                <form onSubmit={this.publish}>
                     <div className="clearfix">
                         <Upload
                             listType="picture-card"
@@ -258,7 +259,7 @@ export default class Edit_post extends React.Component {
                                 ))
                             }
                         </Select>
-                        <button type={'submit'}>saved</button>
+                        <button className="closeButton" type="submit">Publish</button>
                     </div>
                 </form>
                 <style>{`

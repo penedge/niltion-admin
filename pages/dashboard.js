@@ -53,6 +53,7 @@ export default class Dashboard extends React.Component {
             });
         }
     }
+    /*
     componentWillUpdate() {
         const decode = localStorage.getItem('auth');
         const getToken = jwt.decode(atob(decode));
@@ -71,6 +72,7 @@ export default class Dashboard extends React.Component {
             }
         })
     }
+    */
     render() {
         return (
             <div>

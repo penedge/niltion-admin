@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Card, Icon, List, Modal } from 'antd';
+import { Row, Col, Card, Icon, List, Modal, Input } from 'antd';
 import jwt from 'jsonwebtoken';
 import axios from 'axios'
 import Edit_post from '../components/editpost_Form'
@@ -12,7 +12,8 @@ export default class AdminPost extends React.Component {
             albums: [],
             Modal_id: [],
             openModal: false,
-            editContent: []
+            editContent: [],
+            search: ''
         }
     }
     data() {
@@ -47,12 +48,13 @@ export default class AdminPost extends React.Component {
             console.log(res.data);
         })
     }
-    openModal = (id, title, content, albums, image) => {
+    openModal = (id, title, content, albums, image, category) => {
         let editContent = {
             title,
             content,
             albums,
-            image
+            image,
+            category
         }
         this.setState({
             openModal: true,
@@ -64,6 +66,11 @@ export default class AdminPost extends React.Component {
         this.setState({
             openModal: false,
             Modal_id: id
+        })
+    }
+    searchBox = (e)=> {
+        this.setState({
+            search: e.target.value
         })
     }
     render() {
@@ -85,16 +92,18 @@ export default class AdminPost extends React.Component {
                 )
             }
         }
+        let find_Blog = this.state.blog.filter((item) => item.title.indexOf(this.state.search) !== -1);
         return (
             <div>
                 <div className="storiesContainer">
-                    <h2><strong>All Your stories</strong></h2>
+                    <h2><strong>All stories</strong></h2>
+                    <Input className="search" onChange={this.searchBox.bind(this)} placeholder="Search Stories..."/>
                     <Row gutter={16}>
                         {
-                            !this.state.loading && this.state.blog.map((blog) => (
+                            !this.state.loading && find_Blog.map((blog) => (
                                 <Col span={8} className="itemList">
                                     <Card key={blog._id} title={<span><h3 className="storyName">{blog.title}</h3><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{blog.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {blog.date}</span></div></span>}
-                                        actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image)}><Icon type="form" /></span>, <span onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></span>]}>
+                                        actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image, blog.category)}><Icon type="form" /></span>, <span onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></span>]}>
                                         <div className="cover">
                                             <img src={`/static/images/admin/content/${blog.image}`} />
                                         </div>
@@ -131,16 +140,14 @@ export default class AdminPost extends React.Component {
                     .storiesContainer {
                         padding: 30px;
                         padding-top: 16px;
-                    }
-                    .storiesContainer .ant-card-bordered{
-                        border-radius: 13px;
+                        padding-left: 0;
                     }
                     .storiesContainer .ant-card-actions {
                         margin: none !important;
                     }
                     .itemList {
                         padding-top: 20px;
-                        margin-right: 33px;
+                        margin-right: 0;
                         margin-bottom: 30px;
                     }
                     .storyName {
@@ -183,6 +190,18 @@ export default class AdminPost extends React.Component {
                         height: auto;
                         object-fit: cover; 
                         overflow:hidden;
+                    }
+                    .search {
+                        width: 50%;
+                        margin-top:20px;
+                        margin-bottom:20px;
+                    }
+                    @media screen and (max-width: 320px) {
+                        .search {
+                            width: 100%;
+                            margin-top:20px;
+                            margin-bottom:20px;
+                        }
                     }
                  `}</style>
             </div>

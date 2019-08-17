@@ -140,10 +140,59 @@ app.prepare().then(() => {
         });
     });
     //update Blog Data
-    server.put('/blog/:id', uploadPost.fields([{ name: 'cover' }, { name: 'multiFile' }]), (req, res) => {
+    server.put('/ChangeCoverBlog/:id', uploadPost.fields([{ name: 'cover' }]), (req, res) => {
         const id = req.params.id;
         Blog.findByIdAndUpdate({ _id: id }, {
             $set: {
+                cover: req.files.originalname,
+                image: req.body.image
+            }
+        }, (err, admin) => {
+            res.send(admin);
+        });
+    });
+    server.put('/ChangeTitleBlog/:id', (req, res) => {
+        const id = req.params.id;
+        Blog.findByIdAndUpdate({ _id: id }, {
+            $set: {
+                title: req.body.title
+            }
+        }, (err, admin) => {
+            res.send(admin);
+        });
+    });
+    server.put('/ChangeContentBlog/:id', (req, res) => {
+        const id = req.params.id;
+        Blog.findByIdAndUpdate({ _id: id }, {
+            $set: {
+                content: req.body.content
+            }
+        }, (err, admin) => {
+            res.send(admin);
+        });
+    });
+    server.put('/ChangeCategoryBlog/:id', (req, res) => {
+        const id = req.params.id;
+        Blog.findByIdAndUpdate({ _id: id }, {
+            $set: {
+                category: req.body.category
+            }
+        }, (err, admin) => {
+            res.send(admin);
+        });
+    });
+    server.put('/ChangeAlbumsBlog/:id', uploadPost.fields([{ name: 'multiFile' }]), (req, res) => {
+        const id = req.params.id;
+        Blog.findByIdAndUpdate({ _id: id }, {
+            $set: {
+                multiFile: req.files.originalname,
+                albums: req.body.albums
+            }
+        }, (err, admin) => {
+            res.send(admin);
+        });
+    });
+    /*
                 cover: req.files.originalname,
                 image: req.body.image,
                 title: req.body.title,
@@ -153,11 +202,7 @@ app.prepare().then(() => {
                 multiFile: req.files.originalname,
                 albums: req.body.albums,
                 date: req.body.date
-            }
-        }, (err, admin) => {
-            res.send(admin);
-        });
-    })
+    */
     //update user infomation
     server.put('/changeProfileImage/:id', uploadProfile.fields([{ name: 'profileImage' }]), (req, res) => {
         const id = req.params.id;

@@ -1,10 +1,8 @@
 import React from 'react'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
-import { Icon, Tabs, Upload, Select, Card, Col, Row, Skeleton } from 'antd'
+import { Icon, Tabs, Upload, Select, Card, Col, Row, Skeleton, notification } from 'antd'
 const { TabPane } = Tabs;
-const { Option } = Select;
-const { Meta } = Card;
 export default class Editor extends React.Component {
     constructor(props) {
         super(props)
@@ -79,7 +77,8 @@ export default class Editor extends React.Component {
             ],
             selectedItems: [],
             hashtag: null,
-            multiFile: []
+            multiFile: [],
+            percent: 0
         }
     }
     title = (e) => {
@@ -109,7 +108,8 @@ export default class Editor extends React.Component {
                     imageUrl,
                     loading: false,
                     preview: URL.createObjectURL(info.file.originFileObj),
-                    cover: info.file.originFileObj
+                    cover: info.file.originFileObj,
+                    percent: info.file.percent
                 }),
             );
         }
@@ -123,12 +123,14 @@ export default class Editor extends React.Component {
     //
     upload_albums = (info) => {
         this.setState({
-            multiFile: info.fileList
+            multiFile: info.fileList,
+            albumsLoad: info.file.percent
         })
     }
     // submit form
     submit = (e) => {
         e.preventDefault();
+        e.target.reset();
         const decode = localStorage.getItem('auth');
         const getToken = jwt.decode(atob(decode));
         const formData = new FormData();
@@ -137,7 +139,6 @@ export default class Editor extends React.Component {
         formData.append('title', this.state.title);
         formData.append('content', this.state.content);
         formData.append('author', getToken.username);
-        formData.append('category', this.state.selectedItems);
         const date = new Date();
         const times = (date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear());
         formData.append('date', times);
@@ -159,31 +160,22 @@ export default class Editor extends React.Component {
             }
         }
         axios.post('/blog', formData, config).then((res) => {
-            console.log(res.data);
+            notification.open({
+                message: 'congrats',
+                description: 'You publishing successful',
+                icon: <Icon type="read" />,
+            });
+            setTimeout(() => {
+                window.location.reload();
+            }, 1100)
         })
-    }
-    example = () => {
-        if (this.state.preview === null) {
-            return (
-                <div>
-
-                </div>
-            )
+        let newCategory = [];
+        for (let k = 0; k < this.state.selectedItems.length; k++) {
+            let selected = (this.state.selectedItems[k], { category: this.state.selectedItems[k] });
+            newCategory.push(selected);
         }
-        else {
-            return (
-                <div>
-                    <Row gutter={16}>
-                        <Col span={6}>
-                            <Card cover={<img style={{ width: "100%" }} src={this.state.preview} />}>
-                                <Meta
-                                    title={<h1 style={{ fontWeight: 'bold', textTransform: 'capitalize' }}>{this.state.title}</h1>} />
-                                <Skeleton />
-                            </Card>
-                        </Col>
-                    </Row>
-                </div>
-            )
+        for (let j = 0; j < newCategory.length; j++) {
+            formData.append('category', newCategory[j].category)
         }
     }
     render() {
@@ -214,24 +206,27 @@ export default class Editor extends React.Component {
                         <Tabs tabPosition={this.state.tabPosition}>
                             <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="read" />Story Cover Image</span>} key="1">
                                 <div className="mainFormUpload">
-                                    <Upload
-                                        listType="picture-card"
-                                        className="avatar-uploader"
-                                        showUploadList={false}
-                                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                        onChange={this.upload}
-                                    >
-                                        {preview ? <img src={preview} style={{ width: '100%' }} /> : uploadButton}
-                                    </Upload>
-                                    <h1 style={{ fontFamily: 'sukhumvit set', fontWeight: 'bold', marginTop: 23 }}>ข้อแนะนำ</h1>
-                                    <p>
-                                        ไฟล์ที่อัพโหลดต้องถูกต้องลิขสิทธิ์เท่านั้น และ ไฟล์ต้องไม่ติดลิขสิทธิ์ใดๆ จากเว็บอื่นๆ หรือ ไฟล์ที่ละเมิดลิขสิทธิ์มา
-                                    </p>
-                                    <p>
-                                        ตัวอย่างเว็บไซด์แจกไฟล์ภาพถูกต้องลิขสิทธิ์ ฟรี เช่น <a style={{ fontWeight: 'bold' }} href="https://unsplash.com/" target="_blank">https://unsplash.com/</a>
-                                    </p>
-                                    <br />
-                                    {this.example()}
+                                    <Col span={8}>
+                                        <Upload
+                                            listType="picture-card"
+                                            className="avatar-uploader"
+                                            showUploadList={false}
+                                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                            onChange={this.upload}
+                                        >
+                                            {preview ? <img src={preview} style={{ width: '100%' }} /> : uploadButton}
+                                        </Upload>
+                                        <Skeleton />
+                                    </Col>
+                                    <Col span={8}>
+                                        <h1 style={{ fontFamily: 'sukhumvit set', fontWeight: 'bold', marginTop: 23 }}>ข้อแนะนำ</h1>
+                                        <p>
+                                            ไฟล์ที่อัพโหลดต้องถูกต้องลิขสิทธิ์เท่านั้น และ ไฟล์ต้องไม่ติดลิขสิทธิ์ใดๆ จากเว็บอื่นๆ หรือ ไฟล์ที่ละเมิดลิขสิทธิ์มา
+                                        </p>
+                                        <p>
+                                            ตัวอย่างเว็บไซด์แจกไฟล์ภาพถูกต้องลิขสิทธิ์ ฟรี เช่น <a style={{ fontWeight: 'bold' }} href="https://unsplash.com/" target="_blank">https://unsplash.com/</a>
+                                        </p>
+                                    </Col>
                                 </div>
                             </TabPane>
                             <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="form" />Write Story</span>} key="2">
@@ -377,6 +372,9 @@ export default class Editor extends React.Component {
                     }
                     .ant-select-dropdown-menu-item {
                         text-transform: capitalize !important;
+                    }
+                    .imageLoad {
+                        width: 200px;
                     }
                  `}
                 </style>
