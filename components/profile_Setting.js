@@ -106,7 +106,6 @@ export default class ProfileSetting extends React.Component {
     }
     saveChaneProfile = (e) => {
         e.preventDefault();
-        this.props.form.resetFields();
         if (this.state.loadingImage === false && this.state.profileImage === null) {
             e.target.reset();
         }
@@ -120,6 +119,9 @@ export default class ProfileSetting extends React.Component {
                 }
             }
             axios.put(`/changeProfileImage/${this.state.account._id}`, formData, config).then((res) => {
+                setTimeout(()=> {
+                    window.location.reload()
+                })
             });
         }
     }

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import jwt from 'jsonwebtoken'
-import { Breadcrumb, Row, Col, Card, Icon, List } from 'antd';
+import { Row, Col, Card, Icon, List, Statistic } from 'antd';
+import UserTable from '../components/UserTable'
 const Home_feed = () => {
     const [loading, setLoad] = useState(false);
     const [blog, setBlog] = useState([]);
@@ -13,7 +14,9 @@ const Home_feed = () => {
                 setBlog([])
             }
             else {
-                setBlog(res.data)
+                setTimeout(() => {
+                    setBlog(res.data)
+                }, 500)
             }
         });
     })
@@ -38,13 +41,9 @@ const Home_feed = () => {
     return (
         <div>
             <div className="homeContainer">
-                <h2>
-                    <strong>
-                        <Breadcrumb.Item>Home</Breadcrumb.Item>
-                        <span>Feed</span>
-                    </strong>
-                </h2>
-                <div className="feed_Thumbnail">
+                <UserTable/>
+                <div className="feed_Thumbnail clearfix">
+                    <h2><strong><Icon type="read" style={{marginRight:10}}/> stories | {blog.length}</strong></h2>
                     <Row gutter={16}>
                         {
                             !loading && blog.map((post) => (
@@ -89,7 +88,7 @@ const Home_feed = () => {
                 }
                 .thumbnail img {
                     width: 100%;
-                    height: 100%;
+                    height: auto;
                     object-fit:cover;
                 }
                 .storyName {
@@ -107,6 +106,7 @@ const Home_feed = () => {
                     text-transform: capitalize;
                     line-height: 26px;
                     padding-bottom: 0;
+                    font-size: 12px;
                 }
                 .albumsLayout {
                     padding-left: 17px;
@@ -125,6 +125,16 @@ const Home_feed = () => {
                     height: 100px;
                     overflow-x: hidden;
                     margin-bottom: 20px;
+                }
+                .searchBox {
+                    width: 50%;
+                    margin-bottom: 25px;
+                }
+                @media screen and (max-width: 320px) {
+                    .searchBox {
+                        width: 100%;
+                        margin-bottom: 25px;
+                    }
                 }
             `}</style>
         </div>

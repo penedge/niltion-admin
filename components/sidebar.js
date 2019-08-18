@@ -29,15 +29,19 @@ export default class SideBar extends React.Component {
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="edit" /></span>Add new Story</span>} key="1">
                         <EditorForm />
                     </TabPane>
-                    <TabPane tab={<span><span className="tabsIcon"><Icon type="book" /></span>All your stories</span>} key="2">
+                    <TabPane tab={<span><span className="tabsIcon"><Icon type="book" /></span>Overview</span>} key="2">
                         <AdminPost />
                     </TabPane>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="setting" /></span>Profile Setting</span>} key="3">
                         <ProfileSetting />
                     </TabPane>
-                    <TabPane tab={<span><span className="tabsIcon"><Icon type="inbox" /></span>Message inbox</span>} key="4">
-                        message
-                    </TabPane>
+                    {
+                        /*
+                        <TabPane tab={<span><span className="tabsIcon"><Icon type="inbox" /></span>Message inbox</span>} key="4">
+                            message
+                        </TabPane>
+                        */
+                    }
                     <TabPane tab={<span onClick={this.logOut.bind(this)}><span style={{ fontSize: 21 }}><IconFont type="icon-tuichu" /></span>Leave system</span>} key="5"></TabPane>
                 </Tabs>
                 <style>{`

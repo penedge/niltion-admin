@@ -82,7 +82,7 @@ export default class AdminPost extends React.Component {
             }
             else {
                 return (
-                    <div>
+                    <div className="albumsContainer">
                         <List className="albumsImageContainer" dataSource={albums} renderItem={List => (
                             <div>
                                 <img className="albumsImage" src={`/static/images/admin/content/${List}`} />
@@ -92,11 +92,11 @@ export default class AdminPost extends React.Component {
                 )
             }
         }
-        let find_Blog = this.state.blog.filter((item) => item.title.indexOf(this.state.search) !== -1);
+        const find_Blog = this.state.blog.filter((item) => item.title.indexOf(this.state.search) !== -1);
         return (
             <div>
                 <div className="storiesContainer">
-                    <h2><strong>All stories</strong></h2>
+                    <h2><strong>All You stories</strong></h2>
                     <Input className="search" onChange={this.searchBox.bind(this)} placeholder="Search Stories..."/>
                     <Row gutter={16}>
                         {
@@ -129,18 +129,22 @@ export default class AdminPost extends React.Component {
                         clear:both;
                     }
                     .itemList p {
-                        font-size: 12.3px;
-                        height: 110px;
+                        width: 100%;
+                        height: 130px;
+                        overflow: hidden;
+                        padding: 20px;
+                        text-transform: capitalize;
                         line-height: 26px;
-                        overflow:hidden;
-                        overflow-wrap: break-word;
-                        text-overflow: ellipsis;
-                        text-rendering: optimizeSpeed;
+                        padding-bottom: 0;
+                        font-size: 12px;
                     }
                     .storiesContainer {
                         padding: 30px;
                         padding-top: 16px;
                         padding-left: 0;
+                    }
+                    .storiesContainer .ant-card-body{
+                        padding:0;
                     }
                     .storiesContainer .ant-card-actions {
                         margin: none !important;
@@ -164,14 +168,17 @@ export default class AdminPost extends React.Component {
                     .contentFooter {
                         width: 100%;
                     }
+                    .albumsContainer {
+                        padding-left: 17px;
+                    }
                     .albumsImage {
-                        width: 130px;
+                        width: 150px;
                         height: 100px;
                         float: left;
                         object-fit: cover;
                         overflow: hidden;
-                        padding: 9px;
-                        padding-left: 0;
+                        padding-right: 15px;
+                        padding-top: 15px;
                     }
                     .albumsList {
                         width: 218px;
@@ -181,7 +188,7 @@ export default class AdminPost extends React.Component {
                     }
                     .cover {
                         width: 100%;
-                        height: 145px;
+                        height: 200px;
                         overflow: hidden;
                         margin-bottom: 14px;
                     }
@@ -193,7 +200,7 @@ export default class AdminPost extends React.Component {
                     }
                     .search {
                         width: 50%;
-                        margin-top:20px;
+                        margin-top:10px;
                         margin-bottom:20px;
                     }
                     .albumsImageContainer {
