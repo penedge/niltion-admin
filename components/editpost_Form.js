@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import { Upload, Icon, Select, notification } from 'antd'
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
-export default class Edit_post extends React.Component {
+export default class Edit_post extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
@@ -121,6 +121,9 @@ export default class Edit_post extends React.Component {
                     description: 'saved Successful',
                     icon: <Icon type="picture" />,
                 });
+                setTimeout(()=> {
+                    window.location.reload()
+                },1000)
             });
         }
     }
@@ -151,12 +154,19 @@ export default class Edit_post extends React.Component {
                 'content-type': 'multipart/form-data'
             }
         }
+        for (let j = 0; j < this.state.multiFile.length; j++) {
+            var {percent} = this.state.multiFile[j];
+        }
         axios.put(`/ChangeAlbumsBlog/${this.props.id}`, formData, config).then((res) => {
-            notification.open({
-                message: 'congrats',
-                description: 'saved Successful',
-                icon: <Icon type="picture" />,
-            });
+            setTimeout(()=> {
+                if (percent === 100) {
+                    notification.open({
+                        message: 'congrats',
+                        description: 'saved Successful',
+                        icon: <Icon type="picture" />,
+                    });
+                }
+            }, 1300)
         });
     }
     edit_Title = (e) => {
@@ -197,7 +207,7 @@ export default class Edit_post extends React.Component {
         });
         setTimeout(()=> {
             window.location.reload();
-        },1100);
+        },1000);
     }
     render() {
         const uploadButton = (
@@ -208,11 +218,9 @@ export default class Edit_post extends React.Component {
         );
         const albumsButton = (
             <div>
-                <Icon style={{ marginBottom: 14, fontSize: 43, marginRight: 20 }}
+                <Icon style={{ marginBottom: 14, fontSize: 43}}
                     type="picture" />
-                <Icon style={{ marginBottom: 14, fontSize: 43 }}
-                    type="play-square" />
-                <div className="ant-upload-text">picture / video</div>
+                <div className="ant-upload-text">Albums</div>
             </div>
         );
         const { preview } = this.state;

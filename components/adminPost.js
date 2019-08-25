@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import { Row, Col, Card, Icon, List, Modal, Input } from 'antd';
 import jwt from 'jsonwebtoken';
 import axios from 'axios'
-import Edit_post from '../components/editpost_Form'
-export default class AdminPost extends React.Component {
+import dynamic from 'next/dynamic'
+import { list } from 'postcss';
+const Edit_post = dynamic(import('../components/editpost_Form'))
+export default class AdminPost extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -43,9 +45,11 @@ export default class AdminPost extends React.Component {
     componentDidMount() {
         this.data();
     }
+    componentWillUpdate() {
+        this.data();
+    }
     delete = (id) => {
         axios.delete(`/blog/${id}`).then(res => {
-            console.log(res.data);
         })
     }
     openModal = (id, title, content, albums, image, category) => {
@@ -82,11 +86,11 @@ export default class AdminPost extends React.Component {
             }
             else {
                 return (
-                    <div className="albumsContainer">
+                    <div className="SetalbumsContainer">
                         <List className="albumsImageContainer" dataSource={albums} renderItem={List => (
-                            <div>
-                                <img className="albumsImage" src={`/static/images/admin/content/${List}`} />
-                            </div>
+                            <li key={List._id}>
+                                <img className="albumsImage" src={`/static/images/admin/content/${List}`} alt={List} />
+                            </li>
                         )} />
                     </div>
                 )
@@ -94,7 +98,7 @@ export default class AdminPost extends React.Component {
         }
         const find_Blog = this.state.blog.filter((item) => item.title.indexOf(this.state.search) !== -1);
         return (
-            <div>
+            <React.Fragment>
                 <div className="storiesContainer">
                     <h2><strong>All You stories</strong></h2>
                     <Input className="search" onChange={this.searchBox.bind(this)} placeholder="Search Stories..."/>
@@ -105,7 +109,7 @@ export default class AdminPost extends React.Component {
                                     <Card key={blog._id} title={<span><h3 className="storyName">{blog.title}</h3><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{blog.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {blog.date}</span></div></span>}
                                         actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image, blog.category)}><Icon type="form" /></span>, <span onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></span>]}>
                                         <div className="cover">
-                                            <img src={`/static/images/admin/content/${blog.image}`} />
+                                            <img src={`/static/images/admin/content/${blog.image}`} alt={blog.image} />
                                         </div>
                                         <p>{blog.content}</p>
                                         {setAlbums(blog.albums)}
@@ -168,17 +172,21 @@ export default class AdminPost extends React.Component {
                     .contentFooter {
                         width: 100%;
                     }
-                    .albumsContainer {
-                        padding-left: 17px;
+                    .SetalbumsContainer {
+                        padding-left: 10px;
+                        text-decoration: none;
+                        margin-bottom: 20px;
                     }
                     .albumsImage {
-                        width: 150px;
+                        width: 170px;
                         height: 100px;
                         float: left;
                         object-fit: cover;
+                        object-position: center top;
                         overflow: hidden;
-                        padding-right: 15px;
-                        padding-top: 15px;
+                        padding-right: 0;
+                        padding-top: 0;
+                        padding: 3px;
                     }
                     .albumsList {
                         width: 218px;
@@ -216,7 +224,7 @@ export default class AdminPost extends React.Component {
                         }
                     }
                  `}</style>
-            </div>
+            </React.Fragment>
         );
     }
 }

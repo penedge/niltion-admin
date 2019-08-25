@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import { Input, Icon } from 'antd'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
-export default class Login extends React.Component {
+export default class Login extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {

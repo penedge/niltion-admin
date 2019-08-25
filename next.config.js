@@ -1,10 +1,12 @@
-module.exports = {
-  webpack: config => {
-    // Fixes npm packages that depend on `fs` module
-    config.node = {
-      fs: 'empty'
+const withCSS = require("@zeit/next-css");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+module.exports =
+  withCSS({
+    webpack(config, options) {
+      config.optimization.minimizer = [];
+      config.optimization.minimizer.push(new OptimizeCSSAssetsPlugin({}));
+      return config;
     }
-
-    return config
-  }
-}
+  },
+  {compress: true}
+);

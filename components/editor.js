@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import { Icon, Tabs, Upload, Select, Card, Col, Row, Skeleton, notification } from 'antd'
 const { TabPane } = Tabs;
-export default class Editor extends React.Component {
+export default class Editor extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
@@ -188,17 +188,15 @@ export default class Editor extends React.Component {
         );
         const albumsButton = (
             <div>
-                <Icon style={{ marginBottom: 14, fontSize: 33, marginRight: 20 }}
+                <Icon style={{ marginBottom: 14, fontSize: 33}}
                     type="picture" />
-                <Icon style={{ marginBottom: 14, fontSize: 33 }}
-                    type="play-square" />
-                <div className="ant-upload-text">picture / video</div>
+                <div className="ant-upload-text">picture</div>
             </div>
         )
         const { preview } = this.state;
         const { selectedItems, multiFile } = this.state;
         return (
-            <div>
+            <React.Fragment>
                 <br />
                 <form onSubmit={this.submit}>
                     <input style={{ marginBottom: 21 }} type="text" onChange={this.title} name="title" className="title" placeholder={'Story Title: '} />
@@ -379,7 +377,7 @@ export default class Editor extends React.Component {
                     }
                  `}
                 </style>
-            </div>
+            </React.Fragment>
         );
     }
 }

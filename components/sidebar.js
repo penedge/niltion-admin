@@ -1,11 +1,12 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import { Icon, Menu, Tabs } from 'antd';
-import Home_feed from '../components/feed';
-import EditorForm from '../components/editor';
-import AdminPost from '../components/adminPost';
-import ProfileSetting from '../components/profile_Setting'
+import dynamic from 'next/dynamic'
+const Home_feed = dynamic(import('../components/feed'))
+const EditorForm = dynamic(import('../components/editor'))
+const AdminPost = dynamic(import('../components/adminPost'))
+const ProfileSetting = dynamic(import('../components/profile_Setting'))
 const { TabPane } = Tabs;
-export default class SideBar extends React.Component {
+export default class SideBar extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
@@ -20,17 +21,18 @@ export default class SideBar extends React.Component {
         const IconFont = Icon.createFromIconfontCN({
             scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
         });
+        const logOutButton = <div onClick={this.logOut.bind(this)} className="logOut" style={{cursor:'pointer'}}><span className="tabsIcon" style={{marginRight:10}}><IconFont type="icon-tuichu" /></span><span>Leave System</span></div>
         return (
-            <div>
-                <Tabs className="sideBar" tabPosition={this.state.tabPosition}>
+            <React.Fragment>
+                <Tabs className="sideBar" tabPosition={this.state.tabPosition} tabBarExtraContent={logOutButton}>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="home" /></span>Home</span>} key="0">
                         <Home_feed/>
                     </TabPane>
-                    <TabPane tab={<span><span className="tabsIcon"><Icon type="edit" /></span>Add new Story</span>} key="1">
-                        <EditorForm />
-                    </TabPane>
-                    <TabPane tab={<span><span className="tabsIcon"><Icon type="book" /></span>Overview</span>} key="2">
+                    <TabPane tab={<span><span className="tabsIcon"><Icon type="book" /></span>Overview</span>} key="1">
                         <AdminPost />
+                    </TabPane>
+                    <TabPane tab={<span><span className="tabsIcon"><Icon type="edit" /></span>Add Story</span>} key="2">
+                        <EditorForm />
                     </TabPane>
                     <TabPane tab={<span><span className="tabsIcon"><Icon type="setting" /></span>Profile Setting</span>} key="3">
                         <ProfileSetting />
@@ -42,7 +44,6 @@ export default class SideBar extends React.Component {
                         </TabPane>
                         */
                     }
-                    <TabPane tab={<span onClick={this.logOut.bind(this)}><span style={{ fontSize: 21 }}><IconFont type="icon-tuichu" /></span>Leave system</span>} key="5"></TabPane>
                 </Tabs>
                 <style>{`
                     .clearfix {
@@ -60,8 +61,11 @@ export default class SideBar extends React.Component {
                         color:#f26522 !important;
                         font-weight: bold;
                     }
+                    .logOut {
+                        margin-top:20px;
+                    }
                 `}</style>
-            </div>
+            </React.Fragment>
         );
     }
 }

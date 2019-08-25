@@ -1,13 +1,13 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
-import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import { notification, Icon, Layout, Breadcrumb } from 'antd';
-import Navbar from '../components/navbar'
-import SideBar from '../components/sidebar'
+import { notification, Icon, Layout } from 'antd';
 const { Content } = Layout;
-export default class Dashboard extends React.Component {
+const Navbar = dynamic(import('../components/navbar'), { ssr: false })
+const SideBar = dynamic(import('../components/sidebar'), { ssr: false })
+export default class Dashboard extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
@@ -53,7 +53,6 @@ export default class Dashboard extends React.Component {
             });
         }
     }
-    /*
     componentWillUpdate() {
         const decode = localStorage.getItem('auth');
         const getToken = jwt.decode(atob(decode));
@@ -68,23 +67,27 @@ export default class Dashboard extends React.Component {
                     this.setState({
                         admin: res.data
                     })
-                }, 1000)
+                }, 600)
             }
         })
     }
-    */
     render() {
         return (
-            <div>
+            <React.Fragment>
                 <Head>
                     <title>Penedge | Dashboard</title>
-                    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.20.3/antd.min.css" />
+                    <link type="text/css" rel="stylesheet" href="/static/css/antd/antd.css" />
+                    <meta name="description" content="penedge admin using to control content in pendege.com" />
+                    <meta name="author" content={this.state.admin.username} />
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
                 </Head>
                 <Layout className="custom-bg">
                     <Navbar admin={this.state.admin} />
                     <Content className="DashboardContainer">
                         <Layout style={{ padding: '24px 0', background: '#fff' }}>
-                            <SideBar />
+                            <React.Fragment>
+                                <SideBar />
+                            </React.Fragment>
                         </Layout>
                     </Content>
                 </Layout>
@@ -101,7 +104,7 @@ export default class Dashboard extends React.Component {
                         margin-bottom: 50px;
                     }
                 `}</style>
-            </div>
+            </React.Fragment>
         );
     }
 }

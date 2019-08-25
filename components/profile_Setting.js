@@ -1,9 +1,9 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import { Form, Row, Col, Upload, Icon, Collapse } from 'antd'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 const { Panel } = Collapse;
-export default class ProfileSetting extends React.Component {
+export default class ProfileSetting extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -107,7 +107,7 @@ export default class ProfileSetting extends React.Component {
     saveChaneProfile = (e) => {
         e.preventDefault();
         if (this.state.loadingImage === false && this.state.profileImage === null) {
-            e.target.reset();
+            
         }
         else {
             const formData = new FormData();
@@ -119,9 +119,7 @@ export default class ProfileSetting extends React.Component {
                 }
             }
             axios.put(`/changeProfileImage/${this.state.account._id}`, formData, config).then((res) => {
-                setTimeout(()=> {
-                    window.location.reload()
-                })
+                
             });
         }
     }
@@ -134,7 +132,7 @@ export default class ProfileSetting extends React.Component {
         );
         const { imageUrl } = this.state;
         return (
-            <div>
+            <React.Fragment>
                 <div className="ProfileSettingContainer">
                     <h2><strong>Profile Setting</strong></h2>
                     <br />
@@ -246,7 +244,7 @@ export default class ProfileSetting extends React.Component {
                         border: 0;
                     }
                 `}</style>
-            </div>
+            </React.Fragment>
         )
     }
 }

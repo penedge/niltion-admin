@@ -1,14 +1,15 @@
 // package
-import React from 'react';
+import React, {PureComponent} from 'react';
 // antd components
 import { Layout, Card, Col, Modal } from 'antd';
 import Head from 'next/head';
 // import components
-import RegisterAccount from '../components/registerAccount';
-import Login from '../components/login';
+import dynamic from 'next/dynamic'
+const RegisterAccount = dynamic(import('../components/registerAccount'))
+const Login = dynamic(import('../components/login'))
 // custom components
 const { Content } = Layout;
-export default class Index extends React.Component {
+export default class Index extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
@@ -32,7 +33,7 @@ export default class Index extends React.Component {
   }
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Head>
           <title>Penedge Admin</title>
           <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.20.3/antd.min.css"/>
@@ -88,7 +89,7 @@ export default class Index extends React.Component {
             margin-bottom: 20px;
           }
          `}</style>
-      </div>
+      </React.Fragment>
     );
   }
 }

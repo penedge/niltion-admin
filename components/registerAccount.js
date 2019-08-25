@@ -1,8 +1,8 @@
-import React from 'react'
-import { Icon, Input, Upload, notification, Button } from 'antd'
+import React, { PureComponent } from 'react'
+import { Icon, Input, Upload, notification } from 'antd'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
-export default class RegisterAccount extends React.Component {
+export default class RegisterAccount extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
@@ -34,17 +34,17 @@ export default class RegisterAccount extends React.Component {
             );
         }
     };
-    email = (e)=> {
+    email = (e) => {
         this.setState({
             email: e.target.value
         })
     }
-    username = (e)=> {
+    username = (e) => {
         this.setState({
             username: e.target.value
         })
     }
-    password = (e)=> {
+    password = (e) => {
         this.setState({
             password: e.target.value
         })
@@ -53,7 +53,7 @@ export default class RegisterAccount extends React.Component {
         e.preventDefault();
         if ((this.state.username).length >= 8 && this.state.password.length >= 8) {
             const formData = new FormData();
-            const {email, username, password, profileImage} = this.state;
+            const { email, username, password, profileImage } = this.state;
             formData.append('email', email);
             formData.append('username', username);
             formData.append('password', password);
@@ -64,9 +64,9 @@ export default class RegisterAccount extends React.Component {
                     "content-type": "multipart/form-data"
                 }
             }
-            axios.post('/register', formData, config).then((res)=> {
+            axios.post('/register', formData, config).then((res) => {
                 notification['success']({
-                message: 'Create Username & Password success'
+                    message: 'Create Username & Password success'
                 });
                 const user = {
                     username: this.state.username,
@@ -74,8 +74,8 @@ export default class RegisterAccount extends React.Component {
                 }
                 let tokenId = jwt.sign(user, JSON.stringify(this.state.username));
                 localStorage.setItem('auth', btoa(tokenId));
-                setTimeout(()=> {
-                    location.href="dashboard"
+                setTimeout(() => {
+                    location.href = "dashboard"
                 }, 1300)
             })
         }
@@ -83,7 +83,7 @@ export default class RegisterAccount extends React.Component {
             notification['error']({
                 message: `You can't register`,
                 description:
-                'Username and Password must have 8 characters',
+                    'Username and Password must have 8 characters',
             });
         }
     }
@@ -96,7 +96,7 @@ export default class RegisterAccount extends React.Component {
         );
         const { imageUrl } = this.state;
         return (
-            <div>
+            <React.Fragment>
                 <form onSubmit={this.registerSubmit}>
                     <div>
                         <Upload name="avatar"
@@ -105,7 +105,7 @@ export default class RegisterAccount extends React.Component {
                             showUploadList={false}
                             action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                             onChange={this.handleChange}>
-                                {imageUrl ? <img src={imageUrl} className="avatar" /> : uploadButton}
+                            {imageUrl ? <img src={imageUrl} className="avatar" /> : uploadButton}
                         </Upload>
                     </div>
                     <Input type={'email'} name={'email'} onChange={this.email} className="createEmail" placeholder="Email"
@@ -145,7 +145,7 @@ export default class RegisterAccount extends React.Component {
                       object-fit:cover;
                   }
                 `}</style>
-            </div>
+            </React.Fragment>
         );
     }
 }

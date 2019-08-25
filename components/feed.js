@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import jwt from 'jsonwebtoken'
-import { Row, Col, Card, Icon, List, Statistic } from 'antd';
-import UserTable from '../components/UserTable'
+import jwt from 'jsonwebtoken';
+import dynamic from 'next/dynamic';
+import { Row, Col, Card, Icon, List } from 'antd'
+const UserTable = dynamic(import('../components/UserTable'), { ssr: false })
 const Home_feed = () => {
     const [loading, setLoad] = useState(false);
     const [blog, setBlog] = useState([]);
     useEffect(() => {
-        const decode = localStorage.getItem('auth');
-        const getToken = jwt.decode(atob(decode));
-        axios.get(`/blog/${getToken.username}`).then(res => {
+        axios.get(`/blog`).then(res => {
             if (res.data === null) {
                 setBlog([])
             }
@@ -30,29 +29,29 @@ const Home_feed = () => {
             return (
                 <div className="albumsContainer">
                     <List dataSource={albums} renderItem={albumsSet => (
-                        <div className="albumsLayout">
-                            <img className="albumsImageSet" src={`/static/images/admin/content/${albumsSet}`} />
-                        </div>
+                        <li key={albumsSet._id} className="albumsLayout">
+                            <img src={`/static/images/admin/content/${albumsSet}`} className="albumsImageSet lazyload" alt={albumsSet} />
+                        </li>
                     )} />
                 </div>
             )
         }
     }
     return (
-        <div>
+        <React.Fragment>
             <div className="homeContainer">
                 <UserTable/>
                 <div className="feed_Thumbnail clearfix">
-                    <h2><strong><Icon type="read" style={{marginRight:10}}/> stories | {blog.length}</strong></h2>
+                    <h2><strong><Icon type="read" style={{marginRight:10}}/> Stories | {blog.length}</strong></h2>
                     <Row gutter={16}>
                         {
                             !loading && blog.map((post) => (
                                 <div>
                                     <Col span={8}>
-                                        <Card key={post._id} title={<span><h3 className="storyName">{post.title}</h3><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{post.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {post.date}</span></div></span>}>
+                                        <Card key={post._id} title={<span><h3 className="storyName">{post.title}</h3><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize',fontSize:13,fontWeight:'lighter' }}>{post.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {post.date}</span></div></span>}>
                                             <div className="cardBlock">
                                                 <div className="thumbnail">
-                                                    <img src={`/static/images/admin/content/${post.image}`} />
+                                                    <img src={`/static/images/admin/content/${post.image}`} alt={post.image} className="lazyload"/>
                                                 </div>
                                                 <p>{post.content}</p>
                                                 {setAlbums(post.albums)}
@@ -80,6 +79,9 @@ const Home_feed = () => {
                 }
                 .feed_Thumbnail .ant-card-body{
                     padding: 0;
+                }
+                .feed_Thumbnail .ant-card {
+                    margin-bottom: 32px;
                 }
                 .thumbnail {
                     width: 100%;
@@ -109,16 +111,19 @@ const Home_feed = () => {
                     font-size: 12px;
                 }
                 .albumsLayout {
-                    padding-left: 17px;
+                    padding-left: 10px;
+                    text-decoration: none;
                 }
                 .albumsImageSet {
-                    width: 150px;
+                    width: 170px;
                     height: 100px;
                     float: left;
                     object-fit: cover;
+                    object-position: center top;
                     overflow: hidden;
-                    padding-right: 15px;
-                    padding-top: 15px;
+                    padding-right: 0;
+                    padding-top: 0;
+                    padding: 3px;
                 }
                 .albumsContainer{
                     width: 100%;
@@ -137,7 +142,7 @@ const Home_feed = () => {
                     }
                 }
             `}</style>
-        </div>
+        </React.Fragment>
     )
 }
 export default Home_feed;
