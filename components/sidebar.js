@@ -1,10 +1,10 @@
 import React, {PureComponent} from 'react'
 import { Icon, Menu, Tabs } from 'antd';
 import dynamic from 'next/dynamic'
-const Home_feed = dynamic(import('../components/feed'))
-const EditorForm = dynamic(import('../components/editor'))
-const AdminPost = dynamic(import('../components/adminPost'))
-const ProfileSetting = dynamic(import('../components/profile_Setting'))
+const Home_feed = dynamic(import('../components/feed'), {ssr: false})
+const EditorForm = dynamic(import('../components/editor'), {ssr: false})
+const AdminPost = dynamic(import('../components/adminPost'), {ssr: false})
+const ProfileSetting = dynamic(import('../components/profile_Setting'), {ssr: false})
 const { TabPane } = Tabs;
 export default class SideBar extends PureComponent {
     constructor(props) {

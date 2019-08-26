@@ -3,7 +3,7 @@ const express = require('express');
 const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 80;
-const app = next({ dir: '.', dev });
+const app = next({ dir: '.', dev: false, staticMarkup: false, quiet: false, conf: null, chunks: false});
 const handle = app.getRequestHandler();
 const cors = require('cors');
 const bodyParser = require('body-parser');
