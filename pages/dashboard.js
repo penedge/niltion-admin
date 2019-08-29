@@ -5,8 +5,8 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head'
 import { notification, Icon, Layout } from 'antd';
 const { Content } = Layout;
-const Navbar = dynamic(import('../components/navbar'), { ssr: false })
-const SideBar = dynamic(import('../components/sidebar'), { ssr: false })
+const Navbar = dynamic(import('../components/desktop/navbar'), { ssr: false })
+const SideBar = dynamic(import('../components/desktop/sidebar'), { ssr: false })
 export default class Dashboard extends PureComponent {
     constructor(props) {
         super(props)
@@ -23,7 +23,7 @@ export default class Dashboard extends PureComponent {
             icon: <Icon type="warning" style={{ color: 'red' }} />,
         });
     }
-    componentDidMount() {
+    getData () {
         const decode = localStorage.getItem('auth');
         const getToken = jwt.decode(atob(decode));
         if (getToken === null) {
@@ -53,23 +53,13 @@ export default class Dashboard extends PureComponent {
             });
         }
     }
+    componentDidMount() {
+        this.getData()
+    }
     componentWillUpdate() {
-        const decode = localStorage.getItem('auth');
-        const getToken = jwt.decode(atob(decode));
-        axios.get(`/register/${getToken.username}`).then(res => {
-            if (res.data === null) {
-                this.setState({
-                    admin: []
-                })
-            }
-            else {
-                setTimeout(()=> {
-                    this.setState({
-                        admin: res.data
-                    })
-                }, 600)
-            }
-        })
+       setTimeout(()=> {
+        this.getData()
+       },500)
     }
     render() {
         return (
@@ -79,14 +69,13 @@ export default class Dashboard extends PureComponent {
                     <link type="text/css" rel="stylesheet" href="/static/css/antd/antd.css" />
                     <meta name="description" content="penedge admin using to control content in pendege.com" />
                     <meta name="author" content={this.state.admin.username} />
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
                 </Head>
                 <Layout className="custom-bg">
                     <Navbar admin={this.state.admin} />
                     <Content className="DashboardContainer">
                         <Layout style={{ padding: '24px 0', background: '#fff' }}>
                             <React.Fragment>
-                                <SideBar />
+                                <SideBar admin={this.state.admin}/>
                             </React.Fragment>
                         </Layout>
                     </Content>
@@ -103,7 +92,24 @@ export default class Dashboard extends PureComponent {
                         margin-top: 50px;
                         margin-bottom: 50px;
                     }
-                `}</style>
+                    .desktopOnly {
+                        display: block;
+                    }
+                    @media screen and (min-width: 320px) and (max-width: 420px) {
+                        body {
+                            background-color: #fff !important;
+                        }
+                        .DashboardContainer {
+                            padding: 0;
+                            margin-top: 0;
+                            margin-bottom: 0;
+                        }
+                        .desktopOnly {
+                            display: none;
+                        }
+                    }
+                `}
+                </style>
             </React.Fragment>
         );
     }

@@ -7,6 +7,7 @@ WORKDIR /admin
 # Install app dependencies
 COPY package.json /admin/
 RUN yarn install
+RUN yarn build
 
 # Bundle app source
 COPY . ./

@@ -3,7 +3,10 @@ const express = require('express');
 const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 80;
-const app = next({ dir: '.', dev: false, staticMarkup: false, quiet: false, conf: null, chunks: false});
+// using in development
+const app = next({ dev });
+// using in production
+//const app = next({ dir: '.' , dev: false, staticMarkup: false, quiet: false, conf: null, chunk:null, cache: true});
 const handle = app.getRequestHandler();
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -30,9 +33,7 @@ app.prepare().then(() => {
     //Enabling CORS
     server.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");
-        //const cache = (1024 * 1024 * 60);
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        //res.header("Cache-Control", `public, max-age=${cache}, must-revalidate, proxy-revalidate`);
         next();
     });
     // determine upload folder
@@ -237,7 +238,7 @@ app.prepare().then(() => {
     });
     // query public
     server.get('/blog', (req, res) => {
-        mongoose.model('Blog').find().sort({ title: -req.body.title }).exec((err, content) => {
+        mongoose.model('Blog').find().sort({ title: -1 }).exec((err, content) => {
             if (err) {
                 res.status(404).send('404 NOT FOUND!')
             }

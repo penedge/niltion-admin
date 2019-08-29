@@ -5,8 +5,8 @@ import { Layout, Card, Col, Modal } from 'antd';
 import Head from 'next/head';
 // import components
 import dynamic from 'next/dynamic'
-const RegisterAccount = dynamic(import('../components/registerAccount'), {ssr: false})
-const Login = dynamic(import('../components/login'), {ssr: false})
+const RegisterAccount = dynamic(import('../components/desktop/registerAccount'), {ssr: false})
+const Login = dynamic(import('../components/desktop/login'), {ssr: false})
 // custom components
 const { Content } = Layout;
 export default class Index extends PureComponent {
