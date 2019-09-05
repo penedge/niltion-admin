@@ -204,7 +204,7 @@ export default class ProfileSetting extends PureComponent {
                         height: 35px;
                         border: 0;
                         border-radius: 4px;
-                        background-color: #f26522;
+                        background-color: #3d2e91;
                         color: #fff;
                         cursor:pointer;
                     }

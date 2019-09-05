@@ -52,7 +52,7 @@ export default class Login extends PureComponent {
                         .loginButton, loginButton:hover {
                             width: 150px;
                             padding:10px;
-                            background-color: #f26522 !important;
+                            background-color: #3d2e91 !important;
                             color: #fff !important;
                             border-radius: 4px !important;
                             border: 0 !important;

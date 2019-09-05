@@ -10,69 +10,17 @@ export default class Editor_mobile extends PureComponent {
             title: [],
             cover: [],
             content: [],
-            preview: [],
+            preview: '/static/images/bg/uploadIcon.png',
             loading: false,
             multiFile: [],
             tags: [
                 {
                     "id": 1,
-                    "type": "adventure"
+                    "type": "blog"
                 },
                 {
                     "id": 2,
-                    "type": "action"
-                },
-                {
-                    "id": 3,
-                    "type": "fiction"
-                },
-                {
-                    "id": 4,
-                    "type": "news"
-                },
-                {
-                    "id": 5,
-                    "type": "romantic"
-                },
-                {
-                    "id": 6,
-                    "type": "fantasy"
-                },
-                {
-                    "id": 7,
-                    "type": "detective"
-                },
-                {
-                    "id": 8,
-                    "type": "movies"
-                },
-                {
-                    "id": 9,
-                    "type": "technology"
-                },
-                {
-                    "id": 10,
-                    "type": "animation"
-                },
-                {
-                    "id": 11,
-                    "type": "cartoon"
-                },
-                {
-                    "id": 12,
-                    "type": "games"
-                },
-                {
-                    "id": 13,
-                    "type": "travel"
-                },
-                {
-                    "id": 14,
-                    "type": "food"
-                },
-                {
-                    "id": 15,
-                    "type": "erotic"
+                    "type": "promotion"
                 }
             ],
             selectedItems: []
@@ -159,12 +107,12 @@ export default class Editor_mobile extends PureComponent {
         return (
             <React.Fragment>
                 <form onSubmit={this.saved}>
-                    <input className="storyNameMobile" placeholder="Story Title : " onChange={this.storyName} />
+                    <input className="storyNameMobile" placeholder="Title : " onChange={this.storyName} />
                     <br />
                     <div className="Cover_mobile" style={{ backgroundImage: `url(${this.state.preview})` }}>
                         <input type="file" onChange={this.coverUpload.bind(this)} />
                     </div>
-                    <textarea className="content_mobile" placeholder="Add your story..." onChange={this.detail}></textarea>
+                    <textarea className="content_mobile" placeholder="Add your Content..." onChange={this.detail}></textarea>
                     <ImagePicker
                         files={multiFile}
                         onChange={this.UploadMulti}
@@ -172,7 +120,7 @@ export default class Editor_mobile extends PureComponent {
                     <Select
                         className="selectCategory"
                         mode="multiple"
-                        placeholder="Selected Stories Category"
+                        placeholder="Selected Content Category"
                         value={selectedItems}
                         onChange={this.hashtag}
                         showArrow={false}>
@@ -193,6 +141,16 @@ export default class Editor_mobile extends PureComponent {
                         .clearfix {
                             clear:both;
                         }
+                        .custom-header {
+                            padding: 0;
+                            padding-left: 20px;
+                            padding-top: 0;
+                        }
+                        .custom-header {
+                            overflow: hidden;
+                            height: 60px;
+                            background-color: #fff;
+                        }
                         .tabIcon {
                             font-size: 18px;
                         }
@@ -208,7 +166,7 @@ export default class Editor_mobile extends PureComponent {
                         .Cover_mobile {
                             width: 100%;
                             height: 220px;
-                            background-color: red;
+                            background-color: #f5f5f5;
                             overflow: hidden;
                             background-size: cover;
                             background-repeat: no-repeat;
@@ -228,7 +186,7 @@ export default class Editor_mobile extends PureComponent {
                             margin-left: 20px;
                             margin-bottom: 20px;
                             color: #fff;
-                            background-color: #f26522;
+                            background-color: #3d2e91;
                             border: 0;
                             border-radius: 4px;
                         }

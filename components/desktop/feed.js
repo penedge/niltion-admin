@@ -41,7 +41,7 @@ const Home_feed = () => {
             <div className="homeContainer">
                 <UserTable/>
                 <div className="feed_Thumbnail clearfix">
-                    <h2><strong><Icon type="read" style={{marginRight:10}}/> Stories | {blog.length}</strong></h2>
+                    <h2><strong><Icon type="read" style={{marginRight:10}}/> Content | {blog.length}</strong></h2>
                     <Row gutter={16}>
                         {
                             !loading && blog.map((post) => (

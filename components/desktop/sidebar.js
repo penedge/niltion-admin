@@ -40,7 +40,7 @@ export default class SideBar extends PureComponent {
                             <TabPane tab={<span><span className="tabsIcon"><Icon type="book" /></span>Overview</span>} key="1">
                                 <AdminPost />
                             </TabPane>
-                            <TabPane tab={<span><span className="tabsIcon"><Icon type="edit" /></span>Add Story</span>} key="2">
+                            <TabPane tab={<span><span className="tabsIcon"><Icon type="edit" /></span>Add Content</span>} key="2">
                                 <EditorForm />
                             </TabPane>
                             <TabPane tab={<span><span className="tabsIcon"><Icon type="setting" /></span>Profile Setting</span>} key="3">
@@ -70,7 +70,7 @@ export default class SideBar extends PureComponent {
                         font-size: 21px;
                     }
                     .ant-tabs-nav .ant-tabs-tab-active, .ant-tabs-nav .ant-tabs-tab:hover {
-                        color:#f26522 !important;
+                        color:#3d2e91 !important;
                         font-weight: bold;
                     }
                     .logOut {

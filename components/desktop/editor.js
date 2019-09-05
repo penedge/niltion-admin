@@ -16,63 +16,95 @@ export default class Editor extends PureComponent {
             tags: [
                 {
                     "id": 1,
-                    "type": "adventure"
+                    "type": "singapore airlines"
                 },
                 {
                     "id": 2,
-                    "type": "action"
+                    "type": "china southern airlines"
                 },
                 {
                     "id": 3,
-                    "type": "fiction"
+                    "type": "cathay pacific"
                 },
                 {
                     "id": 4,
-                    "type": "news"
+                    "type": "juneyao airlines"
                 },
                 {
                     "id": 5,
-                    "type": "romantic"
+                    "type": "qantas airways"
                 },
                 {
                     "id": 6,
-                    "type": "fantasy"
+                    "type": "hainan airlines"
                 },
                 {
                     "id": 7,
-                    "type": "detective"
+                    "type": "srilankan airlines"
                 },
                 {
                     "id": 8,
-                    "type": "movies"
+                    "type": "sichuan airlines"
                 },
                 {
                     "id": 9,
-                    "type": "technology"
+                    "type": "xiamen airlines"
                 },
                 {
                     "id": 10,
-                    "type": "animation"
+                    "type": "silk air"
                 },
                 {
                     "id": 11,
-                    "type": "cartoon"
+                    "type": "ana airline"
                 },
                 {
                     "id": 12,
-                    "type": "games"
+                    "type": "jetstar"
                 },
                 {
                     "id": 13,
-                    "type": "travel"
+                    "type": "kuwait airways"
                 },
                 {
                     "id": 14,
-                    "type": "food"
+                    "type": "vietnam airlines"
                 },
                 {
                     "id": 15,
-                    "type": "erotic"
+                    "type": "philippine airlines"
+                },
+                {
+                    "id": 16,
+                    "type": "american airlines"
+                },
+                {
+                    "id": 17,
+                    "type": "air india"
+                },
+                {
+                    "id": 18,
+                    "type": "nokscoot"
+                },
+                {
+                    "id": 19,
+                    "type": "china eastern airlines"
+                },
+                {
+                    "id": 20,
+                    "type": "air new zealand"
+                },
+                {
+                    "id": 21,
+                    "type": "eva air"
+                },
+                {
+                    "id": 22,
+                    "type": "china airlines"
+                },
+                {
+                    "id": 23,
+                    "type": "thai airways"
                 }
             ],
             selectedItems: [],
@@ -199,11 +231,11 @@ export default class Editor extends PureComponent {
             <React.Fragment>
                 <br />
                 <form onSubmit={this.submit}>
-                    <input style={{ marginBottom: 21 }} type="text" onChange={this.title} name="title" className="title" placeholder={'Story Title: '} />
+                    <input style={{ marginBottom: 21 }} type="text" onChange={this.title} name="title" className="title" placeholder={'Title: '} />
                     <button type="submit" className="publish">Save & Publish</button>
                     <div className="storyForm clearfix">
                         <Tabs tabPosition={this.state.tabPosition}>
-                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="read" />Story Cover Image</span>} key="1">
+                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13}}><Icon type="read" />Cover Image</span>} key="1">
                                 <div className="mainFormUpload">
                                     <Col span={8}>
                                         <Upload
@@ -228,12 +260,12 @@ export default class Editor extends PureComponent {
                                     </Col>
                                 </div>
                             </TabPane>
-                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="form" />Write Story</span>} key="2">
+                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13}}><Icon type="form" />Write Content</span>} key="2">
                                 <textarea type="text" name="content" onChange={this.content} className="content"
-                                    placeholder="Add your story...">
+                                    placeholder="Add your content...">
                                 </textarea>
                             </TabPane>
-                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="plus" />Albums</span>} key="3">
+                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13}}><Icon type="plus" />Albums</span>} key="3">
                                 <div className="mainFormUpload">
                                     <Upload
                                         multiple={true}
@@ -254,17 +286,17 @@ export default class Editor extends PureComponent {
                                 </p>
                                 <br />
                             </TabPane>
-                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}>
+                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13}}>
                                 <Icon type="align-left" /> Tags
                             </span>} key="4">
                                 <br />
-                                <h3>Select Category</h3>
+                                <h3>Select Airlines</h3>
                                 <br />
                                 <div className="Category">
                                     <Select
                                         className="selectCategory"
                                         mode="multiple"
-                                        placeholder="Selected Stories Category"
+                                        placeholder="Selected Airlines"
                                         value={selectedItems}
                                         onChange={this.hashtag}
                                         showArrow={false}>
@@ -309,7 +341,7 @@ export default class Editor extends PureComponent {
                     }
                     .publish {
                         margin-left: 10px;
-                        background-color: #f26522;
+                        background-color: #3d2e91;
                         border: 0;
                         border-radius: 4px;
                         padding: 10px;

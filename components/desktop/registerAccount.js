@@ -124,7 +124,7 @@ export default class RegisterAccount extends PureComponent {
                   .create, .create:hover {
                     width: 160px;
                     height: 35px;
-                    background-color: #f26522;
+                    background-color: #3d2e91 !important;
                     border: 0;
                     color: #fff !important;
                     border-radius: 4px;

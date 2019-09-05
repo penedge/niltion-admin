@@ -99,8 +99,8 @@ export default class AdminPost extends PureComponent {
         return (
             <React.Fragment>
                 <div className="storiesContainer">
-                    <h2><strong>All You stories</strong></h2>
-                    <Input className="search" onChange={this.searchBox.bind(this)} placeholder="Search Stories..."/>
+                    <h2><strong>All You Content</strong></h2>
+                    <Input className="search" onChange={this.searchBox.bind(this)} placeholder="Search Content..."/>
                     <Row gutter={16}>
                         {
                             !this.state.loading && find_Blog.map((blog) => (

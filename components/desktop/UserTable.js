@@ -61,12 +61,12 @@ export default class UserTable extends PureComponent {
                         width: 100%;
                         height: 100%;
                         overflow: hidden;
-                        background-color: red;
+                        background-color: #fff;
                         border-radius: 100%;
                         margin-bottom: 15px;
                         object-fit: cover;
                         object-position: center top;
-                        border: 4px solid #f26522;
+                        border: 4px solid #3d2e91;
                     }
                     .ant-carousel .slick-slide {
                         text-align: center;

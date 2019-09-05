@@ -40,14 +40,14 @@ export default class Index extends PureComponent {
         </Head>
         <Layout>
           <Content className="loginContainer">
-            <Col span={10} className="register_form">
+            <Col md={{span: 10}} className="register_form">
               <Card>
                 <div className="brandLogo">
-                  <img src={`/static/logo/penedgeLogo.png`} />
+                  <img src={`/static/logo/logo-nilton.png`} />
                 </div>
                 <Login/>
                 <span style={{ fontFamily: 'sukhumvit set' }}>ถ้ายังไม่มีบัญชี Admin สร้างบัญชี
-                    <span onClick={this.modal} style={{ fontWeight: 'bold', marginLeft: 10, cursor: 'pointer', color: '#f26522' }}>
+                    <span onClick={this.modal} style={{ fontWeight: 'bold', marginLeft: 10, cursor: 'pointer', color: '#3d2e91' }}>
                     Admin ได้ที่นี่
                     </span>
                 </span>
@@ -62,6 +62,9 @@ export default class Index extends PureComponent {
           </Content>
         </Layout>
         <style>{`
+          body {
+            background-color: #f0f2f5;
+          }
           .loginContainer {
             padding: 50px;
           }
@@ -74,7 +77,6 @@ export default class Index extends PureComponent {
             width: 100%;
             height: 176px;
             overflow:hidden;
-            background-color: #383535;
             margin-bottom:26px;
           }
           .brandLogo img {
@@ -87,6 +89,19 @@ export default class Index extends PureComponent {
           .usernameLogin, .passwordLogin {
             width: 100%;
             margin-bottom: 20px;
+          }
+          @media screen and (min-width: 320px) and (max-width: 420px) {
+            .loginContainer {
+              padding: 30px;
+              padding-top: 130px;
+            }
+            .brandLogo {
+              height: 110px;
+              margin-bottom: 0;
+            }
+            .brandLogo img {
+              padding: 0;
+            }
           }
          `}</style>
       </React.Fragment>
