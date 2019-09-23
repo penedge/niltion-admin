@@ -2,7 +2,6 @@
 const express = require('express');
 const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
-const PORT = process.env.PORT || 80;
 // using in development
 //const app = next({ dev });
 // using in production
@@ -279,12 +278,12 @@ app.prepare().then(() => {
     server.get('*', (req, res) => {
         return handle(req, res)
     });
-    server.listen(PORT, err => {
+    server.listen(80, err => {
         if (err) {
             throw err
         }
         else {
-            console.log(`> Ready on http://localhost:${PORT}`)
+            console.log(`> Ready on http://localhost:80`)
         }
     })
 });
