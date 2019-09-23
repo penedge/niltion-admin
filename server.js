@@ -17,10 +17,12 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 // using in production
-const connectServer = '"mongodb://mongo:27017/niltonDB';
+const connectServer = 'mongodb://mongo:27017/niltonDB';
 // using in testing code
 //const connectServer = 'mongodb://localhost:27017/niltonDB';
-mongoose.connect(connectServer, { useNewUrlParser: true });
+mongoose.connect(connectServer, { useNewUrlParser: true, useCreateIndex: true }).catch(err => {
+    console.log(err)
+});
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
 // API
@@ -31,7 +33,7 @@ app.prepare().then(() => {
     // setpermission
     server.use(cors({ origin: true }));
     server.use(bodyParser.json());
-    server.use(bodyParser.urlencoded({ extended: true }));
+    server.use(bodyParser.urlencoded({ extended: false }));
     //Enabling CORS
     server.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");

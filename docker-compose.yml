@@ -1,4 +1,4 @@
-version: "3"
+version: "3.4"
 services:
   app:
     container_name: app
@@ -9,15 +9,13 @@ services:
     links:
       - mongo
       - nginx
-    volumes:
-      - ./app:/AppData
   mongo:
     container_name: mongo
     image: mongo
-    ports:
-      - 27017:27017
     volumes:
       - ./data:/data/db
+    ports:
+      - 27017:27017
   nginx:
     container_name: nginx
     image: nginx
