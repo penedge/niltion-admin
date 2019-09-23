@@ -9,7 +9,7 @@ COPY package.json /usr/src/niltion-admin/
 RUN yarn install
 
 # Bundle app source
-COPY . ./
+COPY . /usr/src/niltion-admin
 RUN yarn build
 
 EXPOSE 80
