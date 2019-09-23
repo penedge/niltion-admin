@@ -11,10 +11,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const mongoose = require('mongoose');
-mongoose.set('useNewUrlParser', true);
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-mongoose.set('useUnifiedTopology', true);
 // using in production
 const connectServer = 'mongodb://mongo:27017/niltonDB'
 //const connectServer = 'mongodb://nilton:nilton1234@mongo:27017/niltonDB';
@@ -35,6 +31,7 @@ app.prepare().then(() => {
     //Enabling CORS
     server.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         next();
     });
