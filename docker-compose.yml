@@ -1,19 +1,5 @@
 version: "3"
 services:
-  mongo:
-    container_name: mongo
-    image: mongo
-    ports:
-      - 27017:27017
-    environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: penedgeAdmin
-      ME_CONFIG_MONGODB_ADMINPASSWORD: penedge1234
-    volumes:
-      - ./data:/data/db
-  nginx:
-    container_name: nginx
-    image: nginx
-    restart: always
   app:
     container_name: app
     restart: always
@@ -25,3 +11,18 @@ services:
       - nginx
     volumes:
       - ./app:/AppData
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nilton
+      MONGO_INITDB_ROOT_PASSWORD: nilton1234
+      MONGO_INITDB_DATABASE: niltonDB
+    volumes:
+      - ./data:/data/db
+  nginx:
+    container_name: nginx
+    image: nginx
+    restart: always

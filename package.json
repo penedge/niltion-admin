@@ -19,12 +19,15 @@
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
     "mongoose": "^5.6.5",
     "multer": "^1.4.2",
     "next": "^9.0.5",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
+    "react-facebook": "^8.0.4",
+    "react-social": "^1.10.0",
     "uglify-js": "^3.6.0"
   },
   "devDependencies": {

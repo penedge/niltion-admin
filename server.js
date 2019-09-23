@@ -12,11 +12,14 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const mongoose = require('mongoose');
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
 // using in production
-//const connectServer = 'mongodb://nilton:nilton1234@mongo:27017/niltonDB';
+const connectServer = 'mongodb://nilton:nilton1234@mongo:27017/niltonDB';
 // using in testing code
-const connectServer = 'mongodb://nilton:nilton1234@localhost:27017/niltonDB';
+//const connectServer = 'mongodb://nilton:nilton1234@localhost:27017/niltonDB';
 mongoose.connect(connectServer, { useNewUrlParser: true });
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
@@ -109,7 +112,8 @@ app.prepare().then(() => {
         blog.title = req.body.title;
         blog.content = req.body.content;
         blog.author = req.body.author;
-        blog.category = req.body.category;
+        blog.airlines = req.body.airlines;
+        blog.service = req.body.service;
         blog.multiFile = req.files.originalname;
         blog.albums = req.body.albums;
         blog.date = req.body.date;
@@ -158,7 +162,17 @@ app.prepare().then(() => {
         const id = req.params.id;
         Blog.findByIdAndUpdate({ _id: id }, {
             $set: {
-                category: req.body.category
+                airlines: req.body.airlines
+            }
+        }, (err, admin) => {
+            res.send(admin);
+        });
+    });
+    server.put('/ChangeServiceBlog/:id', (req, res) => {
+        const id = req.params.id;
+        Blog.findByIdAndUpdate({ _id: id }, {
+            $set: {
+                service: req.body.service
             }
         }, (err, admin) => {
             res.send(admin);
@@ -237,7 +251,7 @@ app.prepare().then(() => {
     });
     // query public
     server.get('/blog', (req, res) => {
-        mongoose.model('Blog').find().sort({ title: -1 }).exec((err, content) => {
+        mongoose.model('Blog').find().sort({ title: -req.body.title }).exec((err, content) => {
             if (err) {
                 res.status(404).send('404 NOT FOUND!')
             }
@@ -252,6 +266,13 @@ app.prepare().then(() => {
         Blog.findByIdAndDelete({ _id: id }, (err, admin) => {
             res.send(admin);
         });
+    })
+    // clean URL
+    server.get('/detail/:id', (req, res) => {
+        const id = req.params.id;
+        Blog.find({ _id: id }, (err, admin) => {
+            res.send(admin);
+        }).limit(1);
     })
     // running server
     server.get('*', (req, res) => {

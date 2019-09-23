@@ -67,6 +67,7 @@ export default class Dashboard extends PureComponent {
                 <Head>
                     <title>Penedge | Dashboard</title>
                     <link type="text/css" rel="stylesheet" href="/static/css/antd/antd.css" />
+                    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kanit&display=swap"/>
                     <meta name="description" content="penedge admin using to control content in pendege.com" />
                     <meta name="author" content={this.state.admin.username} />
                 </Head>

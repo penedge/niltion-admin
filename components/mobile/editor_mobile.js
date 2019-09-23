@@ -3,6 +3,7 @@ import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import { ImagePicker } from 'antd-mobile';
 import { Icon, Select, notification } from 'antd'
+const { Option, OptGroup } = Select;
 export default class Editor_mobile extends PureComponent {
     constructor(props) {
         super(props)
@@ -10,20 +11,119 @@ export default class Editor_mobile extends PureComponent {
             title: [],
             cover: [],
             content: [],
-            preview: '/static/images/bg/uploadIcon.png',
+            preview: '/static/images/bg/uploadIcon.svg',
             loading: false,
             multiFile: [],
             tags: [
                 {
                     "id": 1,
-                    "type": "blog"
+                    "type": "singapore airlines"
                 },
                 {
                     "id": 2,
-                    "type": "promotion"
+                    "type": "china southern airlines"
+                },
+                {
+                    "id": 3,
+                    "type": "cathay pacific"
+                },
+                {
+                    "id": 4,
+                    "type": "juneyao airlines"
+                },
+                {
+                    "id": 5,
+                    "type": "qantas airways"
+                },
+                {
+                    "id": 6,
+                    "type": "hainan airlines"
+                },
+                {
+                    "id": 7,
+                    "type": "srilankan airlines"
+                },
+                {
+                    "id": 8,
+                    "type": "sichuan airlines"
+                },
+                {
+                    "id": 9,
+                    "type": "xiamen airlines"
+                },
+                {
+                    "id": 10,
+                    "type": "silk air"
+                },
+                {
+                    "id": 11,
+                    "type": "ana airline"
+                },
+                {
+                    "id": 12,
+                    "type": "jetstar"
+                },
+                {
+                    "id": 13,
+                    "type": "kuwait airways"
+                },
+                {
+                    "id": 14,
+                    "type": "vietnam airlines"
+                },
+                {
+                    "id": 15,
+                    "type": "philippine airlines"
+                },
+                {
+                    "id": 16,
+                    "type": "american airlines"
+                },
+                {
+                    "id": 17,
+                    "type": "air india"
+                },
+                {
+                    "id": 18,
+                    "type": "nokscoot"
+                },
+                {
+                    "id": 19,
+                    "type": "china eastern airlines"
+                },
+                {
+                    "id": 20,
+                    "type": "air new zealand"
+                },
+                {
+                    "id": 21,
+                    "type": "eva air"
+                },
+                {
+                    "id": 22,
+                    "type": "china airlines"
+                },
+                {
+                    "id": 23,
+                    "type": "thai airways"
                 }
             ],
-            selectedItems: []
+            selectService: [
+                {
+                    "id": 1,
+                    "serviceType": "sight seeing tours"
+                },
+                {
+                    "id": 2,
+                    "serviceType": "package tours thailand"
+                },
+                {
+                    "id": 3,
+                    "serviceType": "air tickets"
+                }
+            ],
+            selectedItems: [],
+            service: []
         }
     }
     storyName = (e) => {
@@ -52,6 +152,11 @@ export default class Editor_mobile extends PureComponent {
             selectedItems
         })
     };
+    serviceAPI = (service) => {
+        this.setState({
+            service
+        })
+    }
     saved = (e) => {
         e.preventDefault();
         e.target.reset();
@@ -67,6 +172,8 @@ export default class Editor_mobile extends PureComponent {
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const times = (date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear());
         formData.append('date', times);
+        formData.append('airlines', this.state.selectedItems);
+        formData.append('service', this.state.service);
         let newAlbums = [];
         for (let i = 0; i < this.state.multiFile.length; i++) {
             const file = this.state.multiFile[i].file;
@@ -92,18 +199,10 @@ export default class Editor_mobile extends PureComponent {
             setTimeout(() => {
                 window.location.reload();
             }, 1100)
-        })
-        let newCategory = [];
-        for (let k = 0; k < this.state.selectedItems.length; k++) {
-            let selected = (this.state.selectedItems[k], { category: this.state.selectedItems[k] });
-            newCategory.push(selected);
-        }
-        for (let j = 0; j < newCategory.length; j++) {
-            formData.append('category', newCategory[j].category)
-        }
+        });
     }
     render() {
-        const { multiFile, selectedItems } = this.state;
+        const { multiFile, selectedItems, service } = this.state;
         return (
             <React.Fragment>
                 <form onSubmit={this.saved}>
@@ -120,7 +219,7 @@ export default class Editor_mobile extends PureComponent {
                     <Select
                         className="selectCategory"
                         mode="multiple"
-                        placeholder="Selected Content Category"
+                        placeholder="Selected Airlines"
                         value={selectedItems}
                         onChange={this.hashtag}
                         showArrow={false}>
@@ -131,6 +230,17 @@ export default class Editor_mobile extends PureComponent {
                                 </Select.Option>
                             ))
                         }
+                    </Select>
+                    <Select mode={'default'} className="list_Service" value={service} onChange={this.serviceAPI} placeholder="Selected Service">
+                        <OptGroup label="Service">
+                            {
+                                Object.values(this.state.selectService).map((item) => (
+                                    <Select.Option key={item.id} value={item.serviceType}>
+                                        {item.serviceType}
+                                    </Select.Option>
+                                ))
+                            }
+                        </OptGroup>
                     </Select>
                     <div className="clearfix">
                         <button type="submit" className="savePost" size={'small'}>Save & Publish</button>
@@ -165,11 +275,13 @@ export default class Editor_mobile extends PureComponent {
                         }
                         .Cover_mobile {
                             width: 100%;
-                            height: 220px;
+                            height: 210px;
                             background-color: #f5f5f5;
                             overflow: hidden;
                             background-size: cover;
                             background-repeat: no-repeat;
+                            border-top: 8px solid #fff;
+                            border-bottom: 8px solid #fff;
                         }
                         .Cover_mobile input {
                             width: 100%;
@@ -206,6 +318,12 @@ export default class Editor_mobile extends PureComponent {
                             width: 100%;
                             padding: 20px;
                             padding-bottom: 0;
+                        }
+                        .list_Service {
+                            width: 90% !important;
+                            margin: 20px auto;
+                            display: block;
+                            margin-bottom: 0;
                         }
                     }
                 `}</style>

@@ -1,9 +1,10 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 import { Row, Col, Card, Icon, List, Modal, Input } from 'antd';
+import Link from 'next/link'
 import jwt from 'jsonwebtoken';
 import axios from 'axios'
 import dynamic from 'next/dynamic'
-const Edit_post = dynamic(import('../desktop/editpost_Form'),{ssr:false});
+const Edit_post = dynamic(import('../desktop/editpost_Form'), { ssr: false });
 export default class AdminPost extends PureComponent {
     constructor(props) {
         super(props);
@@ -71,16 +72,16 @@ export default class AdminPost extends PureComponent {
             Modal_id: id
         })
     }
-    searchBox = (e)=> {
+    searchBox = (e) => {
         this.setState({
             search: e.target.value
         })
     }
     render() {
         const setAlbums = (albums) => {
-            if (albums === null) {
+            if (Object.values(albums).length === 0) {
                 <div>
-                    
+
                 </div>
             }
             else {
@@ -100,17 +101,19 @@ export default class AdminPost extends PureComponent {
             <React.Fragment>
                 <div className="storiesContainer">
                     <h2><strong>All You Content</strong></h2>
-                    <Input className="search" onChange={this.searchBox.bind(this)} placeholder="Search Content..."/>
+                    <Input className="search" onChange={this.searchBox.bind(this)} placeholder="Search Content..." />
                     <Row gutter={16}>
                         {
                             !this.state.loading && find_Blog.map((blog) => (
-                                <Col md={{ span: 8}} className="itemList">
+                                <Col md={{ span: 8 }} className="itemList">
                                     <Card key={blog._id} title={<span><h3 className="storyName">{blog.title}</h3><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{blog.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {blog.date}</span></div></span>}
                                         actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image, blog.category)}><Icon type="form" /></span>, <span onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></span>]}>
                                         <div className="cover">
                                             <img src={`/static/images/admin/content/${blog.image}`} alt={blog.image} />
                                         </div>
-                                        <p>{blog.content}</p>
+                                        <Link href={{ pathname: 'detail', query: { id: blog._id,title: blog.title } }}>
+                                            <p>{blog.content}</p>
+                                        </Link>
                                         {setAlbums(blog.albums)}
                                     </Card>
                                 </Col>
@@ -140,6 +143,9 @@ export default class AdminPost extends PureComponent {
                         line-height: 26px;
                         padding-bottom: 0;
                         font-size: 12px;
+                        cursor:pointer;
+                        font-family: sukhumvit set, kanit !important;
+                        font-weight: 400 !important;
                     }
                     .storiesContainer {
                         padding: 30px;
@@ -201,7 +207,7 @@ export default class AdminPost extends PureComponent {
                     }
                     .cover img {
                         width: 100%;
-                        height: auto;
+                        height: 100%;
                         object-fit: cover; 
                         overflow:hidden;
                     }

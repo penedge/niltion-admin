@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
+import Link from 'next/link'
 import { Row, Col, Card, Icon, List } from 'antd'
 const UserTable = dynamic(import('../desktop/UserTable'), { ssr: false });
 const Home_feed = () => {
@@ -19,9 +20,8 @@ const Home_feed = () => {
         });
     })
     const setAlbums = (albums) => {
-        if (albums === null) {
+        if (Object.values(albums).length === 0) {
             <div>
-
             </div>
         }
         else {
@@ -52,7 +52,9 @@ const Home_feed = () => {
                                                 <div className="thumbnail">
                                                     <img src={`/static/images/admin/content/${post.image}`} alt={post.image} className="lazyload"/>
                                                 </div>
-                                                <p>{post.content}</p>
+                                                <Link href={{pathname:'detail', query: {id: post._id}}}>
+                                                    <p>{post.content}</p>
+                                                </Link>
                                                 {setAlbums(post.albums)}
                                             </div>
                                         </Card>
@@ -89,7 +91,7 @@ const Home_feed = () => {
                 }
                 .thumbnail img {
                     width: 100%;
-                    height: auto;
+                    height: 100%;
                     object-fit:cover;
                 }
                 .storyName {
@@ -108,6 +110,9 @@ const Home_feed = () => {
                     line-height: 26px;
                     padding-bottom: 0;
                     font-size: 12px;
+                    cursor:pointer;
+                    font-family: sukhumvit set, kanit !important;
+                    font-weight: 400 !important;
                 }
                 .albumsLayout {
                     padding-left: 10px;

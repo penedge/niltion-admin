@@ -1,8 +1,9 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 import { Icon, Tabs, Upload, Select, Card, Col, Row, Skeleton, notification } from 'antd'
 const { TabPane } = Tabs;
+const { Option, OptGroup } = Select;
 export default class Editor extends PureComponent {
     constructor(props) {
         super(props)
@@ -107,7 +108,22 @@ export default class Editor extends PureComponent {
                     "type": "thai airways"
                 }
             ],
+            selectService: [
+                {
+                    "id": 1,
+                    "serviceType": "sight seeing tours"
+                },
+                {
+                    "id": 2,
+                    "serviceType": "package tours thailand"
+                },
+                {
+                    "id": 3,
+                    "serviceType": "air tickets"
+                }
+            ],
             selectedItems: [],
+            service: [],
             hashtag: null,
             multiFile: [],
             percent: 0
@@ -152,6 +168,11 @@ export default class Editor extends PureComponent {
             selectedItems
         })
     };
+    serviceAPI = (service) => {
+        this.setState({
+            service
+        })
+    }
     //
     upload_albums = (info) => {
         this.setState({
@@ -173,17 +194,19 @@ export default class Editor extends PureComponent {
         formData.append('author', getToken.username);
         const date = new Date();
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const times = (date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear());
+        const times = (date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getFullYear());
         formData.append('date', times);
+        formData.append('airlines', this.state.selectedItems);
+        formData.append('service', this.state.service);
         let newAlbums = [];
         for (let i = 0; i < this.state.multiFile.length; i++) {
             const file = this.state.multiFile[i].originFileObj;
             formData.append('multiFile', file);
             const file_name = (this.state.multiFile[i], { photo: this.state.multiFile[i].name });
-            //const json = JSON.stringify(file_name);
+            //const json = JSON.stringify(file_name);
             newAlbums.push(file_name);
         }
-        //formData.append('albums', newAlbums);
+        //formData.append('albums', newAlbums);
         for (let j = 0; j < newAlbums.length; j++) {
             formData.append('albums', newAlbums[j].photo)
         }
@@ -195,21 +218,14 @@ export default class Editor extends PureComponent {
         axios.post('/blog', formData, config).then((res) => {
             notification.open({
                 message: 'congrats',
-                description: 'You publishing successful',
+                description: 'You publishing successful',
                 icon: <Icon type="read" />,
             });
             setTimeout(() => {
                 window.location.reload();
             }, 1100)
         })
-        let newCategory = [];
-        for (let k = 0; k < this.state.selectedItems.length; k++) {
-            let selected = (this.state.selectedItems[k], { category: this.state.selectedItems[k] });
-            newCategory.push(selected);
-        }
-        for (let j = 0; j < newCategory.length; j++) {
-            formData.append('category', newCategory[j].category)
-        }
+
     }
     render() {
         const uploadButton = (
@@ -220,13 +236,13 @@ export default class Editor extends PureComponent {
         );
         const albumsButton = (
             <div>
-                <Icon style={{ marginBottom: 14, fontSize: 33}}
+                <Icon style={{ marginBottom: 14, fontSize: 33 }}
                     type="picture" />
                 <div className="ant-upload-text">picture</div>
             </div>
         )
         const { preview } = this.state;
-        const { selectedItems, multiFile } = this.state;
+        const { selectedItems, multiFile, service } = this.state;
         return (
             <React.Fragment>
                 <br />
@@ -235,7 +251,7 @@ export default class Editor extends PureComponent {
                     <button type="submit" className="publish">Save & Publish</button>
                     <div className="storyForm clearfix">
                         <Tabs tabPosition={this.state.tabPosition}>
-                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13}}><Icon type="read" />Cover Image</span>} key="1">
+                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="read" />Cover Image</span>} key="1">
                                 <div className="mainFormUpload">
                                     <Col span={8}>
                                         <Upload
@@ -260,12 +276,12 @@ export default class Editor extends PureComponent {
                                     </Col>
                                 </div>
                             </TabPane>
-                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13}}><Icon type="form" />Write Content</span>} key="2">
+                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="form" />Write Content</span>} key="2">
                                 <textarea type="text" name="content" onChange={this.content} className="content"
                                     placeholder="Add your content...">
                                 </textarea>
                             </TabPane>
-                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13}}><Icon type="plus" />Albums</span>} key="3">
+                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}><Icon type="plus" />Albums</span>} key="3">
                                 <div className="mainFormUpload">
                                     <Upload
                                         multiple={true}
@@ -286,17 +302,16 @@ export default class Editor extends PureComponent {
                                 </p>
                                 <br />
                             </TabPane>
-                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13}}>
+                            <TabPane tab={<span style={{ fontSize: 18, marginRight: 13 }}>
                                 <Icon type="align-left" /> Tags
                             </span>} key="4">
                                 <br />
-                                <h3>Select Airlines</h3>
-                                <br />
+                                <h3>Add Airline</h3>
                                 <div className="Category">
                                     <Select
                                         className="selectCategory"
-                                        mode="multiple"
                                         placeholder="Selected Airlines"
+                                        mode={'default'}
                                         value={selectedItems}
                                         onChange={this.hashtag}
                                         showArrow={false}>
@@ -307,6 +322,18 @@ export default class Editor extends PureComponent {
                                                 </Select.Option>
                                             ))
                                         }
+                                    </Select>
+                                    <h3>Add Service</h3>
+                                    <Select mode={'default'} className="selectService" value={service} onChange={this.serviceAPI} placeholder="Selected Service">
+                                        <OptGroup label="Service">
+                                            {
+                                                Object.values(this.state.selectService).map((item) => (
+                                                    <Select.Option key={item.id} value={item.serviceType}>
+                                                        {item.serviceType}
+                                                    </Select.Option>
+                                                ))
+                                            }
+                                        </OptGroup>
                                     </Select>
                                 </div>
                                 <br />
@@ -397,9 +424,11 @@ export default class Editor extends PureComponent {
                     .Category {
                         margin-bottom: 10px;
                     }
-                    .selectCategory {
-                        width: 76% !important;
+                    .selectCategory, .selectService {
+                        width: 300px !important;
                         margin-bottom: 26px;
+                        margin-right: 26px;
+                        text-transform: capitalize;
                     }
                     .ant-select-dropdown-menu-item {
                         text-transform: capitalize !important;

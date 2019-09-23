@@ -1,6 +1,7 @@
-import React, {PureComponent} from 'react';
+import React, { PureComponent } from 'react';
 import { Upload, Icon, Select, notification } from 'antd'
 import axios from 'axios'
+const { Option, OptGroup } = Select;
 export default class Edit_post extends PureComponent {
     constructor(props) {
         super(props)
@@ -15,69 +16,116 @@ export default class Edit_post extends PureComponent {
             tags: [
                 {
                     "id": 1,
-                    "type": "adventure"
+                    "type": "singapore airlines"
                 },
                 {
                     "id": 2,
-                    "type": "action"
+                    "type": "china southern airlines"
                 },
                 {
                     "id": 3,
-                    "type": "fiction"
+                    "type": "cathay pacific"
                 },
                 {
                     "id": 4,
-                    "type": "news"
+                    "type": "juneyao airlines"
                 },
                 {
                     "id": 5,
-                    "type": "romantic"
+                    "type": "qantas airways"
                 },
                 {
                     "id": 6,
-                    "type": "fantasy"
+                    "type": "hainan airlines"
                 },
                 {
                     "id": 7,
-                    "type": "detective"
+                    "type": "srilankan airlines"
                 },
                 {
                     "id": 8,
-                    "type": "movies"
+                    "type": "sichuan airlines"
                 },
                 {
                     "id": 9,
-                    "type": "technology"
+                    "type": "xiamen airlines"
                 },
                 {
                     "id": 10,
-                    "type": "animation"
+                    "type": "silk air"
                 },
                 {
                     "id": 11,
-                    "type": "cartoon"
+                    "type": "ana airline"
                 },
                 {
                     "id": 12,
-                    "type": "games"
+                    "type": "jetstar"
                 },
                 {
                     "id": 13,
-                    "type": "travel"
+                    "type": "kuwait airways"
                 },
                 {
                     "id": 14,
-                    "type": "food"
+                    "type": "vietnam airlines"
                 },
                 {
                     "id": 15,
-                    "type": "erotic"
+                    "type": "philippine airlines"
+                },
+                {
+                    "id": 16,
+                    "type": "american airlines"
+                },
+                {
+                    "id": 17,
+                    "type": "air india"
+                },
+                {
+                    "id": 18,
+                    "type": "nokscoot"
+                },
+                {
+                    "id": 19,
+                    "type": "china eastern airlines"
+                },
+                {
+                    "id": 20,
+                    "type": "air new zealand"
+                },
+                {
+                    "id": 21,
+                    "type": "eva air"
+                },
+                {
+                    "id": 22,
+                    "type": "china airlines"
+                },
+                {
+                    "id": 23,
+                    "type": "thai airways"
+                }
+            ],
+            selectService: [
+                {
+                    "id": 1,
+                    "serviceType": "sight seeing tours"
+                },
+                {
+                    "id": 2,
+                    "serviceType": "package tours thailand"
+                },
+                {
+                    "id": 3,
+                    "serviceType": "air tickets"
                 }
             ],
             hashtag: null,
             albums: [],
             multiFile: [],
-            selectedItems: []
+            selectedItems: [],
+            service: []
         };
     }
     componentDidMount() {
@@ -109,6 +157,7 @@ export default class Edit_post extends PureComponent {
             );
             const formData = new FormData();
             formData.append('image', info.file.originFileObj.name);
+            formData.append('cover', info.file.originFileObj);
             const config = {
                 headers: {
                     'content-type': 'multipart/form-data'
@@ -120,9 +169,6 @@ export default class Edit_post extends PureComponent {
                     description: 'saved Successful',
                     icon: <Icon type="picture" />,
                 });
-                setTimeout(()=> {
-                    window.location.reload()
-                },1000)
             });
         }
     }
@@ -131,6 +177,11 @@ export default class Edit_post extends PureComponent {
             selectedItems
         })
     };
+    serviceAPI = (service)=> {
+        this.setState({
+            service
+        })
+    }
     upload_albums = (info) => {
         this.setState({
             multiFile: info.fileList
@@ -154,10 +205,10 @@ export default class Edit_post extends PureComponent {
             }
         }
         for (let j = 0; j < this.state.multiFile.length; j++) {
-            var {percent} = this.state.multiFile[j];
+            var { percent } = this.state.multiFile[j];
         }
         axios.put(`/ChangeAlbumsBlog/${this.props.id}`, formData, config).then((res) => {
-            setTimeout(()=> {
+            setTimeout(() => {
                 if (percent === 100) {
                     notification.open({
                         message: 'congrats',
@@ -186,17 +237,23 @@ export default class Edit_post extends PureComponent {
         }
         //Change Title
         axios.put(`/ChangeTitleBlog/${this.props.id}`, data).then((res) => {
-            
+
         });
         //Change Content
         axios.put(`/ChangeContentBlog/${this.props.id}`, data).then((res) => {
 
         });
         // Change category
-        const select = {
-            category: (this.state.selectedItems)
+        const Add_new_airlines = {
+            airlines: (this.state.selectedItems)
         }
-        axios.put(`/ChangeCategoryBlog/${this.props.id}`, select).then((res) => {
+        axios.put(`/ChangeCategoryBlog/${this.props.id}`, Add_new_airlines).then((res) => {
+
+        });
+        const Add_new_service = {
+            service: (this.state.service)
+        }
+        axios.put(`/ChangeServiceBlog/${this.props.id}`, Add_new_service).then((res) => {
 
         });
         notification.open({
@@ -204,9 +261,9 @@ export default class Edit_post extends PureComponent {
             description: 'Edit you blog successful',
             icon: <Icon type="form" />,
         });
-        setTimeout(()=> {
+        setTimeout(() => {
             window.location.reload();
-        },1000);
+        }, 1000);
     }
     render() {
         const uploadButton = (
@@ -217,13 +274,13 @@ export default class Edit_post extends PureComponent {
         );
         const albumsButton = (
             <div>
-                <Icon style={{ marginBottom: 14, fontSize: 43}}
+                <Icon style={{ marginBottom: 14, fontSize: 43 }}
                     type="picture" />
                 <div className="ant-upload-text">Albums</div>
             </div>
         );
         const { preview } = this.state;
-        const { selectedItems, multiFile } = this.state;
+        const { selectedItems, multiFile, service } = this.state;
         return (
             <div>
                 <form onSubmit={this.publish}>
@@ -253,8 +310,8 @@ export default class Edit_post extends PureComponent {
                         <br />
                         <Select
                             style={{ width: '100%', marginBottom: 20 }}
-                            mode="multiple"
-                            placeholder="Selected Stories Category"
+                            mode="default"
+                            placeholder="Selected Airlines"
                             value={selectedItems}
                             onChange={this.hashtag}
                             showArrow={false}>
@@ -265,6 +322,17 @@ export default class Edit_post extends PureComponent {
                                     </Select.Option>
                                 ))
                             }
+                        </Select>
+                        <Select mode={'default'} className="selectService" value={service} onChange={this.serviceAPI} placeholder="Selected Service">
+                            <OptGroup label="Service">
+                                {
+                                    Object.values(this.state.selectService).map((item) => (
+                                        <Select.Option key={item.id} value={item.serviceType}>
+                                            {item.serviceType}
+                                        </Select.Option>
+                                    ))
+                                }
+                            </OptGroup>
                         </Select>
                         <button className="PublishSaved" type="submit">Publish</button>
                     </div>
@@ -288,7 +356,7 @@ export default class Edit_post extends PureComponent {
                         overflow-y: auto;
                         margin-bottom: 20px;
                         border: 0;
-                        line-height: 28px;
+                        line-height: 22px;
                         white-space: normal;
                         word-spacing: normal;
                         outline: none !important;
@@ -298,6 +366,7 @@ export default class Edit_post extends PureComponent {
                         height: 180px;
                     }
                     .PublishSaved {
+                        margin-top:20px;
                         width: 136px;
                         font-size: 11.3px;
                         height: 35px;

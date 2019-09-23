@@ -1,16 +1,16 @@
 FROM node:10.16.3
 
 # Create app directory
-RUN mkdir -p /admin
-WORKDIR /admin
+RUN mkdir -p /niltion-admin
+WORKDIR /niltion-admin
 
 # Install app dependencies
-COPY package.json /admin/
+COPY package.json /niltion-admin/
 RUN yarn install
-RUN yarn build
 
 # Bundle app source
 COPY . ./
+RUN yarn build
 
 EXPOSE 80
 CMD [ "yarn", "dev" ]

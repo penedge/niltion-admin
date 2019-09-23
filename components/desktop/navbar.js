@@ -59,6 +59,9 @@ export default class Navbar extends PureComponent {
                     color: #3d2e91;
                     font-weight: 700
                 }
+                .avatar {
+                    display: block;
+                }
                 .avatar img {
                     width: 66px;
                     height: 66px;
@@ -70,6 +73,9 @@ export default class Navbar extends PureComponent {
                     border: 2px solid #eee;
                 }
                 @media screen and (min-width: 320px) and (max-width: 420px) {
+                    .avatar {
+                        display: none;
+                    }
                     .logo img {
                         height: 45px;
                     }

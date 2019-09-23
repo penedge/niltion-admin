@@ -6,7 +6,9 @@ const BlogSchema = new Schema ({
     content:{type:String},
     author:{type:String},
     tags: {type:String},
-    category: {type:Array},
+    airlines: {type:String},
+    message: {type: Array},
+    service: {type:String},
     albums : {type: Array},
     date: { type: String }
 });
