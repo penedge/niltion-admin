@@ -38,7 +38,7 @@ app.prepare().then(() => {
     // determine upload folder
     const userStorage = multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, __dirname + '/static/images/admin/profile_image/')
+            cb(null, __dirname + 'http://api.niltontravel.com/static/images/admin/profile_image/')
         },
         filename: function (req, file, cb) {
             cb(null, file.originalname)
@@ -46,7 +46,7 @@ app.prepare().then(() => {
     });
     const blogStorage = multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, __dirname + '/static/images/admin/content/')
+            cb(null, __dirname + 'http://api.niltontravel.com/static/images/admin/content/')
         },
         filename: function (req, file, cb) {
             cb(null, file.originalname)
