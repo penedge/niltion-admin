@@ -2,6 +2,7 @@
 const express = require('express');
 const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
+const PORT = process.env.PORT || 80;
 // using in development
 //const app = next({ dev });
 // using in production
@@ -11,11 +12,14 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const mongoose = require('mongoose');
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
 // using in production
-const connectServer = 'mongodb://mongo:27017/niltonDB'
-//const connectServer = 'mongodb://nilton:nilton1234@mongo:27017/niltonDB';
+const connectServer = '"mongodb://mongo:27017/niltonDB';
 // using in testing code
-//const connectServer = 'mongodb://nilton:nilton1234@localhost:27017/niltonDB';
+//const connectServer = 'mongodb://localhost:27017/niltonDB';
 mongoose.connect(connectServer, { useNewUrlParser: true });
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
@@ -31,14 +35,13 @@ app.prepare().then(() => {
     //Enabling CORS
     server.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         next();
     });
     // determine upload folder
     const userStorage = multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, __dirname + 'http://api.niltontravel.com/static/images/admin/profile_image/')
+            cb(null, __dirname + '/static/images/admin/profile_image/')
         },
         filename: function (req, file, cb) {
             cb(null, file.originalname)
@@ -46,7 +49,7 @@ app.prepare().then(() => {
     });
     const blogStorage = multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, __dirname + 'http://api.niltontravel.com/static/images/admin/content/')
+            cb(null, __dirname + '/static/images/admin/content/')
         },
         filename: function (req, file, cb) {
             cb(null, file.originalname)
@@ -275,12 +278,12 @@ app.prepare().then(() => {
     server.get('*', (req, res) => {
         return handle(req, res)
     });
-    server.listen(80, err => {
+    server.listen(PORT, err => {
         if (err) {
             throw err
         }
         else {
-            console.log(`> Ready on http://localhost:80`)
+            console.log(`> Ready on http://localhost:${PORT}`)
         }
     })
 });
