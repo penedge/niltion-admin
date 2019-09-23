@@ -17,7 +17,8 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 // using in production
-const connectServer = 'mongodb://nilton:nilton1234@mongo:27017/niltonDB';
+const connectServer = 'mongodb://mongo:27017/niltonDB'
+//const connectServer = 'mongodb://nilton:nilton1234@mongo:27017/niltonDB';
 // using in testing code
 //const connectServer = 'mongodb://nilton:nilton1234@localhost:27017/niltonDB';
 mongoose.connect(connectServer, { useNewUrlParser: true });
