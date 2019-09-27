@@ -76,7 +76,7 @@ export default class RegisterAccount extends PureComponent {
                 localStorage.setItem('auth', btoa(tokenId));
                 setTimeout(() => {
                     location.href = "dashboard"
-                }, 1300)
+                }, 670)
             })
         }
         else {
