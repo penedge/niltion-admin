@@ -18,7 +18,7 @@ export default class SideBar extends PureComponent {
     }
     logOut = () => {
         localStorage.removeItem('auth');
-        location.href = "admin"
+        location.href = "/"
     }
     render() {
         const IconFont = Icon.createFromIconfontCN({

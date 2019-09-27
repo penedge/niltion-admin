@@ -32,7 +32,7 @@ export default class Login extends PureComponent {
             let tokenId = jwt.sign(user, JSON.stringify(this.state.username));
             localStorage.setItem('auth', btoa(tokenId));
             if (localStorage.getItem('auth')=== null) {
-                location.href='admin'
+                location.href='/'
             }
             else {
                 location.href='dashboard'

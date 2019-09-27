@@ -3,7 +3,6 @@ const express = require('express');
 const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 80;
-const path = require('path');
 // using in development
 //const app = next({ dev });
 // using in production
@@ -17,9 +16,9 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 // using in production
-//const connectServer = 'mongodb://mongo:27017/niltonDB';
+const connectServer = 'mongodb://mongo:27017/niltonDB';
 // using in testing code
-const connectServer = 'mongodb://localhost:27017/niltonDB';
+//const connectServer = 'mongodb://localhost:27017/niltonDB';
 mongoose.connect(connectServer, { useNewUrlParser: true});
 const multer = require('multer');
 const jwt = require('jsonwebtoken');

@@ -29,7 +29,7 @@ export default class Dashboard extends PureComponent {
         if (getToken === null) {
             this.messageAlert();
             setTimeout(() => {
-                location.href = "admin"
+                location.href = "/"
             }, 1500);
         }
         else {
@@ -47,7 +47,7 @@ export default class Dashboard extends PureComponent {
                     localStorage.removeItem('auth');
                     this.messageAlert();
                     setTimeout(() => {
-                        location.href = "admin"
+                        location.href = "/"
                     }, 1500);
                 }
             });
