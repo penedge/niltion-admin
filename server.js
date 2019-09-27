@@ -71,7 +71,7 @@ app.prepare().then(() => {
         newUser.image = req.file.filename;
         newUser.save((err, newUser) => {
             if (!err) {
-                res.redirect('/admin')
+                res.redirect('/')
             }
             else {
                 res.send(newUser)
@@ -97,7 +97,7 @@ app.prepare().then(() => {
     });
     server.post('/login', (req, res) => {
         if (!req.body.username || !req.body.password) {
-            res.redirect('/admin')
+            res.redirect('/')
         }
         else {
             res.send(user);
@@ -122,7 +122,7 @@ app.prepare().then(() => {
         blog.date = req.body.date;
         blog.save((err, newBlog) => {
             if (err) {
-                res.redirect('/admin')
+                res.redirect('/dashboard')
             }
             else {
                 res.send(newBlog)
@@ -202,7 +202,7 @@ app.prepare().then(() => {
             }
         }, (err, updateInfo) => {
             if (err) {
-
+                res.redirect('/dashboard');
             }
             else {
                 res.send(updateInfo)
@@ -217,7 +217,7 @@ app.prepare().then(() => {
             }
         }, (err, updateInfo) => {
             if (err) {
-
+                res.redirect('/dashboard');
             }
             else {
                 res.send(updateInfo)
@@ -232,7 +232,7 @@ app.prepare().then(() => {
             }
         }, (err, updateInfo) => {
             if (err) {
-
+                res.redirect('/dashboard');
             }
             else {
                 res.send(updateInfo)
@@ -245,7 +245,7 @@ app.prepare().then(() => {
         const author = req.params.author;
         Blog.find({ author }, (err, admin) => {
             if (err) {
-                res.redirect('/admin');
+                res.redirect('/dashboard');
             }
             else {
                 res.send(admin)
