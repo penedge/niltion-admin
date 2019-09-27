@@ -6,8 +6,9 @@ services:
     build: .
     ports:
       - 80:80
-    links:
+    depends_on:
       - mongo
+      - nginx
   mongo:
     container_name: mongo
     image: mongo
@@ -15,3 +16,7 @@ services:
       - ./data:/data/db
     ports:
       - 27017:27017
+  nginx:
+    container_name: nginx
+    image: nginx
+    restart: always

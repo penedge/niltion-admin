@@ -70,7 +70,7 @@ export default class Navbar extends PureComponent {
                     margin-top: 6px;
                     border-radius: 100%;
                     object-fit: cover;
-                    border: 2px solid #eee;
+                    border: 0;
                 }
                 @media screen and (min-width: 320px) and (max-width: 420px) {
                     .avatar {

@@ -3,6 +3,7 @@ const express = require('express');
 const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 80;
+const path = require('path');
 // using in development
 //const app = next({ dev });
 // using in production
@@ -12,17 +13,14 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const mongoose = require('mongoose');
-mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 // using in production
-const connectServer = 'mongodb://mongo:27017/niltonDB';
+//const connectServer = 'mongodb://mongo:27017/niltonDB';
 // using in testing code
-//const connectServer = 'mongodb://localhost:27017/niltonDB';
-mongoose.connect(connectServer, { useNewUrlParser: true, useCreateIndex: true }).catch(err => {
-    console.log(err)
-});
+const connectServer = 'mongodb://localhost:27017/niltonDB';
+mongoose.connect(connectServer, { useNewUrlParser: true});
 const multer = require('multer');
 const jwt = require('jsonwebtoken');
 // API
@@ -33,10 +31,11 @@ app.prepare().then(() => {
     // setpermission
     server.use(cors({ origin: true }));
     server.use(bodyParser.json());
-    server.use(bodyParser.urlencoded({ extended: false }));
+    server.use(bodyParser.urlencoded({ extended: true }));
     //Enabling CORS
     server.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         next();
     });
@@ -74,6 +73,9 @@ app.prepare().then(() => {
         newUser.save((err, newUser) => {
             if (!err) {
                 res.redirect('/admin')
+            }
+            else {
+                res.send(newUser)
             }
         });
     });
