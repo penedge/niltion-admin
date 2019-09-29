@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
-import { Icon, Tabs, Upload, Select, Card, Col, Row, Skeleton, notification } from 'antd'
+import { Icon, Tabs, Upload, Select, Progress, Col, Row, Skeleton, notification } from 'antd'
 const { TabPane } = Tabs;
 const { Option, OptGroup } = Select;
 export default class Editor extends PureComponent {
@@ -223,7 +223,7 @@ export default class Editor extends PureComponent {
             });
             setTimeout(() => {
                 window.location.reload();
-            }, 1100)
+            }, 360)
         })
 
     }
@@ -244,7 +244,7 @@ export default class Editor extends PureComponent {
         const { preview } = this.state;
         const { selectedItems, multiFile, service } = this.state;
         return (
-            <React.Fragment>
+            <div>
                 <br />
                 <form onSubmit={this.submit}>
                     <input style={{ marginBottom: 21 }} type="text" onChange={this.title} name="title" className="title" placeholder={'Title: '} />
@@ -438,7 +438,7 @@ export default class Editor extends PureComponent {
                     }
                  `}
                 </style>
-            </React.Fragment>
+            </div>
         );
     }
 }

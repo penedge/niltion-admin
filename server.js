@@ -4,9 +4,9 @@ const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 80;
 // using in development
-//const app = next({ dev });
+const app = next({ dev });
 // using in production
-const app = next({ dir: '.' , dev: false, staticMarkup: false, quiet: false, conf: null, chunk:null, cache: true});
+//const app = next({ dir: '.', dev: false, staticMarkup: false, quiet: false, conf: null, chunk: null, cache: true });
 const handle = app.getRequestHandler();
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -16,11 +16,13 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 // using in production
-const connectServer = 'mongodb://mongo:27017/niltonDB';
+//const connectServer = 'mongodb://mongo:27017/niltonDB';
 // using in testing code
-//const connectServer = 'mongodb://localhost:27017/niltonDB';
-mongoose.connect(connectServer, { useNewUrlParser: true});
+const connectServer = 'mongodb://localhost:27017/niltonDB';
+mongoose.connect(connectServer, { useNewUrlParser: true });
 const multer = require('multer');
+const aws = require('aws-sdk');
+const multerS3 = require('multer-s3');
 const jwt = require('jsonwebtoken');
 // API
 app.prepare().then(() => {
@@ -33,30 +35,52 @@ app.prepare().then(() => {
     server.use(bodyParser.urlencoded({ extended: true }));
     //Enabling CORS
     server.use((req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Origin", "niltontravel.com");
         res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         next();
     });
+    const storageId = 'GD3ICAFLCZGR2OCQGLR6';
+    const storageKey = 'moKbQWOLWp5nR1usy4C3E0mh0g5X+pI+3nb0Lq/6VxU';
+    const profileImageAPI = new aws.Endpoint('sgp1.digitaloceanspaces.com/profile_image/');
+    const contentAPI = new aws.Endpoint('sgp1.digitaloceanspaces.com/content/');
+    const adminProfile = new aws.S3({
+        endpoint: profileImageAPI,
+        accessKeyId: storageId,
+        secretAccessKey: storageKey
+    });
+    const adminContent = new aws.S3({
+        endpoint: contentAPI,
+        accessKeyId: storageId,
+        secretAccessKey: storageKey
+    });
     // determine upload folder
-    const userStorage = multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, __dirname + '/static/images/admin/profile_image/')
-        },
-        filename: function (req, file, cb) {
+    const uploadProfile = multer({
+        storage: multerS3({
+          s3: adminProfile,
+          bucket: 'nilton',
+          acl: 'public-read-write',
+          metadata: function (req, file, cb) {
+            cb(null, {fieldName: file.originalname});
+          },
+          key: function (req, file, cb) {
             cb(null, file.originalname)
-        }
+          }
+        })
     });
-    const blogStorage = multer.diskStorage({
-        destination: function (req, file, cb) {
-            cb(null, __dirname + '/static/images/admin/content/')
-        },
-        filename: function (req, file, cb) {
+    const uploadPost = multer({
+        storage: multerS3({
+          s3: adminContent,
+          bucket: 'nilton',
+          acl: 'public-read-write',
+          metadata: function (req, file, cb) {
+            cb(null, {fieldName: file.originalname});
+          },
+          key: function (req, file, cb) {
             cb(null, file.originalname)
-        }
+          }
+        })
     });
-    const uploadProfile = multer({ storage: userStorage });
-    const uploadPost = multer({ storage: blogStorage });
     // Schema
     const User = require('./static/schema/user.model');
     const Blog = require('./static/schema/blog.model');
@@ -67,8 +91,7 @@ app.prepare().then(() => {
         newUser.email = req.body.email;
         newUser.username = req.body.username;
         newUser.password = jwt.sign(req.body.password, req.body.username);
-        newUser.profileImage = req.file.originalname;
-        newUser.image = req.file.filename;
+        newUser.image = req.file.key;
         newUser.save((err, newUser) => {
             if (!err) {
                 res.redirect('/')
@@ -110,14 +133,12 @@ app.prepare().then(() => {
     // Blog API
     server.post('/blog', uploadPost.fields([{ name: 'cover' }, { name: 'multiFile' }]), (req, res) => {
         const blog = new Blog();
-        blog.cover = req.files.originalname;
         blog.image = req.body.image;
         blog.title = req.body.title;
         blog.content = req.body.content;
         blog.author = req.body.author;
         blog.airlines = req.body.airlines;
         blog.service = req.body.service;
-        blog.multiFile = req.files.originalname;
         blog.albums = req.body.albums;
         blog.date = req.body.date;
         blog.save((err, newBlog) => {
@@ -134,7 +155,6 @@ app.prepare().then(() => {
         const id = req.params.id;
         Blog.findByIdAndUpdate({ _id: id }, {
             $set: {
-                cover: req.files.originalname,
                 image: req.body.image
             }
         }, (err, admin) => {

@@ -110,6 +110,10 @@ export default class ProfileSetting extends PureComponent {
             });
         }
     }
+    logOut = () => {
+        localStorage.removeItem('auth');
+        location.href = "/"
+    }
     render() {
         const uploadButton = (
             <div>
@@ -118,8 +122,11 @@ export default class ProfileSetting extends PureComponent {
             </div>
         );
         const { imageUrl } = this.state;
+        const IconFont = Icon.createFromIconfontCN({
+            scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
+        });
         return (
-            <React.Fragment>
+            <div>
                 <div className="ProfileSettingContainer">
                     <h2><strong>Profile Setting</strong></h2>
                     <br />
@@ -172,10 +179,15 @@ export default class ProfileSetting extends PureComponent {
                             </Row>
                         </div>
                     </form>
+                    <br/>
+                    <button className="mobileOnly" style={{fontSize:19,cursor: 'pointer'}} onClick={this.logOut.bind(this)}><IconFont type="icon-tuichu" style={{marginRight:10}}/> Leave System</button>
                 </div>
                 <style>{`
                     .clearfix {
                         clear:both;
+                    }
+                    .mobileOnly {
+                        display:none;
                     }
                     .custom-border .ant-collapse-item {
                         border-bottom: 0 !important;
@@ -241,9 +253,12 @@ export default class ProfileSetting extends PureComponent {
                         .ProfileSettingContainer h2{
                             padding-left: 10px;
                         }
+                        .mobileOnly {
+                            display:block;
+                        }
                     }
                 `}</style>
-            </React.Fragment>
+            </div>
         )
     }
 }

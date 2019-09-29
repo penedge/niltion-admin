@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import axios from 'axios'
 import dynamic from 'next/dynamic'
 const Edit_post = dynamic(import('../desktop/editpost_Form'), { ssr: false });
+const UserTable = dynamic(import('../desktop/UserTable'), { ssr: false });
+const storageAPI = 'https://nilton.sgp1.digitaloceanspaces.com/content';
 export default class AdminPost extends PureComponent {
     constructor(props) {
         super(props);
@@ -89,7 +91,7 @@ export default class AdminPost extends PureComponent {
                     <div className="SetalbumsContainer">
                         <List className="albumsImageContainer" dataSource={albums} renderItem={List => (
                             <li key={List._id}>
-                                <img className="albumsImage" src={`/static/images/admin/content/${List}`} alt={List} />
+                                <img className="albumsImage" src={`${storageAPI}/${List}`} alt={List} />
                             </li>
                         )} />
                     </div>
@@ -100,6 +102,9 @@ export default class AdminPost extends PureComponent {
         return (
             <React.Fragment>
                 <div className="storiesContainer">
+                    <UserTable/>
+                    <br/>
+                    <br/>
                     <h2><strong>All You Content</strong></h2>
                     <Input className="search" onChange={this.searchBox.bind(this)} placeholder="Search Content..." />
                     <Row gutter={16}>
@@ -109,7 +114,7 @@ export default class AdminPost extends PureComponent {
                                     <Card key={blog._id} title={<span><h3 className="storyName">{blog.title}</h3><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{blog.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {blog.date}</span></div></span>}
                                         actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image, blog.category)}><Icon type="form" /></span>, <span onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></span>]}>
                                         <div className="cover">
-                                            <img src={`/static/images/admin/content/${blog.image}`} alt={blog.image} />
+                                            <img src={`${storageAPI}/${blog.image}`} alt={blog.image} />
                                         </div>
                                         <Link href={{ pathname: 'detail', query: { id: blog._id,title: blog.title } }}>
                                             <p>{blog.content}</p>

@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head';
 import { Icon } from 'antd'
 import { Tabs } from 'antd-mobile';
-const Home_feed = dynamic(import('../desktop/feed'), { ssr: false })
 const AdminPost = dynamic(import('../desktop/adminPost'), { ssr: false })
 const Editor_mobile = dynamic(import('../mobile/editor_mobile'), { ssr: false });
 const ProfileSetting = dynamic(import('../desktop/profile_Setting'), { ssr: false })
@@ -11,7 +10,6 @@ export default class MobileOnly extends PureComponent {
     render() {
         const tabs = [
             { title: <Icon type="home" className="tabIcon" /> },
-            { title: <Icon type="book" className="tabIcon" /> },
             { title: <Icon type="edit" className="tabIcon" /> },
             { title: <Icon type="setting" className="tabIcon" /> }
         ];
@@ -22,9 +20,6 @@ export default class MobileOnly extends PureComponent {
                 </Head>
                 <div className="mobileOnly">
                     <Tabs tabs={tabs} animated={false} useOnPan={false}>
-                        <div style={{ height: 'auto', backgroundColor: '#fff' }}>
-                            <Home_feed/>
-                        </div>
                         <div style={{ height: 'auto', backgroundColor: '#fff' }}>
                             <AdminPost/>
                         </div>

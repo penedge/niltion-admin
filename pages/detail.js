@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import { Layout, Menu, Col, Card, List, Icon } from 'antd'
+import { Layout, Modal, Card, List, Icon, Button, Menu } from 'antd'
 import { FacebookButton, FacebookCount } from 'react-social'
-import jwt from 'jsonwebtoken'
-const RelatedPost = dynamic(import('../components/desktop/relatedPost'), {ssr:false});
+const RelatedPost = dynamic(import('../components/desktop/relatedPost'), { ssr: false });
+const Footer = dynamic(import('../components/desktop/footer'))
 const { Header } = Layout;
-const webURL = 'https://niltontravel.com/';
+const webURL = 'api.niltontravel.com';
+const storageAPI = 'https://nilton.sgp1.digitaloceanspaces.com/content';
 const Index = ({ url: { query: { id } } }) => {
     const [loading, setLoad] = useState(false);
     const [detail, setDetail] = useState([]);
-    const [username, setUsername] = useState([]);
-    const [message, setMessage] = useState([]);
+    const [box, setBox] = useState(false);
     useEffect(() => {
         axios.get(`/detail/${id}`).then((res) => {
             if (res.data === null) {
@@ -21,12 +21,15 @@ const Index = ({ url: { query: { id } } }) => {
             }
             else {
                 setDetail(res.data);
-                const decode = localStorage.getItem('auth');
-                const getToken = jwt.decode(atob(decode));
-                setUsername(getToken.username);
             }
         });
     })
+    const openBox = ()=> {
+        setBox(true)
+    }
+    const closed = ()=> {
+        setBox(false)
+    }
     const setAlbums = (albums) => {
         if (Object.values(albums).length === 0) {
             <div>
@@ -36,8 +39,8 @@ const Index = ({ url: { query: { id } } }) => {
             return (
                 <div className="albumsContainer">
                     <List dataSource={albums} renderItem={albumsSet => (
-                        <li key={albumsSet._id} className="albumsLayout">
-                            <img src={`/static/images/admin/content/${albumsSet}`} className="albumsImageSet lazyload" alt={albumsSet} />
+                        <li onClick={openBox} key={albumsSet._id} className="albumsLayout">
+                            <img src={`${storageAPI}/${albumsSet}`} className="albumsImageSet lazyload" alt={albumsSet} />
                         </li>
                     )} />
                 </div>
@@ -55,15 +58,12 @@ const Index = ({ url: { query: { id } } }) => {
         else {
             return (
                 <div>
-                    <div style={{ marginTop: 12 }} className="clearfix">
-                        <span>Agent : <strong style={{ textTransform: 'capitalize' }}>nilton travel center</strong></span>
-                    </div>
-                    <div style={{ marginTop: 12 }}>
-                        <span>Services : <strong style={{ textTransform: 'capitalize' }}>{service}</strong></span>
-                    </div>
-                    <div style={{ marginTop: 12 }} className="clearfix">
-                        <span>Airline : <strong style={{ textTransform: 'capitalize' }}>{airlines}</strong></span>
-                    </div>
+                    <strong size={'middle'} style={{ marginRight: 20, textTransform: 'uppercase', padding: 9, borderRadius: 4, border: '1px solid' }}>
+                        {service}
+                    </strong>
+                    <strong size={'middle'} style={{ marginRight: 20, textTransform: 'uppercase', padding: 9, borderRadius: 4, border: '1px solid' }}>
+                        {airlines}
+                    </strong>
                 </div>
             )
         }
@@ -81,18 +81,18 @@ const Index = ({ url: { query: { id } } }) => {
         <React.Fragment>
             <Head>
                 <title>{webTitle}</title>
-                <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.20.3/antd.min.css"/>
-                <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kanit&display=swap"/>
+                <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.20.3/antd.min.css" />
+                <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kanit&display=swap" />
                 <meta property="og:url" content={URL} />
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content={webTitle} />
                 <meta property="og:description" content={description} />
-                <meta property="og:image" content={`/static/images/admin/content/${image}`} />
+                <meta property="og:image" content={`${storageAPI}/${image}`} />
             </Head>
             <Header className="header custom-header">
                 <div className="logo">
                     <a href={'/dashboard'}>
-                        {!loading && <img src={`/static/logo/logo-nilton.png`} alt="penedge logo" />}
+                        {!loading && <img src={`https://nilton.sgp1.digitaloceanspaces.com/static/logo/logo-nilton.png`} alt="penedge logo" />}
                     </a>
                 </div>
                 <Menu
@@ -100,7 +100,7 @@ const Index = ({ url: { query: { id } } }) => {
                     mode="horizontal"
                     style={{ lineHeight: '64px', float: 'right', borderBottom: 0 }}>
                     <Menu.Item key="1" style={{ borderBottom: 0 }}>
-                        <a href={'dashboard'} className="adminName">{username}</a>
+                        <a href={`/dashboard`} className="adminName">back to admin</a>
                     </Menu.Item>
                 </Menu>
             </Header>
@@ -109,9 +109,9 @@ const Index = ({ url: { query: { id } } }) => {
                     !loading && Object.values(detail).map((post) => (
                         <div>
                             <div md={{ span: 12 }} className="mainContent">
-                               <Card style={{padding:0}} bordered={false}>
-                                    <img src={`/static/images/admin/content/${post.image}`}/>
-                               </Card>
+                                <Card style={{ padding: 0 }} bordered={false}>
+                                    <img src={`${storageAPI}/${post.image}`}/>
+                                </Card>
                             </div>
                             <div className="contentContainer clearfix">
                                 <div>
@@ -124,21 +124,29 @@ const Index = ({ url: { query: { id } } }) => {
                                     </p>
                                     {serviceProvide(post.service, post.airlines)}
                                 </div>
-                                <br/>
-                                <br/>
+                                <br />
+                                <br />
                                 <h2><strong>Share content</strong></h2>
                                 <div className="facebookShare" style={{ marginTop: 10 }}>
                                     <FacebookButton url={URL} appId={appId}>
-                                        <Icon type="facebook"/>
+                                        <Icon type="facebook" />
                                     </FacebookButton>
                                 </div>
-                                <br/>
-                                <br/>
-                                <RelatedPost/>
+                                <br />
+                                <br />
+                                <RelatedPost />
                             </div>
+                            <Modal visible={box} footer={null}>
+                                <img style={{width:'100%'}} src={`${storageAPI}/${post.image}`}/>
+                                <br/>
+                                <Button style={{marginTop:15}} onClick={closed}>Close</Button>
+                            </Modal>
                         </div>
                     ))
                 }
+            </div>
+            <div className="clearfix">
+                <Footer />
             </div>
             <style>{`
                 .clearfix {
@@ -166,15 +174,17 @@ const Index = ({ url: { query: { id } } }) => {
                     text-transform: capitalize;
                 }
                 .contentContainer p {
-                    font-size: 1rem;
+                    font-size: 1.6rem;
                     line-height: 40px;
                     white-space: pre-line;
                     font-family: sukhumvit set, kanit !important;
                     font-weight: 400 !important;
+                    padding-top: 13px;
                 }
                 .contentContainer span {
                     font-size: 20px;
                     margin-bottom:14px;
+                    text-transform: capitalize;
                 }
                 .mainContent {
                     width: 100%;
@@ -241,6 +251,7 @@ const Index = ({ url: { query: { id } } }) => {
                     padding-right: 0;
                     padding-top: 0;
                     padding: 3px;
+                    cursor: pointer;
                 }
                 .albumsContainer{
                     width: 100%;

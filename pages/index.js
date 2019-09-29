@@ -43,7 +43,7 @@ export default class Index extends PureComponent {
             <Col md={{span: 10}} className="register_form">
               <Card>
                 <div className="brandLogo">
-                  <img src={`/static/logo/logo-nilton.png`} />
+                  <img src={`https://nilton.sgp1.digitaloceanspaces.com/static/logo/logo-nilton.png`} />
                 </div>
                 <Login/>
                 <span style={{ fontFamily: 'sukhumvit set' }}>ถ้ายังไม่มีบัญชี Admin สร้างบัญชี

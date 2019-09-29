@@ -30,7 +30,7 @@ export default class Dashboard extends PureComponent {
             this.messageAlert();
             setTimeout(() => {
                 location.href = "/"
-            }, 1500);
+            }, 300);
         }
         else {
             axios.get(`/register/${getToken.username}`).then(res => {
@@ -48,7 +48,7 @@ export default class Dashboard extends PureComponent {
                     this.messageAlert();
                     setTimeout(() => {
                         location.href = "/"
-                    }, 1500);
+                    }, 300);
                 }
             });
         }
@@ -57,9 +57,7 @@ export default class Dashboard extends PureComponent {
         this.getData()
     }
     componentWillUpdate() {
-       setTimeout(()=> {
         this.getData()
-       },500)
     }
     render() {
         return (
@@ -75,9 +73,9 @@ export default class Dashboard extends PureComponent {
                     <Navbar admin={this.state.admin} />
                     <Content className="DashboardContainer">
                         <Layout style={{ padding: '24px 0', background: '#fff' }}>
-                            <React.Fragment>
+                            <div>
                                 <SideBar admin={this.state.admin}/>
-                            </React.Fragment>
+                            </div>
                         </Layout>
                     </Content>
                 </Layout>
