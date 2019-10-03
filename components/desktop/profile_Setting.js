@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react'
-import { Form, Row, Col, Upload, Icon, Collapse } from 'antd'
+import React, { PureComponent } from 'react'
+import { Form, Row, Col, Upload, Icon, Collapse, Modal, notification } from 'antd'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 const { Panel } = Collapse;
@@ -10,14 +10,14 @@ export default class ProfileSetting extends PureComponent {
             loading: false,
             loadingImage: false,
             account: [],
-            username: null,
             password: null,
             profileImage: null,
-            fileName: []
+            fileName: [],
+            closed: []
         }
     }
     componentDidMount() {
-        this.setState({account: this.props.setting})
+        this.setState({ account: this.props.setting })
     }
     getBase64(img, callback) {
         const reader = new FileReader();
@@ -39,38 +39,28 @@ export default class ProfileSetting extends PureComponent {
                     fileName: info.file.name
                 }),
             );
+            const formData = new FormData();
+            formData.append('profileImage', info.file.originFileObj);
+            formData.append('image', info.file.originFileObj.name);
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            }
+            axios.put(`/changeProfileImage/${this.state.account._id}`, formData, config).then((res) => {
+                notification.open({
+                    message: 'congrats',
+                    description: 'Change profile Successful',
+                    icon: <Icon type="picture" />,
+                });
+            });
         }
     };
-    newUsername = (e) => {
-        this.setState({
-            username: e.target.value,
-            loading: true
-        })
-    }
     newPassword = (e) => {
         this.setState({
             password: e.target.value,
             loading: true
         })
-    }
-    saveChangeUsername = (e) => {
-        e.preventDefault();
-        e.target.reset();
-        if (this.state.loading === false && this.state.username === null) {
-            e.target.reset()
-        }
-        else {
-            const decode = localStorage.getItem('auth');
-            const getToken = jwt.decode(atob(decode));
-            let user = {
-                username: this.state.username,
-                password: getToken.password
-            }
-            axios.put(`/changeUsername/${this.state.account._id}`, user).then((res) => {
-                let tokenId = jwt.sign(user, JSON.stringify(this.state.username));
-                localStorage.setItem('auth', btoa(tokenId));
-            });
-        }
     }
     saveChangePassword = (e) => {
         e.preventDefault();
@@ -91,28 +81,15 @@ export default class ProfileSetting extends PureComponent {
             });
         }
     }
-    saveChaneProfile = (e) => {
-        e.preventDefault();
-        if (this.state.loadingImage === false && this.state.profileImage === null) {
-            
-        }
-        else {
-            const formData = new FormData();
-            formData.append('profileImage', this.state.profileImage);
-            formData.append('image', this.state.fileName);
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data'
-                }
-            }
-            axios.put(`/changeProfileImage/${this.state.account._id}`, formData, config).then((res) => {
-                
-            });
-        }
-    }
     logOut = () => {
         localStorage.removeItem('auth');
         location.href = "/"
+    }
+    saveAll = ()=> {
+        location.reload()
+    }
+    closed = ()=> {
+        location.reload()
     }
     render() {
         const uploadButton = (
@@ -126,61 +103,51 @@ export default class ProfileSetting extends PureComponent {
             scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
         });
         return (
-            <div>
+            <Modal visible={this.props.modal_load && this.state.closed} footer={null}>
                 <div className="ProfileSettingContainer">
                     <h2><strong>Profile Setting</strong></h2>
                     <br />
-                    <form>
+                    <div>
                         <div className="clearfix">
                             <Row gutter={16}>
                                 <div className="clearfix">
-                                    <Col md={{span:8}}>
-                                        <Collapse className="custom-border" bordered={false} showArrow={true}>
-                                            <Panel showArrow={false} header={<span><Icon style={{ marginRight: 10, fontSize: 18 }} type={'picture'} /><span style={{ textTransform: 'capitalize' }}>Change Profile</span><Icon className="customDrop_downIcon" type="caret-down" /></span>} key="1">
-                                                <Form onSubmit={this.saveChaneProfile} form={this.props.form}>
-                                                    <div className="UploadContainer">
-                                                        <Upload
-                                                            name="avatar"
-                                                            listType="picture-card"
-                                                            className="ediUploadProfile"
-                                                            showUploadList={false}
-                                                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                                            onChange={this.newProfile}
-                                                        >
-                                                            {imageUrl ? <img src={imageUrl} className="changeProfile" /> : uploadButton}
-                                                        </Upload>
-                                                    </div>
-                                                    <button className="save custom-buttonSave" type="submit">Save Change</button>
-                                                </Form>
-                                            </Panel>
-                                        </Collapse>
+                                    <Col md={{ span: 12 }}>
+                                        <Form onSubmit={this.saveChaneProfile} form={this.props.form}>
+                                            <div className="UploadContainer">
+                                                <Upload
+                                                    name="avatar"
+                                                    listType="picture-card"
+                                                    className="ediUploadProfile"
+                                                    showUploadList={false}
+                                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                                    onChange={this.newProfile}
+                                                >
+                                                    {imageUrl ? <img src={imageUrl} className="changeProfile" /> : uploadButton}
+                                                </Upload>
+                                            </div>
+                                            {/*<button className="save custom-buttonSave" type="submit">Save Change</button>*/}
+                                        </Form>
                                     </Col>
-                                    <Col md={{span:8}}>
-                                        <Collapse className="custom-border" bordered={false} showArrow={true}>
-                                            <Panel showArrow={false} header={<span><Icon style={{ marginRight: 10, fontSize: 18 }} type={'user'} /><span style={{ textTransform: 'capitalize' }}>Change username</span><Icon className="customDrop_downIcon" type="caret-down" /></span>} key="2">
-                                                <form id="ChangeUsername" className="editContainer" onSubmit={this.saveChangeUsername}>
-                                                    <input className="ChangeForm" placeholder={'Change your username'} onChange={this.newUsername} style={{ marginBottom: 20 }} />
-                                                    <button className="save" type="submit">Save Change</button>
-                                                </form>
-                                            </Panel>
-                                        </Collapse>
-                                    </Col>
-                                    <Col md={{span:8}}>
-                                        <Collapse className="custom-border" bordered={false} showArrow={true}>
-                                            <Panel showArrow={false} header={<span><Icon style={{ marginRight: 10, fontSize: 18 }} type={'lock'} /><span style={{ textTransform: 'capitalize' }}>Change password</span><Icon className="customDrop_downIcon" type="caret-down" /></span>} key="3">
-                                                <form className="editContainer" onSubmit={this.saveChangePassword}>
-                                                    <input className="ChangeForm" type="password" placeholder={'Change your password'} onChange={this.newPassword} style={{ marginBottom: 20 }} />
-                                                    <button className="save" type="submit">Save Change</button>
-                                                </form>
-                                            </Panel>
-                                        </Collapse>
-                                    </Col>
+                                    <div className="clearfix">
+                                        <Col md={{ span: 12 }}>
+                                            <Collapse className="custom-border" bordered={false} showArrow={true}>
+                                                <Panel showArrow={false} header={<span><Icon style={{ marginRight: 10, fontSize: 18 }} type={'lock'} /><span style={{ textTransform: 'capitalize' }}>Change password</span><Icon className="customDrop_downIcon" type="caret-down" /></span>} key="3">
+                                                    <form className="editContainer" onSubmit={this.saveChangePassword}>
+                                                        <input className="ChangeForm" type="password" placeholder={'Change your password'} onChange={this.newPassword} style={{ marginBottom: 20 }} />
+                                                        <button className="save" type="submit">Change Password</button>
+                                                    </form>
+                                                </Panel>
+                                            </Collapse>
+                                        </Col>
+                                    </div>
+                                    <button onClick={this.saveAll} className="saveAll">CONFIRM SAVE SETTING</button>
+                                    <button onClick={this.closed} className="close">Cancel</button>
                                 </div>
                             </Row>
                         </div>
-                    </form>
-                    <br/>
-                    <button className="mobileOnly" style={{fontSize:19,cursor: 'pointer'}} onClick={this.logOut.bind(this)}><IconFont type="icon-tuichu" style={{marginRight:10}}/> Leave System</button>
+                    </div>
+                    <br />
+                    <button className="mobileOnly" style={{ fontSize: 19, cursor: 'pointer' }} onClick={this.logOut.bind(this)}><IconFont type="icon-tuichu" style={{ marginRight: 10 }} /> Leave System</button>
                 </div>
                 <style>{`
                     .clearfix {
@@ -205,8 +172,13 @@ export default class ProfileSetting extends PureComponent {
                         top: 5px;
                     }
                     .editContainer {
-                        padding: 30px;
-                        background-color: #001528;
+                        padding: 0;
+                    }
+                    .editContainer input {
+                        border: 1px solid;
+                    }
+                    .ant-modal-close {
+                        display:none;
                     }
                     .custom-buttonSave {
                         margin-top: 15px;
@@ -216,9 +188,24 @@ export default class ProfileSetting extends PureComponent {
                         height: 35px;
                         border: 0;
                         border-radius: 4px;
-                        background-color: #3d2e91;
+                        background-color: #3c3a3a;
                         color: #fff;
                         cursor:pointer;
+                        text-transform: uppercase;
+                    }
+                    .saveAll {
+                        position: relative;
+                        margin-left: 10px;
+                        margin-top: 20px;
+                        border-radius: 3px;
+                        background-color: #3d2e91;
+                        padding: 10px;
+                        color: #fff;
+                        border: 0;
+                        width: 100%;
+                        text-transform: capitalize;
+                        font-weight: bold;
+                        cursor: pointer;
                     }
                     .UploadContainer {
                         margin-bottom: 20px;
@@ -245,6 +232,15 @@ export default class ProfileSetting extends PureComponent {
                         border-radius: 4px;
                         border: 0;
                     }
+                    .close {
+                        margin-left: 10px;
+                        margin-top: 20px;
+                        width: 100%;
+                        height: 35px;
+                        border: 1px solid #ccc;
+                        border-radius: 3px;
+                        cursor:pointer;
+                    }
                     @media screen and (min-width:320px) and (max-width: 420px) {
                         .ProfileSettingContainer {
                             padding: 20px;
@@ -258,7 +254,7 @@ export default class ProfileSetting extends PureComponent {
                         }
                     }
                 `}</style>
-            </div>
+            </Modal>
         )
     }
 }

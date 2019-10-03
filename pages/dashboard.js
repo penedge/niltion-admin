@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import jwt from 'jsonwebtoken'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
@@ -7,7 +7,7 @@ import { notification, Icon, Layout } from 'antd';
 const { Content } = Layout;
 const Navbar = dynamic(import('../components/desktop/navbar'), { ssr: false })
 const SideBar = dynamic(import('../components/desktop/sidebar'), { ssr: false })
-export default class Dashboard extends PureComponent {
+export default class Dashboard extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -23,7 +23,7 @@ export default class Dashboard extends PureComponent {
             icon: <Icon type="warning" style={{ color: 'red' }} />,
         });
     }
-    getData () {
+    async getData() {
         const decode = localStorage.getItem('auth');
         const getToken = jwt.decode(atob(decode));
         if (getToken === null) {
@@ -33,7 +33,7 @@ export default class Dashboard extends PureComponent {
             }, 300);
         }
         else {
-            axios.get(`/register/${getToken.username}`).then(res => {
+            await axios.get(`/register/${getToken.username}`).then(res => {
                 // ถ้ามี user อยู่ในระบบถึงจะเข้าได้
                 const checked_username = getToken.username;
                 const checked_password = getToken.password;
@@ -50,13 +50,10 @@ export default class Dashboard extends PureComponent {
                         location.href = "/"
                     }, 300);
                 }
-            });
+            })
         }
     }
     componentDidMount() {
-        this.getData()
-    }
-    componentWillUpdate() {
         this.getData()
     }
     render() {
@@ -65,7 +62,7 @@ export default class Dashboard extends PureComponent {
                 <Head>
                     <title>Penedge | Dashboard</title>
                     <link type="text/css" rel="stylesheet" href="/static/css/antd/antd.css" />
-                    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kanit&display=swap"/>
+                    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kanit&display=swap" />
                     <meta name="description" content="penedge admin using to control content in pendege.com" />
                     <meta name="author" content={this.state.admin.username} />
                 </Head>
@@ -74,7 +71,7 @@ export default class Dashboard extends PureComponent {
                     <Content className="DashboardContainer">
                         <Layout style={{ padding: '24px 0', background: '#fff' }}>
                             <div>
-                                <SideBar admin={this.state.admin}/>
+                                <SideBar admin={this.state.admin} />
                             </div>
                         </Layout>
                     </Content>

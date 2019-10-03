@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import { Layout, Modal, Card, List, Icon, Button, Menu } from 'antd'
-import { FacebookButton, FacebookCount } from 'react-social'
+import { Layout, Modal, Card, List, Icon, Button, Menu, Descriptions } from 'antd';
 const RelatedPost = dynamic(import('../components/desktop/relatedPost'), { ssr: false });
 const Footer = dynamic(import('../components/desktop/footer'))
 const { Header } = Layout;
@@ -13,21 +12,21 @@ const Index = ({ url: { query: { id } } }) => {
     const [loading, setLoad] = useState(false);
     const [detail, setDetail] = useState([]);
     const [box, setBox] = useState(false);
+    const data = async() => await axios.get(`/detail/${id}`);
     useEffect(() => {
-        axios.get(`/detail/${id}`).then((res) => {
+        data().then(res => {
             if (res.data === null) {
-                setDetail([]);
-                setUsername([])
+                setDetail([])
             }
             else {
-                setDetail(res.data);
+                setDetail(res.data)
             }
-        });
-    })
-    const openBox = ()=> {
+        })
+    },[]);
+    const openBox = () => {
         setBox(true)
     }
-    const closed = ()=> {
+    const closed = () => {
         setBox(false)
     }
     const setAlbums = (albums) => {
@@ -47,8 +46,8 @@ const Index = ({ url: { query: { id } } }) => {
             )
         }
     }
-    const serviceProvide = (service, airlines) => {
-        if (service === undefined || airlines === undefined) {
+    const serviceProvide = (author, service, airlines) => {
+        if (author === undefined || service === undefined || airlines === undefined) {
             return (
                 <div>
 
@@ -58,12 +57,11 @@ const Index = ({ url: { query: { id } } }) => {
         else {
             return (
                 <div>
-                    <strong size={'middle'} style={{ marginRight: 20, textTransform: 'uppercase', padding: 9, borderRadius: 4, border: '1px solid' }}>
-                        {service}
-                    </strong>
-                    <strong size={'middle'} style={{ marginRight: 20, textTransform: 'uppercase', padding: 9, borderRadius: 4, border: '1px solid' }}>
-                        {airlines}
-                    </strong>
+                    <Descriptions title={<h2 style={{fontWeight:'bold'}}>Service Info</h2>}>
+                        <Descriptions.Item label="Agent"><strong style={{color:'#3d2e91'}}>{author}</strong></Descriptions.Item>
+                        <Descriptions.Item label="Service Type"><strong style={{color:'#3d2e91'}}>{service}</strong></Descriptions.Item>
+                        <Descriptions.Item label="Airlines"><strong style={{color:'#3d2e91'}}>{airlines}</strong></Descriptions.Item>
+                    </Descriptions>
                 </div>
             )
         }
@@ -110,7 +108,7 @@ const Index = ({ url: { query: { id } } }) => {
                         <div>
                             <div md={{ span: 12 }} className="mainContent">
                                 <Card style={{ padding: 0 }} bordered={false}>
-                                    <img src={`${storageAPI}/${post.image}`}/>
+                                    <img src={`${storageAPI}/${post.image}`} />
                                 </Card>
                             </div>
                             <div className="contentContainer clearfix">
@@ -122,24 +120,14 @@ const Index = ({ url: { query: { id } } }) => {
                                     <p>
                                         {post.content}
                                     </p>
-                                    {serviceProvide(post.service, post.airlines)}
+                                    {serviceProvide(post.author, post.service, post.airlines)}
                                 </div>
-                                <br />
-                                <br />
-                                <h2><strong>Share content</strong></h2>
-                                <div className="facebookShare" style={{ marginTop: 10 }}>
-                                    <FacebookButton url={URL} appId={appId}>
-                                        <Icon type="facebook" />
-                                    </FacebookButton>
-                                </div>
-                                <br />
-                                <br />
                                 <RelatedPost />
                             </div>
                             <Modal visible={box} footer={null}>
-                                <img style={{width:'100%'}} src={`${storageAPI}/${post.image}`}/>
-                                <br/>
-                                <Button style={{marginTop:15}} onClick={closed}>Close</Button>
+                                <img style={{ width: '100%' }} src={`${storageAPI}/${post.image}`} />
+                                <br />
+                                <Button style={{ marginTop: 15 }} onClick={closed}>Close</Button>
                             </Modal>
                         </div>
                     ))

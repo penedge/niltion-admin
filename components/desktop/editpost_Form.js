@@ -216,7 +216,7 @@ export default class Edit_post extends PureComponent {
                         icon: <Icon type="picture" />,
                     });
                 }
-            }, 1300)
+            }, 500)
         });
     }
     edit_Title = (e) => {
@@ -263,7 +263,7 @@ export default class Edit_post extends PureComponent {
         });
         setTimeout(() => {
             window.location.reload();
-        }, 1000);
+        }, 500);
     }
     render() {
         const uploadButton = (

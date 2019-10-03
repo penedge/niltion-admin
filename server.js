@@ -4,9 +4,9 @@ const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 80;
 // using in development
-const app = next({ dev });
+//const app = next({ dev });
 // using in production
-//const app = next({ dir: '.', dev: false, staticMarkup: false, quiet: false, conf: null, chunk: null, cache: true });
+const app = next({ dir: '.', dev: false, staticMarkup: false, quiet: false, conf: null, chunk: null, cache: true });
 const handle = app.getRequestHandler();
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -35,9 +35,9 @@ app.prepare().then(() => {
     server.use(bodyParser.urlencoded({ extended: true }));
     //Enabling CORS
     server.use((req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "niltontravel.com");
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", 'Content-Type, Authorization, Content-Length, X-Requested-With');
+        res.header("Access-Control-Allow-Methods", "PUT, POST, GET, OPTIONS, DELETE");
         next();
     });
     const storageId = 'GD3ICAFLCZGR2OCQGLR6';
@@ -57,28 +57,28 @@ app.prepare().then(() => {
     // determine upload folder
     const uploadProfile = multer({
         storage: multerS3({
-          s3: adminProfile,
-          bucket: 'nilton',
-          acl: 'public-read-write',
-          metadata: function (req, file, cb) {
-            cb(null, {fieldName: file.originalname});
-          },
-          key: function (req, file, cb) {
-            cb(null, file.originalname)
-          }
+            s3: adminProfile,
+            bucket: 'nilton',
+            acl: 'public-read-write',
+            metadata: function (req, file, cb) {
+                cb(null, { fieldName: file.originalname });
+            },
+            key: function (req, file, cb) {
+                cb(null, file.originalname)
+            }
         })
     });
     const uploadPost = multer({
         storage: multerS3({
-          s3: adminContent,
-          bucket: 'nilton',
-          acl: 'public-read-write',
-          metadata: function (req, file, cb) {
-            cb(null, {fieldName: file.originalname});
-          },
-          key: function (req, file, cb) {
-            cb(null, file.originalname)
-          }
+            s3: adminContent,
+            bucket: 'nilton',
+            acl: 'public-read-write',
+            metadata: function (req, file, cb) {
+                cb(null, { fieldName: file.originalname });
+            },
+            key: function (req, file, cb) {
+                cb(null, file.originalname)
+            }
         })
     });
     // Schema
@@ -217,7 +217,7 @@ app.prepare().then(() => {
         const id = req.params.id;
         User.findByIdAndUpdate({ _id: id }, {
             $set: {
-                profileImage: req.files.originalname,
+                profileImage: req.files.key,
                 image: req.body.image
             }
         }, (err, updateInfo) => {
@@ -228,22 +228,7 @@ app.prepare().then(() => {
                 res.send(updateInfo)
             }
         });
-    })
-    server.put('/changeUsername/:id', (req, res) => {
-        const id = req.params.id;
-        User.findByIdAndUpdate({ _id: id }, {
-            $set: {
-                username: req.body.username
-            }
-        }, (err, updateInfo) => {
-            if (err) {
-                res.redirect('/dashboard');
-            }
-            else {
-                res.send(updateInfo)
-            }
-        });
-    })
+    });
     server.put('/changePassword/:id', (req, res) => {
         const id = req.params.id;
         User.findByIdAndUpdate({ _id: id }, {

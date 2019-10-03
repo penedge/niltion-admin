@@ -12,6 +12,7 @@ export default class SideBar extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
+            modal_load: false,
             tabPosition: 'left'
         }
     }
@@ -19,11 +20,14 @@ export default class SideBar extends PureComponent {
         localStorage.removeItem('auth');
         location.href = "/"
     }
+    editFormModal = ()=> {
+        this.setState({modal_load: true})
+    }
     render() {
         const IconFont = Icon.createFromIconfontCN({
             scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
         });
-        const logOutButton = <div onClick={this.logOut.bind(this)} className="logOut" style={{ cursor: 'pointer' }}><span className="tabsIcon" style={{ marginRight: 10 }}><IconFont type="icon-tuichu" /></span><span>Leave System</span></div>
+        const logOutButton = <div><div onClick={this.editFormModal} style={{marginTop:25,cursor:'pointer'}}><span style={{marginRight:10}} className="tabsIcon"><Icon type="setting" /></span>Profile Setting</div><div onClick={this.logOut.bind(this)} className="logOut" style={{ cursor: 'pointer' }}><span className="tabsIcon" style={{ marginRight: 10 }}><IconFont type="icon-tuichu" /></span><span>Leave System</span></div></div>
         return (
             <div>
                 <Head>
@@ -31,11 +35,11 @@ export default class SideBar extends PureComponent {
                 </Head>
                 <div className="desktopOnly">
                     <div>
-                        <div style={{position:'relative',marginLeft:50,marginBottom:26}}>
+                        <div style={{ position: 'relative', marginLeft: 50, marginBottom: 26 }}>
                             <span className="tabsIcon">
-                                <Icon type="home" style={{marginRight:10}}/>   
+                                <Icon type="home" style={{ marginRight: 10 }} />
                             </span>
-                            <a style={{fontWeight:'bold',color:'#5b5b5b'}} href={`http://niltontravel.com/`}>Home</a>
+                            <a style={{ fontWeight: 'bold', color: '#5b5b5b' }} href={`http://niltontravel.com/package`}>Home</a>
                         </div>
                         <Tabs className="sideBar" tabPosition={this.state.tabPosition} tabBarExtraContent={logOutButton}>
                             <TabPane tab={<span><span className="tabsIcon"><Icon type="book" /></span>Overview</span>} key="1">
@@ -44,10 +48,8 @@ export default class SideBar extends PureComponent {
                             <TabPane tab={<span><span className="tabsIcon"><Icon type="edit" /></span>Add Content</span>} key="2">
                                 <EditorForm />
                             </TabPane>
-                            <TabPane tab={<span><span className="tabsIcon"><Icon type="setting" /></span>Profile Setting</span>} key="3">
-                                <ProfileSetting setting={this.props.admin} />
-                            </TabPane>
                         </Tabs>
+                        <ProfileSetting setting={this.props.admin} modal_load={this.state.modal_load}/>
                     </div>
                 </div>
                 <MobileOnly />

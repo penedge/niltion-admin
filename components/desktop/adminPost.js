@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Row, Col, Card, Icon, List, Modal, Input } from 'antd';
+import { Row, Col, Card, Icon, List, Modal, Input, Button } from 'antd';
 import Link from 'next/link'
 import jwt from 'jsonwebtoken';
 import axios from 'axios'
@@ -47,12 +47,12 @@ export default class AdminPost extends PureComponent {
     componentDidMount() {
         this.data();
     }
-    componentWillUpdate() {
-        this.data();
-    }
     delete = (id) => {
         axios.delete(`/blog/${id}`).then(res => {
         })
+        setTimeout(()=> {
+            location.reload()
+        },460);
     }
     openModal = (id, title, content, albums, image, category) => {
         let editContent = {
@@ -102,9 +102,9 @@ export default class AdminPost extends PureComponent {
         return (
             <React.Fragment>
                 <div className="storiesContainer">
-                    <UserTable/>
-                    <br/>
-                    <br/>
+                    <UserTable />
+                    <br />
+                    <br />
                     <h2><strong>All You Content</strong></h2>
                     <Input className="search" onChange={this.searchBox.bind(this)} placeholder="Search Content..." />
                     <Row gutter={16}>
@@ -112,11 +112,11 @@ export default class AdminPost extends PureComponent {
                             !this.state.loading && find_Blog.map((blog) => (
                                 <Col md={{ span: 8 }} className="itemList">
                                     <Card key={blog._id} title={<span><h3 className="storyName">{blog.title}</h3><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{blog.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {blog.date}</span></div></span>}
-                                        actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image, blog.category)}><Icon type="form" /></span>, <span onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></span>]}>
+                                        actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image, blog.category)}><Icon type="form" /></span>, <Button style={{backgroundColor:'transparent',border:0}} onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></Button>]}>
                                         <div className="cover">
                                             <img src={`${storageAPI}/${blog.image}`} alt={blog.image} />
                                         </div>
-                                        <Link href={{ pathname: 'detail', query: { id: blog._id,title: blog.title } }}>
+                                        <Link href={{ pathname: 'detail', query: { id: blog._id } }}>
                                             <p>{blog.content}</p>
                                         </Link>
                                         {setAlbums(blog.albums)}
@@ -147,7 +147,7 @@ export default class AdminPost extends PureComponent {
                         text-transform: capitalize;
                         line-height: 26px;
                         padding-bottom: 0;
-                        font-size: 12px;
+                        font-size: 1.1rem;
                         cursor:pointer;
                         font-family: sukhumvit set, kanit !important;
                         font-weight: 400 !important;
