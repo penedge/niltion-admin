@@ -60,7 +60,7 @@ export default class Dashboard extends React.Component {
         return (
             <React.Fragment>
                 <Head>
-                    <title>Penedge | Dashboard</title>
+                    <title>Nilton Travel | Dashboard</title>
                     <link type="text/css" rel="stylesheet" href="/static/css/antd/antd.css" />
                     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kanit&display=swap" />
                     <meta name="description" content="penedge admin using to control content in pendege.com" />

@@ -35,7 +35,7 @@ export default class Index extends PureComponent {
     return (
       <React.Fragment>
         <Head>
-          <title>Penedge Admin</title>
+          <title>Nilton Travel Admin</title>
           <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.20.3/antd.min.css"/>
         </Head>
         <Layout>
