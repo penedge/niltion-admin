@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import { Layout, Modal, Card, List, Icon, Button, Menu, Descriptions } from 'antd';
+import { Card, List, Icon, Timeline, Divider, Layout, Menu } from 'antd'
 const RelatedPost = dynamic(import('../components/desktop/relatedPost'), { ssr: false });
 const Footer = dynamic(import('../components/desktop/footer'))
 const { Header } = Layout;
@@ -10,7 +10,6 @@ const storageAPI = 'https://nilton.sgp1.digitaloceanspaces.com/content';
 const Index = ({ url: { query: { id } } }) => {
     const [loading, setLoad] = useState(false);
     const [detail, setDetail] = useState([]);
-    const [box, setBox] = useState(false);
     const data = async() => await axios.get(`/detail/${id}`);
     useEffect(() => {
         data().then(res => {
@@ -41,26 +40,6 @@ const Index = ({ url: { query: { id } } }) => {
                             <img src={`${storageAPI}/${albumsSet}`} className="albumsImageSet lazyload" alt={albumsSet} />
                         </li>
                     )} />
-                </div>
-            )
-        }
-    }
-    const serviceProvide = (author, service, airlines) => {
-        if (author === undefined || service === undefined || airlines === undefined) {
-            return (
-                <div>
-
-                </div>
-            )
-        }
-        else {
-            return (
-                <div>
-                    <Descriptions title={<h2 style={{fontWeight:'bold'}}>Service Info</h2>}>
-                        <Descriptions.Item label="Agent"><strong style={{color:'#3d2e91'}}>{author}</strong></Descriptions.Item>
-                        <Descriptions.Item label="Service Type"><strong style={{color:'#3d2e91'}}>{service}</strong></Descriptions.Item>
-                        <Descriptions.Item label="Airlines"><strong style={{color:'#3d2e91'}}>{airlines}</strong></Descriptions.Item>
-                    </Descriptions>
                 </div>
             )
         }
@@ -101,27 +80,30 @@ const Index = ({ url: { query: { id } } }) => {
                         <div>
                             <div md={{ span: 12 }} className="mainContent">
                                 <Card style={{ padding: 0 }} bordered={false}>
-                                    <img src={`${storageAPI}/${post.image}`} />
+                                    <img className="bg_images" src={`${storageAPI}/${post.image}`} />
                                 </Card>
                             </div>
                             <div className="contentContainer clearfix">
                                 <div>
                                     <h1>{post.title}</h1>
-                                    <h3><Icon type={'history'} /> : {post.date}</h3>
-                                    <br />
-                                    {setAlbums(post.albums)}
                                     <p>
                                         {post.content}
                                     </p>
-                                    {serviceProvide(post.author, post.service, post.airlines)}
                                 </div>
-                                <RelatedPost />
-                            </div>
-                            <Modal visible={box} footer={null}>
-                                <img style={{ width: '100%' }} src={`${storageAPI}/${post.image}`} />
                                 <br />
-                                <Button style={{ marginTop: 15 }} onClick={closed}>Close</Button>
-                            </Modal>
+                                {<RelatedPost />}
+                            </div>
+                            <div className="serviceInfo">
+                                <Divider orientation="left"><h2><strong>Package Info</strong></h2></Divider>
+                                <Timeline>
+                                    <Timeline.Item style={{ textTransform: 'capitalize' }}><strong>Airline :</strong> {post.airlines}</Timeline.Item>
+                                    <Timeline.Item style={{ textTransform: 'capitalize' }}><strong>Service Types :</strong> {post.service}</Timeline.Item>
+                                    <Timeline.Item style={{ textTransform: 'capitalize' }}><strong>Date : </strong> {post.date}</Timeline.Item>
+                                    <Timeline.Item style={{ textTransform: 'capitalize' }}><strong>Distribution : </strong> {post.author}</Timeline.Item>
+                                </Timeline>
+                                <br />
+                                {setAlbums(post.albums)}
+                            </div>
                         </div>
                     ))
                 }
@@ -134,14 +116,13 @@ const Index = ({ url: { query: { id } } }) => {
                     clear:both;
                 }
                 .contentContainer {
-                    background-color: #fff;
                     padding: 30px;
-                    width: 70%;
+                    width: 60%;
                     height: auto;
                     margin: auto;
                     margin-top: 0;
                     display: block;
-                    float: none;
+                    float: left;
                 }
                 .contentContainer h1 {
                     white-space: pre-line;
@@ -223,8 +204,8 @@ const Index = ({ url: { query: { id } } }) => {
                     text-decoration: none;
                 }
                 .albumsImageSet {
-                    width: 300px;
-                    height: 300px;
+                    width: 250px;
+                    height: 250px;
                     float: left;
                     object-fit: cover;
                     object-position: center top;
@@ -240,14 +221,12 @@ const Index = ({ url: { query: { id } } }) => {
                     overflow-x: hidden;
                     margin-bottom: 20px;
                 }
-                .facebookShare button {
-                    border: 0;
-                    outline: none;
-                    background-color: transparent;
-                }
-                .facebookShare i{
-                    cursor: pointer;
-                    font-size: 40px;
+                .serviceInfo {
+                    padding:25px;
+                    width: 40%;
+                    height: auto;
+                    float:left;
+                    border-left: 2.2px dashed #f1f1f1;
                 }
                 @media screen and (min-width: 320px) and (max-width: 420px) {
                     .avatar {

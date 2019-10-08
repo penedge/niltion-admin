@@ -89,10 +89,10 @@ export default class RelatedPost extends PureComponent {
                         text-transform: capitalize;
                         line-height: 26px !important;
                         padding-bottom: 0;
-                        font-size: 16px !important;
+                        font-size: 1.2rem !important;
                         font-family: sukhumvit set, Kanit !important;
                         cursor: pointer;
-                        padding-top: 0;
+                        padding-top: 0 !important;
                     }
                 `}
                 </style>
