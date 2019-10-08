@@ -223,7 +223,7 @@ export default class Editor extends PureComponent {
             });
             setTimeout(() => {
                 window.location.reload();
-            }, 360)
+            }, 200)
         })
 
     }
