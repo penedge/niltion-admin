@@ -22,14 +22,13 @@ export default class Navbar extends PureComponent {
                     <Menu
                         theme="white"
                         mode="horizontal"
-                        defaultSelectedKeys={['2']}
                         style={{ lineHeight: '64px', float: 'right', borderBottom: 0 }}>
-                        <Menu.Item key="1" style={{ backgroundColor: 'transparent', borderBottom: 0 }}>
+                        <Menu.Item style={{ backgroundColor: 'transparent', borderBottom: 0 }}>
                             <span className="adminName">{admin.username}</span>
                         </Menu.Item>
-                        <Menu.Item key="2" style={{ backgroundColor: 'transparent', borderBottom: 0 }}>
+                        <Menu.Item style={{ backgroundColor: 'transparent', borderBottom: 0 }}>
                             <div className="avatar">
-                                <img src={`${storageAPI}${admin.image}`} alt={`profile : ${admin.username}`} />
+                                <img src={`${storageAPI}${admin.image}`} />
                             </div>
                         </Menu.Item>
                     </Menu>

@@ -11,7 +11,7 @@ export default class Editor_mobile extends PureComponent {
             title: [],
             cover: [],
             content: [],
-            preview: '/static/images/bg/uploadIcon.svg',
+            preview: 'https://nilton.sgp1.digitaloceanspaces.com/asset/upload-icon-ConvertImage.jpg',
             loading: false,
             multiFile: [],
             tags: [

@@ -3,10 +3,37 @@ import dynamic from 'next/dynamic'
 import Head from 'next/head';
 import { Icon } from 'antd'
 import { Tabs } from 'antd-mobile';
+import axios from 'axios'
+import jwt from 'jsonwebtoken'
 const AdminPost = dynamic(import('../desktop/adminPost'), { ssr: false })
 const Editor_mobile = dynamic(import('../mobile/editor_mobile'), { ssr: false });
-const ProfileSetting = dynamic(import('../desktop/profile_Setting'), { ssr: false })
+const ProfileSetting_mobile = dynamic(import('../mobile/profileSeting_mobile'), { ssr: false })
 export default class MobileOnly extends PureComponent {
+    constructor(props) {
+        super(props)
+        this.state = {
+            id: []
+        }
+    }
+    async getData() {
+        const decode = localStorage.getItem('auth');
+        const getToken = jwt.decode(atob(decode));
+        await axios.get(`/register/${getToken.username}`).then(res => {
+            if (res.data === null) {
+                this.setState({
+                    id: []
+                })
+            }
+            else {
+                this.setState({
+                    id: res.data._id
+                })
+            }
+        })
+    }
+    componentDidMount() {
+        this.getData()
+    }
     render() {
         const tabs = [
             { title: <Icon type="home" className="tabIcon" /> },
@@ -21,13 +48,13 @@ export default class MobileOnly extends PureComponent {
                 <div className="mobileOnly">
                     <Tabs tabs={tabs} animated={false} useOnPan={false}>
                         <div style={{ height: 'auto', backgroundColor: '#fff' }}>
-                            <AdminPost/>
+                            <AdminPost />
                         </div>
                         <div style={{ height: 'auto', backgroundColor: '#fff' }}>
                             <Editor_mobile />
                         </div>
                         <div style={{ height: 'auto', backgroundColor: '#fff' }}>
-                            <ProfileSetting/>
+                            <ProfileSetting_mobile  setting={this.state.id}/>
                         </div>
                     </Tabs>
                 </div>
