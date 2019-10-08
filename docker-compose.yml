@@ -20,5 +20,3 @@ services:
     container_name: nginx
     image: nginx
     restart: always
-    volumes:
-      - ./nginxConfig:/etc/nginx/nginx.conf

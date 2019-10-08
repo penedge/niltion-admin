@@ -6,7 +6,6 @@ import { Layout, Modal, Card, List, Icon, Button, Menu, Descriptions } from 'ant
 const RelatedPost = dynamic(import('../components/desktop/relatedPost'), { ssr: false });
 const Footer = dynamic(import('../components/desktop/footer'))
 const { Header } = Layout;
-const webURL = 'api.niltontravel.com';
 const storageAPI = 'https://nilton.sgp1.digitaloceanspaces.com/content';
 const Index = ({ url: { query: { id } } }) => {
     const [loading, setLoad] = useState(false);
@@ -71,7 +70,6 @@ const Index = ({ url: { query: { id } } }) => {
     const description = Object.values(detail).map(item => item.content);
     const image = Object.values(detail).map(item => item.image);
     const appId = '133758567104408';
-    const URL = `${webURL}/detail?id=${id}`
     const IconFont = Icon.createFromIconfontCN({
         scriptUrl: '//at.alicdn.com/t/font_8d5l8fzk5b87iudi.js',
     });
@@ -81,11 +79,6 @@ const Index = ({ url: { query: { id } } }) => {
                 <title>{webTitle}</title>
                 <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.20.3/antd.min.css" />
                 <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kanit&display=swap" />
-                <meta property="og:url" content={URL} />
-                <meta property="og:type" content="website" />
-                <meta property="og:title" content={webTitle} />
-                <meta property="og:description" content={description} />
-                <meta property="og:image" content={`${storageAPI}/${image}`} />
             </Head>
             <Header className="header custom-header">
                 <div className="logo">
