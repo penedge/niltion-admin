@@ -16,20 +16,20 @@ export default class Navbar extends PureComponent {
                 <Header className="header custom-header">
                     <div className="logo">
                         <a href={'/dashboard'}>
-                            {!this.state.loading && <img src={`https://nilton.sgp1.digitaloceanspaces.com/static/logo/logo-nilton.png`} alt="penedge logo" />}
+                            <img src={`https://nilton.sgp1.digitaloceanspaces.com/static/logo/logo-nilton.png`} alt="penedge logo" />
                         </a>
                     </div>
                     <Menu
                         theme="white"
                         mode="horizontal"
                         defaultSelectedKeys={['2']}
-                        style={{ lineHeight: '64px', float: 'right',borderBottom: 0 }}>
-                        <Menu.Item key="1" style={{ backgroundColor: 'transparent',borderBottom: 0 }}>
+                        style={{ lineHeight: '64px', float: 'right', borderBottom: 0 }}>
+                        <Menu.Item key="1" style={{ backgroundColor: 'transparent', borderBottom: 0 }}>
                             <span className="adminName">{admin.username}</span>
                         </Menu.Item>
-                        <Menu.Item key="2" style={{ backgroundColor: 'transparent',borderBottom: 0 }}>
+                        <Menu.Item key="2" style={{ backgroundColor: 'transparent', borderBottom: 0 }}>
                             <div className="avatar">
-                                {!this.state.loading && <img src={`${storageAPI}${admin.image}`} alt={`profile : ${admin.username}`} />}
+                                <img src={`${storageAPI}${admin.image}`} alt={`profile : ${admin.username}`} />
                             </div>
                         </Menu.Item>
                     </Menu>
@@ -64,8 +64,8 @@ export default class Navbar extends PureComponent {
                     display: block;
                 }
                 .avatar img {
-                    width: 66px;
-                    height: 66px;
+                    width: 66px !important;
+                    height: 66px !important;
                     padding: 8px;
                     overflow: hidden;
                     margin-top: 6px;
