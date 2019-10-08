@@ -216,14 +216,9 @@ export default class Editor extends PureComponent {
             }
         }
         axios.post('/blog', formData, config).then((res) => {
-            notification.open({
-                message: 'congrats',
-                description: 'You publishing successful',
-                icon: <Icon type="read" />,
-            });
             setTimeout(() => {
                 window.location.reload();
-            }, 200)
+            }, 130)
         })
 
     }
