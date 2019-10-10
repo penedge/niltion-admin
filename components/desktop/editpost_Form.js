@@ -289,7 +289,7 @@ export default class Edit_post extends PureComponent {
                             listType="picture-card"
                             className="editCoverImage"
                             showUploadList={false}
-                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            action="https://jsonplaceholder.typicode.com/todos"
                             onChange={this.upload}
                         >
                             {preview ? <img src={preview} style={{ width: '100%' }} /> : uploadButton}

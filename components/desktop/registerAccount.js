@@ -103,7 +103,7 @@ export default class RegisterAccount extends PureComponent {
                             listType="picture-card"
                             className="avatar-uploader"
                             showUploadList={false}
-                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            action="https://jsonplaceholder.typicode.com/todos"
                             onChange={this.handleChange}>
                             {imageUrl ? <img src={imageUrl} className="avatar" /> : uploadButton}
                         </Upload>
