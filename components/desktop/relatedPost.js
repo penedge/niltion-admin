@@ -36,14 +36,11 @@ export default class RelatedPost extends PureComponent {
                             !this.state.loading && this.state.blog.map((post) => (
                                 <div>
                                     <Col md={{ span: 8 }}>
-                                        <Card key={post._id} title={<span><h3 className="storyName">{post.title}</h3><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize', fontSize: 13, fontWeight: 'lighter' }}>{post.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {post.date}</span></div></span>}>
+                                        <Card key={post._id} title={<span><Link href={{ pathname: 'detail', query: { id: post._id } }}><h3 style={{cursor:'pointer',textTransform:'capitalize'}} className="storyName">{post.title}</h3></Link><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize', fontSize: 13, fontWeight: 'lighter' }}>{post.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {post.date}</span></div></span>}>
                                             <div className="cardBlock">
                                                 <div className="thumbnail">
                                                     <img src={`${storageAPI}/${post.image}`} alt={post.image} className="lazyload" />
                                                 </div>
-                                                <Link href={{ pathname: 'detail', query: { id: post._id } }}>
-                                                    <p>{post.content}</p>
-                                                </Link>
                                             </div>
                                         </Card>
                                     </Col>

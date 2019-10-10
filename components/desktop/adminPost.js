@@ -111,15 +111,12 @@ export default class AdminPost extends PureComponent {
                         {
                             !this.state.loading && find_Blog.map((blog) => (
                                 <Col md={{ span: 8 }} className="itemList">
-                                    <Card key={blog._id} title={<span><h3 className="storyName">{blog.title}</h3><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{blog.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {blog.date}</span></div></span>}
+                                    <Card key={blog._id} title={<span><Link href={{ pathname: 'detail', query: { id: blog._id } }} className="storyName"><h3 style={{cursor:'pointer',textTransform:'capitalize'}}><strong>{blog.title}</strong></h3></Link><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{blog.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {blog.date}</span></div></span>}
                                         actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image, blog.category)}><Icon type="form" /></span>, <Button style={{backgroundColor:'transparent',border:0}} onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></Button>]}>
                                         <div className="cover">
                                             <img src={`${storageAPI}/${blog.image}`} alt={blog.image} />
-                                        </div>
-                                        <Link href={{ pathname: 'detail', query: { id: blog._id } }}>
-                                            <p>{blog.content}</p>
-                                        </Link>
-                                        {setAlbums(blog.albums)}
+                                        </div>                         
+                                        {/*setAlbums(blog.albums)*/}
                                     </Card>
                                 </Col>
                             ))
