@@ -1,9 +1,9 @@
 {
   "name": "create-next-example-app",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "pm2-runtime server.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js"
+    "start": "NODE_ENV=production pm2-runtime server.js"
   },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",
@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
+    "global": "^4.4.0",
     "http-proxy-middleware": "^0.20.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
@@ -27,6 +28,7 @@
     "multer-s3": "^2.9.0",
     "next": "^9.0.5",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "pm2": "^3.5.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-facebook": "^8.0.4",

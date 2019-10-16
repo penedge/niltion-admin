@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import { Card, List, Icon, Timeline, Divider, Layout, Menu } from 'antd'
+import { Card, List, Icon, Timeline, Divider, Layout, Menu, Modal } from 'antd'
 const RelatedPost = dynamic(import('../components/desktop/relatedPost'), { ssr: false });
 const Footer = dynamic(import('../components/desktop/footer'))
 const { Header } = Layout;
@@ -10,6 +10,8 @@ const storageAPI = 'https://nilton.sgp1.digitaloceanspaces.com/content';
 const Index = ({ url: { query: { id } } }) => {
     const [loading, setLoad] = useState(false);
     const [detail, setDetail] = useState([]);
+    const [box, setBox] = useState(false);
+    const [ModalImage, setModalImage] = useState(null);
     const data = async() => await axios.get(`/detail/${id}`);
     useEffect(() => {
         data().then(res => {
@@ -21,7 +23,8 @@ const Index = ({ url: { query: { id } } }) => {
             }
         })
     },[]);
-    const openBox = () => {
+    const openBox = (image) => {
+        setModalImage(image)
         setBox(true)
     }
     const closed = () => {
@@ -36,13 +39,23 @@ const Index = ({ url: { query: { id } } }) => {
             return (
                 <div className="albumsContainer">
                     <List dataSource={albums} renderItem={albumsSet => (
-                        <li onClick={openBox} key={albumsSet._id} className="albumsLayout">
+                        <li onClick={() => openBox(albumsSet)} key={albumsSet._id} className="albumsLayout">
                             <img src={`${storageAPI}/${albumsSet}`} className="albumsImageSet lazyload" alt={albumsSet} />
                         </li>
                     )} />
                 </div>
             )
         }
+    }
+    const BoxPreview = ()=> {
+        return (
+            <div>
+                <Modal visible={box} footer={null} closable={false}>
+                    <Icon onClick={closed} type="close" className="closeButton"/>
+                    <img width={'100%'} src={`${storageAPI}/${ModalImage}`}/>
+                </Modal>
+            </div>
+        )
     }
     // sharing to facebook
     const webTitle = Object.values(detail).map(item => item.title);
@@ -107,6 +120,7 @@ const Index = ({ url: { query: { id } } }) => {
                         </div>
                     ))
                 }
+                {BoxPreview()}
             </div>
             <div className="clearfix">
                 <Footer />
@@ -227,6 +241,15 @@ const Index = ({ url: { query: { id } } }) => {
                     height: auto;
                     float:left;
                     border-left: 2.2px dashed #f1f1f1;
+                }
+                .closeButton {
+                    position: absolute;
+                    float: right;
+                    z-index: 30000;
+                    right: 9px;
+                    top: 8px;
+                    font-size: 14px;
+                    cursor: pointer;
                 }
                 @media screen and (min-width: 320px) and (max-width: 420px) {
                     .avatar {

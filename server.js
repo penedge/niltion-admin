@@ -4,9 +4,9 @@ const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 80;
 // using in development
-//const app = next({ dev });
+const app = next({ dev });
 // using in production
-const app = next({ dir: '.', dev: false, staticMarkup: false, quiet: false, conf: null, chunk: null, cache: true });
+//const app = next({ dir: '.', dev: false, staticMarkup: false, quiet: false, conf: null, chunk: null, cache: true });
 const handle = app.getRequestHandler();
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -16,9 +16,9 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 // using in production
-const connectServer = 'mongodb://mongo:27017/niltonDB';
+//const connectServer = 'mongodb://mongo:27017/niltonDB';
 // using in testing code
-//const connectServer = 'mongodb://localhost:27017/niltonDB';
+const connectServer = 'mongodb://localhost:27017/niltonDB';
 mongoose.connect(connectServer, { useNewUrlParser: true });
 const multer = require('multer');
 const aws = require('aws-sdk');
@@ -31,12 +31,11 @@ app.prepare().then(() => {
     server.use(compression());
     // setpermission
     server.use(cors({ origin: true }));
-    server.use(bodyParser.json());
-    server.use(bodyParser.urlencoded({ extended: true }));
+    server.use(bodyParser.json({ limit: '500mb' }));
+    server.use(bodyParser.urlencoded({ limit: '500mb', extended: true }));
     //Enabling CORS
     server.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", 'Content-Type, Authorization, Content-Length, X-Requested-With');
         res.header("Access-Control-Allow-Methods", "PUT, POST, GET, OPTIONS, DELETE");
         next();
     });
@@ -139,6 +138,7 @@ app.prepare().then(() => {
         blog.author = req.body.author;
         blog.airlines = req.body.airlines;
         blog.service = req.body.service;
+        blog.otherService = req.body.otherService;
         blog.albums = req.body.albums;
         blog.date = req.body.date;
         blog.save((err, newBlog) => {
@@ -204,7 +204,7 @@ app.prepare().then(() => {
     server.put('/ChangeAlbumsBlog/:id', uploadPost.fields([{ name: 'multiFile' }]), (req, res) => {
         const id = req.params.id;
         Blog.findByIdAndUpdate({ _id: id }, {
-            $set: {
+            $addToSet: {
                 multiFile: req.files.originalname,
                 albums: req.body.albums
             }
@@ -272,6 +272,13 @@ app.prepare().then(() => {
     server.delete('/blog/:id', (req, res) => {
         const id = req.params.id;
         Blog.findByIdAndDelete({ _id: id }, (err, admin) => {
+            res.send(admin);
+        });
+    })
+    // delete albums
+    server.delete('/deleteAlbums/:albums', (req, res) => {
+        const albums = req.params.albums;
+        Blog.updateOne({ $pull : { albums } }, (err, admin) => {
             res.send(admin);
         });
     })

@@ -7,6 +7,7 @@ WORKDIR /usr/src/niltion-admin
 # Install app dependencies
 COPY package.json /usr/src/niltion-admin
 RUN yarn install
+RUN yarn add global pm2 -g
 
 # Bundle app source
 COPY . .

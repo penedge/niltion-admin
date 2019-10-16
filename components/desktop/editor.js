@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
-import { Icon, Tabs, Upload, Select, Progress, Col, Row, Skeleton, notification } from 'antd'
+import { Icon, Tabs, Upload, Select, Progress, Col, Row, Skeleton, notification, Input } from 'antd'
 const { TabPane } = Tabs;
 const { Option, OptGroup } = Select;
 export default class Editor extends PureComponent {
@@ -17,95 +17,386 @@ export default class Editor extends PureComponent {
             tags: [
                 {
                     "id": 1,
-                    "type": "singapore airlines"
+                    "type": "AEROFLOT RUSSIAN AIRLINES"
                 },
                 {
                     "id": 2,
-                    "type": "china southern airlines"
+                    "type": "AIR ASIA"
                 },
                 {
                     "id": 3,
-                    "type": "cathay pacific"
+                    "type": "AIR AUSTRAL"
                 },
                 {
                     "id": 4,
-                    "type": "juneyao airlines"
+                    "type": "AIR CHINA"
                 },
                 {
                     "id": 5,
-                    "type": "qantas airways"
+                    "type": "AIR FRANCE"
                 },
                 {
                     "id": 6,
-                    "type": "hainan airlines"
+                    "type": "AIR INDIA"
                 },
                 {
                     "id": 7,
-                    "type": "srilankan airlines"
+                    "type": "AIR KBZ"
                 },
                 {
                     "id": 8,
-                    "type": "sichuan airlines"
+                    "type": "AIR MACAU"
                 },
                 {
                     "id": 9,
-                    "type": "xiamen airlines"
+                    "type": "AIR MANDALAY"
                 },
                 {
                     "id": 10,
-                    "type": "silk air"
+                    "type": "ALITALIA"
                 },
                 {
                     "id": 11,
-                    "type": "ana airline"
+                    "type": "ALL NIPPON AIRWAYS"
                 },
                 {
                     "id": 12,
-                    "type": "jetstar"
+                    "type": "ASIANA AIRLINES"
                 },
                 {
                     "id": 13,
-                    "type": "kuwait airways"
+                    "type": "AUSTRIAN AIRLINES"
                 },
                 {
                     "id": 14,
-                    "type": "vietnam airlines"
+                    "type": "BANGKOK AIRWAYS"
                 },
                 {
                     "id": 15,
-                    "type": "philippine airlines"
+                    "type": "BIMAN BANGLADESH AIRLINES"
                 },
                 {
                     "id": 16,
-                    "type": "american airlines"
+                    "type": "BHUTAN AIRLINES"
                 },
                 {
                     "id": 17,
-                    "type": "air india"
+                    "type": "BRITISH AIRWAYS"
                 },
                 {
                     "id": 18,
-                    "type": "nokscoot"
+                    "type": "CAMBODIA ANGKOR AIR"
                 },
                 {
                     "id": 19,
-                    "type": "china eastern airlines"
+                    "type": "CEBU PACIFIC AIR"
                 },
                 {
                     "id": 20,
-                    "type": "air new zealand"
+                    "type": "CATHAY PACIFIC AIRWAYS"
                 },
                 {
                     "id": 21,
-                    "type": "eva air"
+                    "type": "CHINA AIRLINES"
                 },
                 {
                     "id": 22,
-                    "type": "china airlines"
+                    "type": "CHINA EASTERN"
                 },
                 {
                     "id": 23,
-                    "type": "thai airways"
+                    "type": "CHINA SOUTHERN AIRLINES"
+                },
+                {
+                    "id": 24,
+                    "type": "DELTA AIRLINES"
+                },
+                {
+                    "id": 25,
+                    "type": "DRUK AIR"
+                },
+                {
+                    "id": 26,
+                    "type": "EGYPT AIR"
+                },
+                {
+                    "id": 27,
+                    "type": "EL AL ISRAEL AIRLINES"
+                },
+                {
+                    "id": 28,
+                    "type": "EMIRATES"
+                },
+                {
+                    "id": 29,
+                    "type": "ETIHAD AIRWAYS"
+                }
+                ,
+                {
+                    "id": 30,
+                    "type": "ETHIOPIAN AIRLINES"
+                }
+                ,
+                {
+                    "id": 31,
+                    "type": "EVA AIRWAYS"
+                },
+                {
+                    "id": 32,
+                    "type": "FINNAIR"
+                },
+                {
+                    "id": 33,
+                    "type": "FIREFLY AIRLINES"
+                },
+                {
+                    "id": 34,
+                    "type": "GARUDA INDONESIA"
+                }
+                ,
+                {
+                    "id": 35,
+                    "type": "GOAIR"
+                },
+                {
+                    "id": 36,
+                    "type": "GULF AIR"
+                },
+                {
+                    "id": 37,
+                    "type": "HAINAN AIRLINES"
+                },
+                {
+                    "id": 38,
+                    "type": "HONGKONG AIRLINES"
+                },
+                {
+                    "id": 39,
+                    "type": "HONGKONG EXPRESS AIRWAYS"
+                },
+                {
+                    "id": 40,
+                    "type": "HUNNU AIR"
+                },
+                {
+                    "id": 41,
+                    "type": "INDIGO AIRLINES"
+                },
+                {
+                    "id": 42,
+                    "type": "JAPAN AIRLINES"
+                },
+                {
+                    "id": 43,
+                    "type": "JC (Cambodia) International Airlines"
+                },
+                {
+                    "id": 44,
+                    "type": "JEJU AIR"
+                },
+                {
+                    "id": 45,
+                    "type": "JET AIRWAYS"
+                },
+                {
+                    "id": 46,
+                    "type": "JETSTAR AIRWAYS"
+                },
+                {
+                    "id": 47,
+                    "type": "JINAIR"
+                },
+                {
+                    "id": 48,
+                    "type": "KLM ROYAL DUTCH AIRLINES"
+                },
+                {
+                    "id": 49,
+                    "type": "KENYA AIRWAYS"
+                },
+                {
+                    "id": 50,
+                    "type": "KOREAN AIR"
+                },
+                {
+                    "id": 51,
+                    "type": "KUWAIT AIRWAYS"
+                },
+                {
+                    "id": 52,
+                    "type": "LAO AIRLINES"
+                },
+                {
+                    "id": 53,
+                    "type": "LUFTHANSA GERMAN AIRLINES"
+                },
+                {
+                    "id": 54,
+                    "type": "MALAYSIA AIRLINES"
+                },
+                {
+                    "id": 55,
+                    "type": "MAHAN AIR"
+                },
+                {
+                    "id": 56,
+                    "type": "MONGOLIAN AIRLINES"
+                },
+                {
+                    "id": 57,
+                    "type": "NEPAL AIRLINES"
+                },
+                {
+                    "id": 58,
+                    "type": "NEW GEN AIRWAYS"
+                },
+                {
+                    "id": 59,
+                    "type": "NOK AIR"
+                },
+                {
+                    "id": 60,
+                    "type": "NOK SCOOT"
+                },
+                {
+                    "id": 61,
+                    "type": "NORWEGIAN AIR"
+                },
+                {
+                    "id": 62,
+                    "type": "OMAN AIR"
+                },
+                {
+                    "id": 63,
+                    "type": "ORIENT THAI AIRLINES"
+                },
+                {
+                    "id": 64,
+                    "type": "PAKISTAN AIRLINES"
+                },
+                {
+                    "id": 65,
+                    "type": "PHILIPPINE AIRLINES"
+                },
+                {
+                    "id": 66,
+                    "type": "QANTAS AIRWAYS"
+                },
+                {
+                    "id": 67,
+                    "type": "QATAR AIRWAYS"
+                },
+                {
+                    "id": 68,
+                    "type": "REGENT AIRWAYS"
+                },
+                {
+                    "id": 69,
+                    "type": "ROYAL BRUNEI AIRLINES"
+                },
+                {
+                    "id": 70,
+                    "type": "ROYAL JORDANIAN"
+                },
+                {
+                    "id": 71,
+                    "type": "SCANDINAVIAN AIRLINES"
+                },
+                {
+                    "id": 72,
+                    "type": "SCOOT AIRLINES"
+                },
+                {
+                    "id": 73,
+                    "type": "SHANGHAI AIRLINES"
+                },
+                {
+                    "id": 74,
+                    "type": "SILK AIR"
+                },
+                {
+                    "id": 75,
+                    "type": "SINGAPORE AIRLINES"
+                },
+                {
+                    "id": 76,
+                    "type": "SPICEJET"
+                },
+                {
+                    "id": 77,
+                    "type": "SPRING AIRLINES"
+                },
+                {
+                    "id": 78,
+                    "type": "SRI LANKAN AIRLINES"
+                },
+                {
+                    "id": 79,
+                    "type": "SWISS INTERNATIONAL AIRLINES LTD"
+                },
+                {
+                    "id": 80,
+                    "type": "THAI AIR ASIA"
+                },
+                {
+                    "id": 81,
+                    "type": "THAI AIRWAYS INTERNATIONAL"
+                },
+                {
+                    "id": 82,
+                    "type": "THAI LION AIR"
+                },
+                {
+                    "id": 83,
+                    "type": "MALINDO AIR"
+                },
+                {
+                    "id": 84,
+                    "type": "TIGERAIR"
+                },
+                {
+                    "id": 85,
+                    "type": "TIGERAIR TAIWAN"
+                },
+                {
+                    "id": 86,
+                    "type": "TURKISH AIRLINES"
+                },
+                {
+                    "id": 87,
+                    "type": "TURKMENISTAN AIRLINES"
+                },
+                {
+                    "id": 88,
+                    "type": "T WAY AIR"
+                },
+                {
+                    "id": 89,
+                    "type": "UKRAINE INTERNATIONAL AIRLINES"
+                },
+                {
+                    "id": 90,
+                    "type": "UNITED AIRLINES"
+                },
+                {
+                    "id": 91,
+                    "type": "UZBEKISTAN AIRWAYS"
+                },
+                {
+                    "id": 92,
+                    "type": "VIETJET AIR"
+                },
+                {
+                    "id": 93,
+                    "type": "THAI VIETJET AIR"
+                },
+                {
+                    "id": 94,
+                    "type": "VIETNAM AIRLINES"
+                },
+                {
+                    "id": 95,
+                    "type": "XIAMEN AIRLINES"
                 }
             ],
             selectService: [
@@ -124,6 +415,7 @@ export default class Editor extends PureComponent {
             ],
             selectedItems: [],
             service: [],
+            otherService: [],
             hashtag: null,
             multiFile: [],
             percent: 0
@@ -180,6 +472,12 @@ export default class Editor extends PureComponent {
             albumsLoad: info.file.percent
         })
     }
+    // add other service
+    insertOtherService = (e) => {
+        this.setState({
+            otherService: e.target.value
+        });
+    }
     // submit form
     submit = (e) => {
         e.preventDefault();
@@ -198,6 +496,7 @@ export default class Editor extends PureComponent {
         formData.append('date', times);
         formData.append('airlines', this.state.selectedItems);
         formData.append('service', this.state.service);
+        formData.append('otherService', this.state.otherService);
         let newAlbums = [];
         for (let i = 0; i < this.state.multiFile.length; i++) {
             const file = this.state.multiFile[i].originFileObj;
@@ -250,10 +549,11 @@ export default class Editor extends PureComponent {
                                 <div className="mainFormUpload">
                                     <Col span={8}>
                                         <Upload
+                                            multiple={false}
                                             listType="picture-card"
                                             className="avatar-uploader"
                                             showUploadList={false}
-                                            action="https://jsonplaceholder.typicode.com/todos"
+                                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                                             onChange={this.upload}
                                         >
                                             {preview ? <img src={preview} style={{ width: '100%' }} /> : uploadButton}
@@ -281,7 +581,7 @@ export default class Editor extends PureComponent {
                                     <Upload
                                         multiple={true}
                                         className="UploadAlbums"
-                                        action={'https://jsonplaceholder.typicode.com/albums'}
+                                        action={'https://www.mocky.io/v2/5cc8019d300000980a055e76'}
                                         listType="picture-card"
                                         onChange={this.upload_albums}
                                     >
@@ -330,6 +630,8 @@ export default class Editor extends PureComponent {
                                             }
                                         </OptGroup>
                                     </Select>
+                                    <h3>Add Other Service/Airlines</h3>
+                                    <input className="insertOtherService" placeholder={'Other Service/Airlines'} onChange={this.insertOtherService} />
                                 </div>
                                 <br />
                             </TabPane>
@@ -430,6 +732,14 @@ export default class Editor extends PureComponent {
                     }
                     .imageLoad {
                         width: 200px;
+                    }
+                    .insertOtherService {
+                        width: 300px;
+                        height: 30px;
+                        padding: 15px;
+                        border-radius: 4px;
+                        border: 1px solid #ddd;
+                        margin-bottom: 25px;
                     }
                  `}
                 </style>

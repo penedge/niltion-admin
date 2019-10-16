@@ -64,6 +64,7 @@ export default class RelatedPost extends PureComponent {
                         width: 100%;
                         height: 370px;
                         overflow: hidden;
+                        cursor: pointer;
                     }
                     .thumbnail img {
                         width: 100%;

@@ -9,6 +9,7 @@ const BlogSchema = new Schema ({
     airlines: {type:String},
     service: {type:String},
     albums : {type: Array},
+    otherService: {type: String},
     date: { type: String }
 });
 const Blog = mongoose.model('Blog', BlogSchema);

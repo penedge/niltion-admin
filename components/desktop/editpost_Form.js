@@ -145,32 +145,30 @@ export default class Edit_post extends PureComponent {
             this.setState({ loading: true });
             return;
         }
-        if (info.file.status === 'done') {
-            // Get this url from response in real world.
-            this.getBase64(info.file.originFileObj, imageUrl =>
-                this.setState({
-                    imageUrl,
-                    loading: true,
-                    preview: URL.createObjectURL(info.file.originFileObj),
-                    cover: info.file.originFileObj
-                }),
-            );
-            const formData = new FormData();
-            formData.append('image', info.file.originFileObj.name);
-            formData.append('cover', info.file.originFileObj);
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data'
-                }
+        // Get this url from response in real world.
+        this.getBase64(info.file.originFileObj, imageUrl =>
+            this.setState({
+                imageUrl,
+                loading: true,
+                preview: URL.createObjectURL(info.file.originFileObj),
+                cover: info.file.originFileObj
+            }),
+        );
+        const formData = new FormData();
+        formData.append('image', info.file.originFileObj.name);
+        formData.append('cover', info.file.originFileObj);
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
             }
-            axios.put(`/ChangeCoverBlog/${this.props.id}`, formData, config).then((res) => {
-                notification.open({
-                    message: 'congrats',
-                    description: 'saved Successful',
-                    icon: <Icon type="picture" />,
-                });
-            });
         }
+        axios.put(`/ChangeCoverBlog/${this.props.id}`, formData, config).then((res) => {
+            notification.open({
+                message: 'congrats',
+                description: 'saved Successful',
+                icon: <Icon type="picture" />,
+            });
+        });
     }
     hashtag = (selectedItems) => {
         this.setState({
@@ -289,7 +287,7 @@ export default class Edit_post extends PureComponent {
                             listType="picture-card"
                             className="editCoverImage"
                             showUploadList={false}
-                            action="https://jsonplaceholder.typicode.com/todos"
+                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                             onChange={this.upload}
                         >
                             {preview ? <img src={preview} style={{ width: '100%' }} /> : uploadButton}

@@ -16,7 +16,10 @@ export default class AdminPost extends PureComponent {
             albums: [],
             Modal_id: [],
             openModal: false,
+            previewBox: false,
             editContent: [],
+            imageModal: [],
+            content_delete_id: [],
             search: ''
         }
     }
@@ -50,9 +53,9 @@ export default class AdminPost extends PureComponent {
     delete = (id) => {
         axios.delete(`/blog/${id}`).then(res => {
         })
-        setTimeout(()=> {
+        setTimeout(() => {
             location.reload()
-        },460);
+        }, 460);
     }
     openModal = (id, title, content, albums, image, category) => {
         let editContent = {
@@ -79,8 +82,42 @@ export default class AdminPost extends PureComponent {
             search: e.target.value
         })
     }
+    previewModal = (albums, id) => {
+        this.setState({
+            imageModal: albums,
+            content_delete_id: id
+        })
+        this.setState({
+            previewBox: true
+        })
+    }
+    closed = () => {
+        this.setState({
+            previewBox: false
+        })
+    }
+    deleteAlbums = (albums) => {
+        axios.delete(`/deleteAlbums/${albums}`).then(res => {
+            setInterval(() => {
+                location.reload()
+            }, 400)
+        })
+    }
+    previewBox = () => {
+        return (
+            <Modal
+                visible={this.state.previewBox} footer={null} closable={false}>
+                <Icon onClick={this.closed} type="close" className="closeButton" />
+                <img width={'100%'} src={`${storageAPI}/${this.state.imageModal}`} />
+                <span style={{cursor:'pointer'}} onClick={this.deleteAlbums.bind(this,this.state.imageModal)}>
+                    <Icon type={'delete'} style={{ fontSize: 22, marginTop: 20, marginRight: 10 }} />
+                    <span>DELETE</span>
+                </span>
+            </Modal>
+        )
+    }
     render() {
-        const setAlbums = (albums) => {
+        const setAlbums = (albums, id) => {
             if (Object.values(albums).length === 0) {
                 <div>
 
@@ -90,9 +127,12 @@ export default class AdminPost extends PureComponent {
                 return (
                     <div className="SetalbumsContainer">
                         <List className="albumsImageContainer" dataSource={albums} renderItem={List => (
-                            <li key={List._id}>
-                                <img className="albumsImage" src={`${storageAPI}/${List}`} alt={List} />
-                            </li>
+                            <div>
+                                <li onClick={this.previewModal.bind(this, List, id)} key={List._id}>
+                                    <img className="albumsImage" src={`${storageAPI}/${List}`} alt={List} />
+                                </li>
+                                {this.previewBox()}
+                            </div>
                         )} />
                     </div>
                 )
@@ -111,12 +151,12 @@ export default class AdminPost extends PureComponent {
                         {
                             !this.state.loading && find_Blog.map((blog) => (
                                 <Col md={{ span: 8 }} className="itemList">
-                                    <Card key={blog._id} title={<span><Link href={{ pathname: 'detail', query: { id: blog._id } }} className="storyName"><h3 style={{cursor:'pointer',textTransform:'capitalize'}}><strong>{blog.title}</strong></h3></Link><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{blog.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {blog.date}</span></div></span>}
-                                        actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image, blog.category)}><Icon type="form" /></span>, <Button style={{backgroundColor:'transparent',border:0}} onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></Button>]}>
+                                    <Card key={blog._id} title={<span><Link href={{ pathname: 'detail', query: { id: blog._id } }} className="storyName"><h3 style={{ cursor: 'pointer', textTransform: 'capitalize' }}><strong>{blog.title}</strong></h3></Link><span className="author"><Icon type={'user'} /> : <span style={{ textTransform: 'capitalize' }}>{blog.author}</span></span><div className="clearfix"><span style={{ fontSize: 12, fontWeight: 'lighter' }}><Icon type={'history'} /> : {blog.date}</span></div></span>}
+                                        actions={[<span onClick={this.openModal.bind(this, blog._id, blog.title, blog.content, blog.albums, blog.image, blog.category)}><Icon type="form" /></span>, <Button style={{ backgroundColor: 'transparent', border: 0 }} onClick={this.delete.bind(this, blog._id)}><Icon type="minus-square" /></Button>]}>
                                         <div className="cover">
-                                            <Link style={{cursor:'pointer'}} href={{ pathname: 'detail', query: { id: blog._id } }}><img src={`${storageAPI}/${blog.image}`} alt={blog.image} /></Link>
-                                        </div>                         
-                                        {/*setAlbums(blog.albums)*/}
+                                            <Link style={{ cursor: 'pointer' }} href={{ pathname: 'detail', query: { id: blog._id } }}><img src={`${storageAPI}/${blog.image}`} alt={blog.image} /></Link>
+                                        </div>
+                                        {setAlbums(blog.albums, blog._id)}
                                     </Card>
                                 </Col>
                             ))
@@ -185,6 +225,7 @@ export default class AdminPost extends PureComponent {
                         margin-bottom: 20px;
                     }
                     .albumsImage {
+                        cursor: pointer;
                         width: 170px;
                         height: 100px;
                         float: left;
@@ -206,6 +247,7 @@ export default class AdminPost extends PureComponent {
                         height: 370px;
                         overflow: hidden;
                         margin-bottom: 14px;
+                        cursor: pointer;
                     }
                     .cover img {
                         width: 100%;
@@ -222,6 +264,15 @@ export default class AdminPost extends PureComponent {
                         width: 100%;
                         height: 100px;
                         overflow-y: auto;
+                    }
+                    .closeButton {
+                        position: absolute;
+                        float: right;
+                        z-index: 30000;
+                        right: 9px;
+                        top: 8px;
+                        font-size: 14px;
+                        cursor: pointer;
                     }
                     @media screen and (min-width: 320px) and (max-width: 420px) {
                         .search {
