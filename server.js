@@ -4,9 +4,9 @@ const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
 const PORT = process.env.PORT || 80;
 // using in development
-const app = next({ dev });
+//const app = next({ dev });
 // using in production
-//const app = next({ dir: '.', dev: false, staticMarkup: false, quiet: false, conf: null, chunk: null, cache: true });
+const app = next({ dir: '.', dev: false, staticMarkup: false, quiet: false, conf: null, chunk: null, cache: true });
 const handle = app.getRequestHandler();
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -16,9 +16,9 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 // using in production
-//const connectServer = 'mongodb://mongo:27017/niltonDB';
+const connectServer = 'mongodb://mongo:27017/niltonDB';
 // using in testing code
-const connectServer = 'mongodb://localhost:27017/niltonDB';
+//const connectServer = 'mongodb://localhost:27017/niltonDB';
 mongoose.connect(connectServer, { useNewUrlParser: true });
 const multer = require('multer');
 const aws = require('aws-sdk');
