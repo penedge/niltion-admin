@@ -242,6 +242,9 @@ const Index = ({ url: { query: { id } } }) => {
                 }
                 .bg_images {
                     width: 100%;
+                    height: 300px;
+                    object-fit: cover;
+                    object-position: center top;
                 }
                 @media screen and (min-width: 320px) and (max-width: 420px) {
                     .avatar {
@@ -274,6 +277,15 @@ const Index = ({ url: { query: { id } } }) => {
                     .serviceInfo {
                         width: 100%;
                         padding-top: 0;
+                    }
+                    .ant-card-body {
+                        padding: 0;
+                    }
+                    .bg_images {
+                        width: 100%;
+                        height: 200px;
+                        object-fit: cover;
+                        object-position: center top;
                     }
                 }
             `}</style>

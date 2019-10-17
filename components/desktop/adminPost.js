@@ -244,14 +244,14 @@ export default class AdminPost extends PureComponent {
                     }
                     .cover {
                         width: 100%;
-                        height: 370px;
+                        height: 200px;
                         overflow: hidden;
                         margin-bottom: 14px;
                         cursor: pointer;
                     }
                     .cover img {
                         width: 100%;
-                        height: 100%;
+                        height: auto;
                         object-fit: cover; 
                         overflow:hidden;
                     }
