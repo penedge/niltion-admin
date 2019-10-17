@@ -12,7 +12,7 @@ const Index = ({ url: { query: { id } } }) => {
     const [detail, setDetail] = useState([]);
     const [box, setBox] = useState(false);
     const [ModalImage, setModalImage] = useState(null);
-    const data = async() => await axios.get(`/detail/${id}`);
+    const data = async () => await axios.get(`/detail/${id}`);
     useEffect(() => {
         data().then(res => {
             if (res.data === null) {
@@ -47,12 +47,12 @@ const Index = ({ url: { query: { id } } }) => {
             )
         }
     }
-    const BoxPreview = ()=> {
+    const BoxPreview = () => {
         return (
             <div>
                 <Modal visible={box} footer={null} closable={false}>
-                    <Icon onClick={closed} type="close" className="closeButton"/>
-                    <img width={'100%'} src={`${storageAPI}/${ModalImage}`}/>
+                    <Icon onClick={closed} type="close" className="closeButton" />
+                    <img width={'100%'} src={`${storageAPI}/${ModalImage}`} />
                 </Modal>
             </div>
         )
@@ -91,22 +91,10 @@ const Index = ({ url: { query: { id } } }) => {
                 {
                     !loading && Object.values(detail).map((post) => (
                         <div>
-                            <div md={{ span: 12 }} className="mainContent">
+                            <div className="serviceInfo clearfix">
                                 <Card style={{ padding: 0 }} bordered={false}>
                                     <img className="bg_images" src={`${storageAPI}/${post.image}`} />
                                 </Card>
-                            </div>
-                            <div className="contentContainer clearfix">
-                                <div>
-                                    <h1>{post.title}</h1>
-                                    <p>
-                                        {post.content}
-                                    </p>
-                                </div>
-                                <br />
-                                {<RelatedPost />}
-                            </div>
-                            <div className="serviceInfo">
                                 <Divider orientation="left"><h2><strong>Package Info</strong></h2></Divider>
                                 <Timeline>
                                     <Timeline.Item style={{ textTransform: 'capitalize' }}><strong>Airline :</strong> {post.airlines}</Timeline.Item>
@@ -236,11 +224,12 @@ const Index = ({ url: { query: { id } } }) => {
                     margin-bottom: 20px;
                 }
                 .serviceInfo {
-                    padding:25px;
-                    width: 40%;
+                    padding: 25px;
+                    width: 60%;
                     height: auto;
-                    float:left;
-                    border-left: 2.2px dashed #f1f1f1;
+                    float: none;
+                    margin: auto;
+                    display: block;
                 }
                 .closeButton {
                     position: absolute;
@@ -250,6 +239,9 @@ const Index = ({ url: { query: { id } } }) => {
                     top: 8px;
                     font-size: 14px;
                     cursor: pointer;
+                }
+                .bg_images {
+                    width: 100%;
                 }
                 @media screen and (min-width: 320px) and (max-width: 420px) {
                     .avatar {
@@ -278,6 +270,10 @@ const Index = ({ url: { query: { id } } }) => {
                     .contentContainer span {
                         font-size: 17px;
                         margin-bottom:14px;
+                    }
+                    .serviceInfo {
+                        width: 100%;
+                        padding-top: 0;
                     }
                 }
             `}</style>
